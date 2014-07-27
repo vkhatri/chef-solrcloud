@@ -105,7 +105,8 @@ end
   node.solrcloud.cores_home,
   node.solrcloud.shared_lib,
   node.solrcloud.config_sets,
-  File.join(node.solrcloud.install_dir, 'etc')
+  File.join(node.solrcloud.install_dir, 'etc'),
+  File.join(node.solrcloud.install_dir, 'resources')
 ].each {|dir|
   directory dir do
     owner     node.solrcloud.user
@@ -116,15 +117,21 @@ end
   end 
 }
 
+template File.join(node.solrcloud.install_dir, 'resources', 'log4j.properties') do
+  source "log4j.properties.erb"
+  owner node.solrcloud.user
+  group node.solrcloud.group
+  mode  0644
+  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+end
+
 # Solr Configuration Files
-%w(solr.xml log4j.properties).each do |f|
-  template File.join(node.solrcloud.solr_home, f) do
-    source "#{f}.erb"
-    owner node.solrcloud.user
-    group node.solrcloud.group
-    mode  0644
-    notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
-  end
+template File.join(node.solrcloud.solr_home, 'solr.xml') do
+  source "solr.xml.erb"
+  owner node.solrcloud.user
+  group node.solrcloud.group
+  mode  0644
+  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
 end
 
 # Solr Service User limits
