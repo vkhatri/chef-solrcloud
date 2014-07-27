@@ -405,7 +405,7 @@ case "$ACTION" in
   status)
     source /etc/init.d/functions
     status -p $JETTY_PID jetty
-    RETVAL=$?
+    exit $?
   ;;
   start)
     echo -n "Starting Jetty: "

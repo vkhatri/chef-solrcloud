@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: solrcloud
-# Recipe:: collections
+# Recipe:: cores
 #
 # Copyright 2014, Virender Khatri
 #
@@ -17,45 +17,50 @@
 # limitations under the License.
 #
 
-node.solrcloud.collections.each { |collection_name, collection_options|
-  directory File.join(node.solrcloud.install_dir, collection_name) do
-    owner     node.solrcloud.user
-    group     node.solrcloud.group
-    mode      node.solrcloud.dir_mode
-    recursive true
-    action    collection_options[:action] || :create
-  end
+node.solrcloud.cores.each { |core_name, core_options|
+  puts core_options[:action]
 
-  options[:cores].each { |core_name, core_options|
-    directory File.join(node.solrcloud.install_dir, collection_name, core_name) do
+  case core_options[:action]
+  when "remove"
+    directory File.join(node.solrcloud.config_sets, core_name) do
+      action    :delete
+    end
+  else
+    configset_dir = File.join(node.solrcloud.config_sets, core_name, 'conf')
+    directory configset_dir do
       owner     node.solrcloud.user
       group     node.solrcloud.group
       mode      node.solrcloud.dir_mode
-      recursive true
-      action    core_options[:action] || :create
+     recursive true
     end
 
-    template File.join(node.solrcloud.install_dir, collection_name, core_name, 'schema.xml') do
-      cookbook  
-      source    "#{collection_name}_#{core_name}_#{f}.erb"
+    template File.join(node.solrcloud.cores_home, core_name, 'core.properties') do
+      cookbook  node.solrcloud.cookbook
+      source    "core.properties.erb"
+      owner     node.solrcloud.user
+      group     node.solrcloud.group
+      mode      0644
+      variables :config => core_options
+      notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+    end
+
+    cookbook_file File.join(configset_dir, 'schema.xml') do
+      cookbook  node.solrcloud.cookbook
+      source    "#{core_name}.schema.xml"
       owner     node.solrcloud.user
       group     node.solrcloud.group
       mode      0644
       notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
     end
 
-    template File.join(node.solrcloud.install_dir, collection_name, core_name, 'solrconfig.xml') do
-      source "#{collection_name}_#{core_name}_#{f}.erb"
+    cookbook_file File.join(configset_dir, 'solrconfig.xml') do
+      cookbook  node.solrcloud.cookbook
+      source "#{core_name}.solrconfig.xml"
       owner node.solrcloud.user
       group node.solrcloud.group
       mode  0644
       notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
     end
-  }
+  end
 }
 
-service "solr" do
-  supports :start => true, :stop => true, :restart => true, :status => true
-  service_name node.solrcloud.service_name
-  action [:enable, :start]
-end

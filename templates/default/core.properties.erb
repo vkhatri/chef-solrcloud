@@ -1,0 +1,22 @@
+#
+# This file is managed by Chef.
+# Do NOT modify this file directly.
+# Source: https://cwiki.apache.org/confluence/display/solr/Format+of+solr.xml
+#         https://cwiki.apache.org/confluence/display/solr/CoreAdminHandler+Parameters+and+Usage
+#
+
+name=<%=@config[:name]%>
+instanceDir=<%=@config[:instanceDir] || ''%>
+config=<%=@config[:config] || ''%>
+schema=<%=@config[:schema] || ''%>
+dataDir=<%=node.solrcloud.data_dir%>/<%=@config[:name]%>
+configSet=<%=@config[:name]%>
+properties=<%=@config[:properties] || ''%>
+transient=<%=@config[:transient] || 'false'%>
+loadOnStartup=<%=@config[:loadOnStartup] || 'true'%>
+coreNodeName=<%=@config[:coreNodeName] || ''%>
+ulogDir=<%=@config[:ulogDir] || ''%>
+shard=<%=@config[:shard] || ''%>
+collection=<%=@config[:collection] || ''%>
+roles=<%=@config[:roles] || ''%>
+

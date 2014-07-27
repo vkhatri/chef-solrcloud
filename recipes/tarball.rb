@@ -73,9 +73,17 @@ link node.solrcloud.install_dir do
   action  :create
 end
 
-# Link Solr lib dir
+# Link Jetty lib dir
 link File.join(node.solrcloud.install_dir, 'lib') do
   to      File.join(node.solrcloud.source_dir,'example','lib')
+  owner   node.solrcloud.user
+  group   node.solrcloud.group
+  action :create
+end
+
+# Link Solr lib dir
+link File.join(node.solrcloud.install_dir, 'lib', 'solr') do
+  to      File.join(node.solrcloud.install_dir,'dist')
   owner   node.solrcloud.user
   group   node.solrcloud.group
   action :create
@@ -96,8 +104,8 @@ end
   node.solrcloud.solr_home,
   node.solrcloud.cores_home,
   node.solrcloud.shared_lib,
-  File.join(node.solrcloud.install_dir, 'etc'),
-  File.join(node.solrcloud.solr_home, 'configsets')
+  node.solrcloud.config_sets,
+  File.join(node.solrcloud.install_dir, 'etc')
 ].each {|dir|
   directory dir do
     owner     node.solrcloud.user
