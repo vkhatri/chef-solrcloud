@@ -86,7 +86,7 @@
 
 usage()
 {
-    echo "Usage: ${0##*/} [-d] {start|stop|run|restart|check|supervise} [ CONFIGS ... ] "
+    echo "Usage: ${0##*/} [-d] {start|stop|status|run|restart|check|supervise} [ CONFIGS ... ] "
     exit 1
 }
 
@@ -402,6 +402,11 @@ fi
 # Do the action
 ##################################################
 case "$ACTION" in
+  status)
+    source /etc/init.d/functions
+    status -p $JETTY_PID jetty
+    RETVAL=$?
+  ;;
   start)
     echo -n "Starting Jetty: "
 

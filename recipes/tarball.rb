@@ -93,6 +93,7 @@ end
 [ node.solrcloud.log_dir,
   node.solrcloud.pid_dir,
   node.solrcloud.data_dir,
+  node.solrcloud.solr_home,
   File.join(node.solrcloud.install_dir, 'etc')
 ].each {|dir|
   directory dir do
@@ -106,7 +107,7 @@ end
 
 # Solr Configuration Files
 %w(solr.xml log4j.properties).each do |f|
-  template File.join(node.solrcloud.install_dir, f) do
+  template File.join(node.solrcloud.solr_home, f) do
     source "#{f}.erb"
     owner node.solrcloud.user
     group node.solrcloud.group

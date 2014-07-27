@@ -54,6 +54,9 @@ e.g.
 
 }
 
+# Solr Home
+default[:solrcloud][:solr_home]  = File.join(node.solrcloud.install_dir,'solr')
+
 # Enable Local Zookeeper
 default[:solrcloud][:zookeeper][:self]  = false
 # Default Port for Zookeeper
