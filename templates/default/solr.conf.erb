@@ -1,0 +1,9 @@
+# This file is managed by Chef.
+# Do NOT modify this file directly.
+
+#JAVA_HOME=/usr/java/default
+JAVA_OPTIONS="-Dsolr.solr.home=<%=node.solrcloud.install_dir-%>/solr $JAVA_OPTIONS"
+JETTY_HOME=<%=node.solrcloud.install_dir-%>
+JETTY_USER=<%=node.solrcloud.user-%>
+JETTY_LOGS=<%=node.solrcloud.log_dir-%>
+
