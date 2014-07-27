@@ -2,6 +2,8 @@
 <!--
 # This file is managed by Chef.
 # Do NOT modify this file directly.
+# Refer: https://cwiki.apache.org/confluence/display/solr/Format+of+solr.xml
+#        https://wiki.apache.org/solr/Solr.xml%204.4%20and%20beyond
 -->
 
 <!--
@@ -32,12 +34,24 @@
 -->
 
 <solr>
+<!-- -->
+  <str name="adminHandler"><%=node.solrcloud.admin_handler-%></str>
+  <int name="coreLoadThreads"><%=node.solrcloud.core_load_threads-%></int>
+  <str name="coreRootDirectory"><%=node.solrcloud.cores_home-%></str> <!-- usually solrHome  -->
+  <str name="managementPath">${managementPath:}</str>
+  <str name="sharedLib"><%=node.solrcloud.shared_lib-%></str>
+  <str name="shareSchema"><%=node.solrcloud.share_schema-%></str>
+  <int name="transientCacheSize">${transientCacheSize:Integer.MAX_VALUE}</int> <!-- ignored unless cores are defined with transient=true --> 
 
   <solrcloud>
+    <int name="distribUpdateConnTimeout">${distribUpdTimeout:}</int>
+    <int name="distribUpdateSoTimeout">${distribUpdateTimeout:}</int>
+    <int name="leaderVoteWait">${leaderVoteWait:}</int>
     <str name="host">${host:}</str>
     <int name="hostPort">${jetty.port:8983}</int>
     <str name="hostContext">${hostContext:solr}</str>
     <int name="zkClientTimeout">${zkClientTimeout:15000}</int>
+    <str name="zkHost">${zkHost:<%=node.solrcloud.zookeeper.servers.join(',')-%>}</str>
     <bool name="genericCoreNodeNames">${genericCoreNodeNames:true}</bool>
   </solrcloud>
 
@@ -46,5 +60,14 @@
     <int name="socketTimeout">${socketTimeout:0}</int>
     <int name="connTimeout">${connTimeout:0}</int>
   </shardHandlerFactory>
+
+  <logging>
+    <str name="class">${loggingClass:}</str>
+    <str name="enabled">${loggingEnabled:true}</str>
+    <watcher>
+      <int name="size">${loggingSize:100}</int>
+      <int name="threshold">${loggingThreshold:INFO}</int>
+    </watcher>
+  </logging>
 
 </solr>

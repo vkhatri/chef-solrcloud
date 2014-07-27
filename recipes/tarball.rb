@@ -94,7 +94,10 @@ end
   node.solrcloud.pid_dir,
   node.solrcloud.data_dir,
   node.solrcloud.solr_home,
-  File.join(node.solrcloud.install_dir, 'etc')
+  node.solrcloud.cores_home,
+  node.solrcloud.shared_lib,
+  File.join(node.solrcloud.install_dir, 'etc'),
+  File.join(node.solrcloud.solr_home, 'configsets')
 ].each {|dir|
   directory dir do
     owner     node.solrcloud.user
@@ -134,6 +137,11 @@ end
 # Setup Jetty Config and Solr Service
 include_recipe "solrcloud::jetty"
 
-# Setup Collections - node.solrcloud.collections
-include_recipe "solrcloud::collections"
+# Setup cores - node.solrcloud.cores
+include_recipe "solrcloud::cores"
 
+service "solr" do
+  supports :start => true, :stop => true, :restart => true, :status => true
+  service_name node.solrcloud.service_name
+  action [:enable, :start]
+end
