@@ -2,7 +2,7 @@
 # Do NOT modify this file directly.
 
 #  Logging level
-solr.log=logs/
+solr.log=<%=node.solrcloud.log_dir%>
 log4j.rootLogger=INFO, file, CONSOLE
 
 log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
@@ -12,8 +12,8 @@ log4j.appender.CONSOLE.layout.ConversionPattern=%-4r [%t] %-5p %c %x \u2013 %m%n
 
 #- size rotation with log cleanup.
 log4j.appender.file=org.apache.log4j.RollingFileAppender
-log4j.appender.file.MaxFileSize=4MB
-log4j.appender.file.MaxBackupIndex=9
+log4j.appender.file.MaxFileSize=node.solrcloud.log4j.max_file_size
+log4j.appender.file.MaxBackupIndex=node.solrcloud.log4j.max_backup_index
 
 #- File to log to and log format
 log4j.appender.file.File=${solr.log}/solr.log
@@ -25,3 +25,4 @@ log4j.logger.org.apache.hadoop=WARN
 
 # set to INFO to enable infostream log messages
 log4j.logger.org.apache.solr.update.LoggingInfoStream=OFF
+

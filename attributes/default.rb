@@ -19,6 +19,15 @@ default[:solrcloud] = {
     :nofile     => 48000,
     :nproc      => 'unlimited'
   },
+
+  :log4j        => {
+    :max_file_size    => '10MB',
+    :max_backup_index => '10'
+  },
+
+  :jetty        => {
+    :port       => '8080'
+  },
   :collections  => {}
 
 =begin

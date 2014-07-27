@@ -67,16 +67,33 @@ end
 
 # Link Solr install_dir to Current source_dir
 link node.solrcloud.install_dir do
-  to node.solrcloud.source_dir
-  owner     node.solrcloud.user
-  group     node.solrcloud.group
+  to      node.solrcloud.source_dir
+  owner   node.solrcloud.user
+  group   node.solrcloud.group
+  action  :create
+end
+
+# Link Solr lib dir
+link File.join(node.solrcloud.install_dir, 'lib') do
+  to      File.join(node.solrcloud.source_dir,'example','lib')
+  owner   node.solrcloud.user
+  group   node.solrcloud.group
+  action :create
+end
+
+# Link Solr start.jar
+link File.join(node.solrcloud.install_dir, 'start.jar') do
+  to      File.join(node.solrcloud.source_dir,'example','start.jar')
+  owner   node.solrcloud.user
+  group   node.solrcloud.group
   action :create
 end
 
 # Setup Directories for Solr
 [ node.solrcloud.log_dir,
   node.solrcloud.pid_dir,
-  node.solrcloud.data_dir
+  node.solrcloud.data_dir,
+  File.join(node.solrcloud.install_dir, 'etc')
 ].each {|dir|
   directory dir do
     owner     node.solrcloud.user
@@ -113,9 +130,9 @@ ruby_block "require_pam_limits.so" do
   end
 end
 
-# Setup Collections - node.solrcloud.collections
-include_recipe "solrcloud::collections"
-
 # Setup Jetty Config and Solr Service
 include_recipe "solrcloud::jetty"
+
+# Setup Collections - node.solrcloud.collections
+include_recipe "solrcloud::collections"
 

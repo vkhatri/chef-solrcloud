@@ -3,7 +3,11 @@
 
 #JAVA_HOME=/usr/java/default
 JAVA_OPTIONS="-Dsolr.solr.home=<%=node.solrcloud.install_dir-%>/solr $JAVA_OPTIONS"
-JETTY_HOME=<%=node.solrcloud.install_dir-%>
-JETTY_USER=<%=node.solrcloud.user-%>
-JETTY_LOGS=<%=node.solrcloud.log_dir-%>
+JETTY_HOME=<%=node.solrcloud.install_dir%>
+JETTY_USER=<%=node.solrcloud.user%>
+JETTY_LOGS=<%=node.solrcloud.log_dir%>
+JETTY_RUN=<%=node.solrcloud.pid_dir%>
+JETTY_PORT=<%=node.solrcloud.jetty.port%>
+#JETTY_ARGS=< %=node.solrcloud.jetty.args.join(' ')%>
+#JETTY_ARGS=< %=node.solrcloud.java_options.join(' ')%>
 

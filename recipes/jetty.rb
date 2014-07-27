@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-template "/etc/jetty.xml" do
+template File.join(node.solrcloud.install_dir, 'etc', 'jetty.xml') do
   source "jetty.xml.erb"
   owner node.solrcloud.user
   group node.solrcloud.group
