@@ -75,12 +75,13 @@ end
 
 # Link Jetty lib dir
 link File.join(node.solrcloud.install_dir, 'lib') do
-  to      File.join(node.solrcloud.source_dir,'example','lib')
+  to      File.join(node.solrcloud.install_dir,'example','lib')
   owner   node.solrcloud.user
   group   node.solrcloud.group
   action :create
 end
 
+=begin
 # Link Solr lib dir
 link File.join(node.solrcloud.install_dir, 'lib', 'solr') do
   to      File.join(node.solrcloud.install_dir,'dist')
@@ -88,10 +89,11 @@ link File.join(node.solrcloud.install_dir, 'lib', 'solr') do
   group   node.solrcloud.group
   action :create
 end
+=end
 
 # Link Solr start.jar
 link File.join(node.solrcloud.install_dir, 'start.jar') do
-  to      File.join(node.solrcloud.source_dir,'example','start.jar')
+  to      File.join(node.solrcloud.install_dir,'example','start.jar')
   owner   node.solrcloud.user
   group   node.solrcloud.group
   action :create
@@ -106,7 +108,10 @@ end
   node.solrcloud.shared_lib,
   node.solrcloud.config_sets,
   File.join(node.solrcloud.install_dir, 'etc'),
-  File.join(node.solrcloud.install_dir, 'resources')
+  File.join(node.solrcloud.install_dir, 'resources'),
+  File.join(node.solrcloud.install_dir, 'webapps'),
+  File.join(node.solrcloud.install_dir, 'contexts'),
+  File.join(node.solrcloud.install_dir, 'solr-webapp')
 ].each {|dir|
   directory dir do
     owner     node.solrcloud.user
@@ -116,23 +121,6 @@ end
     action    :create
   end 
 }
-
-template File.join(node.solrcloud.install_dir, 'resources', 'log4j.properties') do
-  source "log4j.properties.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0644
-  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
-end
-
-# Solr Configuration Files
-template File.join(node.solrcloud.solr_home, 'solr.xml') do
-  source "solr.xml.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0644
-  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
-end
 
 # Solr Service User limits
 user_ulimit node.solrcloud.user do

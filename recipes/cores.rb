@@ -25,9 +25,20 @@ node.solrcloud.cores.each { |core_name, core_options|
     directory File.join(node.solrcloud.config_sets, core_name) do
       action    :delete
     end
+
+    directory File.join(node.solrcloud.data_dir, core_name) do
+      action    :delete
+    end
   else
     configset_dir = File.join(node.solrcloud.config_sets, core_name, 'conf')
     directory configset_dir do
+      owner     node.solrcloud.user
+      group     node.solrcloud.group
+      mode      node.solrcloud.dir_mode
+     recursive true
+    end
+
+    directory File.join(node.solrcloud.data_dir, core_name) do
       owner     node.solrcloud.user
       group     node.solrcloud.group
       mode      node.solrcloud.dir_mode
@@ -44,18 +55,18 @@ node.solrcloud.cores.each { |core_name, core_options|
       notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
     end
 
-    cookbook_file File.join(configset_dir, 'schema.xml') do
+    template File.join(configset_dir, 'schema.xml') do
       cookbook  node.solrcloud.cookbook
-      source    "#{core_name}.schema.xml"
+      source    "#{core_name}.schema.xml.erb"
       owner     node.solrcloud.user
       group     node.solrcloud.group
       mode      0644
       notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
     end
 
-    cookbook_file File.join(configset_dir, 'solrconfig.xml') do
+    template File.join(configset_dir, 'solrconfig.xml') do
       cookbook  node.solrcloud.cookbook
-      source "#{core_name}.solrconfig.xml"
+      source "#{core_name}.solrconfig.xml.erb"
       owner node.solrcloud.user
       group node.solrcloud.group
       mode  0644

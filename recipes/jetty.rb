@@ -17,6 +17,47 @@
 # limitations under the License.
 #
 
+# Link Solr start-xyz.war to webapps/
+link File.join(node.solrcloud.install_dir, 'webapps', 'solr.war') do
+  to      File.join(node.solrcloud.install_dir,'dist',"solr-#{node.solrcloud.version}.war")
+  owner   node.solrcloud.user
+  group   node.solrcloud.group
+  action :create
+end
+
+template File.join(node.solrcloud.install_dir, 'resources', 'log4j.properties') do
+  source "log4j.properties.erb"
+  owner node.solrcloud.user
+  group node.solrcloud.group
+  mode  0644
+  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+end
+
+template File.join(node.solrcloud.install_dir, 'contexts', 'solr-jetty-context.xml') do
+  source "solr-jetty-context.xml.erb"
+  owner node.solrcloud.user
+  group node.solrcloud.group
+  mode  0644
+  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+end
+
+template File.join(node.solrcloud.install_dir, 'etc', 'webdefault.xml') do
+  source "webdefault.xml.erb"
+  owner node.solrcloud.user
+  group node.solrcloud.group
+  mode  0644
+  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+end
+
+# Solr Configuration Files
+template File.join(node.solrcloud.solr_home, 'solr.xml') do
+  source "solr.xml.erb"
+  owner node.solrcloud.user
+  group node.solrcloud.group
+  mode  0644
+  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+end
+
 template File.join(node.solrcloud.install_dir, 'etc', 'jetty.xml') do
   source "jetty.xml.erb"
   owner node.solrcloud.user

@@ -39,10 +39,12 @@ default[:solrcloud] = {
 }
 
 # Solr Home
-default[:solrcloud][:solr_home]  = File.join(node.solrcloud.install_dir,'solr')
+default[:solrcloud][:solr_home]   = File.join(node.solrcloud.install_dir,'solr')
 default[:solrcloud][:cores_home]  = File.join(node.solrcloud.solr_home,'cores')
-default[:solrcloud][:shared_lib]  = File.join(node.solrcloud.solr_home,'coreslib')
-default[:solrcloud][:config_sets]  = File.join(node.solrcloud.solr_home,'configsets')
+default[:solrcloud][:shared_lib]  = File.join(node.solrcloud.install_dir,'coreslib')
+default[:solrcloud][:config_sets] = File.join(node.solrcloud.solr_home,'configsets')
+default[:solrcloud][:contrib]     = File.join(node.solrcloud.install_dir,'contrib')
+default[:solrcloud][:dist]        = File.join(node.solrcloud.install_dir,'dist')
 
 # Enable Local Zookeeper
 default[:solrcloud][:zookeeper][:self]  = false
