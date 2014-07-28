@@ -148,3 +148,7 @@ service "solr" do
   service_name node.solrcloud.service_name
   action [:enable, :start]
 end
+
+remote_file tarball_file do
+  action :delete
+end
