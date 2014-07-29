@@ -18,7 +18,8 @@
 #
 
 node.solrcloud.cores.each { |core_name, core_options|
-  puts core_options[:action]
+
+  Chef::Application.fatal!("#{core_name} is missing :name key. :name key is required to create a core name") if not core_options[:name]
 
   case core_options[:action]
   when "remove"

@@ -4,19 +4,41 @@
 # Source: https://cwiki.apache.org/confluence/display/solr/Format+of+solr.xml
 #         https://cwiki.apache.org/confluence/display/solr/CoreAdminHandler+Parameters+and+Usage
 #
+# #####
+# Node Configuration
+# 
+<%@config.each do |key, value|-%>
+<%if not key.nil? and key.to_s.length > 0 and not value.nil? and value.to_s.length > 0-%>
+<%="#{key.strip}=#{value.strip}"%> 
+<%else-%>
+<%="##{key.strip}=#{value.strip}"%> 
+<%end-%>
+<%end-%>
 
-name=<%=@config[:name]%>
-instanceDir=<%=@config[:instanceDir] || ''%>
-config=<%=@config[:config] || ''%>
-schema=<%=@config[:schema] || ''%>
-dataDir=<%=node.solrcloud.data_dir%>/<%=@config[:name]%>
-configSet=<%=@config[:name]%>
-properties=<%=@config[:properties] || ''%>
-transient=<%=@config[:transient] || 'false'%>
-loadOnStartup=<%=@config[:loadOnStartup] || 'true'%>
-coreNodeName=<%=@config[:coreNodeName] || ''%>
-ulogDir=<%=@config[:ulogDir] || ''%>
-shard=<%=@config[:shard] || ''%>
-collection=<%=@config[:collection] || ''%>
-roles=<%=@config[:roles] || ''%>
+# #####
+# Default Values
+<%if not @config['dataDir']-%>
+<%="dataDir=#{node.solrcloud.data_dir}/#{@config[:name]}"%>
+<%end-%>
+<%if not @config['configSet']-%>
+<%="configSet=#{@config[:name]}"%>
+<%end-%>
+
+# #####
+# Possible Configuration Parametrs
+#
+#name=<%=@config[:name]%>
+#instanceDir=<%=@config[:instanceDir] || ''%>
+#config=<%=@config[:config] || ''%>
+#schema=<%=@config[:schema] || ''%>
+#dataDir=<%=node.solrcloud.data_dir%>/<%=@config[:name]%>
+#configSet=<%=@config[:name]%>
+#properties=<%=@config[:properties] || ''%>
+#transient=<%=@config[:transient] || 'false'%>
+#loadOnStartup=<%=@config[:loadOnStartup] || 'true'%>
+#coreNodeName=<%=@config[:coreNodeName] || ''%>
+#ulogDir=<%=@config[:ulogDir] || ''%>
+#shard=<%=@config[:shard] || ''%>
+#collection=<%=@config[:collection] || ''%>
+#roles=<%=@config[:roles] || ''%>
 

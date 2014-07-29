@@ -34,40 +34,43 @@
 -->
 
 <solr>
-<!-- -->
-  <str name="adminHandler"><%=node.solrcloud.admin_handler-%></str>
-  <str name="adminPath"><%=node.solrcloud.admin_path-%></str>
-  <int name="coreLoadThreads"><%=node.solrcloud.core_load_threads-%></int>
-  <str name="coreRootDirectory"><%=node.solrcloud.cores_home-%></str> <!-- usually solrHome  -->
-  <str name="managementPath">${managementPath:}</str>
-  <str name="sharedLib"><%=node.solrcloud.shared_lib-%></str>
-  <str name="shareSchema"><%=node.solrcloud.share_schema-%></str>
-  <int name="transientCacheSize">${transientCacheSize:Integer.MAX_VALUE}</int> <!-- ignored unless cores are defined with transient=true --> 
+  <str name="adminHandler"><%=node.solrcloud.config.adminHandler-%></str>
+  <str name="adminPath"><%=node.solrcloud.config.adminPath-%></str>
+  <int name="coreLoadThreads"><%=node.solrcloud.config.coreLoadThreads-%></int>
+  <str name="coreRootDirectory"><%=node.solrcloud.config.coreRootDirectory-%></str> <!-- usually solrHome  -->
+  <str name="managementPath">${managementPath:<%=node.solrcloud.config.managementPath-%>}</str>
+  <str name="sharedLib"><%=node.solrcloud.config.sharedLib-%></str>
+  <str name="shareSchema"><%=node.solrcloud.config.shareSchema-%></str>
+  <int name="transientCacheSize">${transientCacheSize:<%=node.solrcloud.config.transientCacheSize-%>}</int> <!-- ignored unless cores are defined with transient=true --> 
 
   <solrcloud>
-    <int name="distribUpdateConnTimeout">${distribUpdTimeout:}</int>
-    <int name="distribUpdateSoTimeout">${distribUpdateTimeout:}</int>
-    <int name="leaderVoteWait">${leaderVoteWait:}</int>
+    <int name="distribUpdateConnTimeout">${distribUpdTimeout:<%=node.solrcloud.config.solrcloud.distribUpdateConnTimeout-%>}</int>
+    <int name="distribUpdateSoTimeout">${distribUpdateTimeout:<%=node.solrcloud.config.solrcloud.distribUpdateSoTimeout-%>}</int>
+    <int name="leaderVoteWait">${leaderVoteWait:<%=node.solrcloud.config.solrcloud.leaderVoteWait-%>}</int>
     <str name="host">${host:}</str>
-    <int name="hostPort">${jetty.port:8983}</int>
-    <str name="hostContext">${hostContext:solr}</str>
-    <int name="zkClientTimeout">${zkClientTimeout:15000}</int>
-    <str name="zkHost">${zkHost:<%=node.solrcloud.zookeeper.servers.join(',')-%>}</str>
-    <bool name="genericCoreNodeNames">${genericCoreNodeNames:true}</bool>
+    <int name="hostPort">${jetty.port:<%=node.solrcloud.config.solrcloud.hostPort-%>}</int>
+    <str name="hostContext">${hostContext:<%=node.solrcloud.config.solrcloud.hostContext-%>}</str>
+    <int name="zkClientTimeout">${zkClientTimeout:<%=node.solrcloud.config.solrcloud.zkClientTimeout-%>}</int>
+    <%if not node.solrcloud.enable_zookeeper-%>
+    <!--<str name="zkHost">${zkHost:}</str>-->
+    <%else-%>
+    <str name="zkHost">${zkHost:<%=node.solrcloud.config.solrcloud.zkHost.join(',')-%>}</str>
+    <%end-%>
+    <bool name="genericCoreNodeNames">${genericCoreNodeNames:<%=node.solrcloud.config.solrcloud.genericCoreNodeNames-%>}</bool>
   </solrcloud>
 
   <shardHandlerFactory name="shardHandlerFactory"
     class="HttpShardHandlerFactory">
-    <int name="socketTimeout">${socketTimeout:0}</int>
-    <int name="connTimeout">${connTimeout:0}</int>
+    <int name="socketTimeout">${socketTimeout:<%=node.solrcloud.config.shardHandlerFactory.socketTimeout-%>}</int>
+    <int name="connTimeout">${connTimeout:<%=node.solrcloud.config.shardHandlerFactory.connTimeout-%>}</int>
   </shardHandlerFactory>
 
   <logging>
-    <str name="class">${loggingClass:}</str>
-    <str name="enabled">${loggingEnabled:true}</str>
+    <str name="class">${loggingClass:<%=node.solrcloud.config.logging.loggingClass-%>}</str>
+    <str name="enabled">${loggingEnabled:<%=node.solrcloud.config.logging.enabled-%>}</str>
     <watcher>
-      <int name="size">${loggingSize:100}</int>
-      <int name="threshold">${loggingThreshold:INFO}</int>
+      <int name="size">${loggingSize:<%=node.solrcloud.config.logging.watcher.loggingSize-%>}</int>
+      <int name="threshold">${loggingThreshold:<%=node.solrcloud.config.logging.watcher.threshold-%>}</int>
     </watcher>
   </logging>
 

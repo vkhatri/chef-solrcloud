@@ -14,6 +14,7 @@ default[:solrcloud] = {
   :log_dir      => '/var/log/solr',
   :cookbook     => "solrcloud", # template source cookbook
   :templates_cookbook => "solrcloud", # template source cookbook
+  :enable_zookeeper   => true,
 
   :limits => {
     :memlock    => 'unlimited',
@@ -30,10 +31,36 @@ default[:solrcloud] = {
     :port       => '8080'
   },
 
-  :admin_handler      => 'org.apache.solr.handler.admin.CoreAdminHandler',
-  :admin_path         => '/solr/admin',
-  :share_schema       => false,
-  :core_load_threads  => 3,
+  :config       => {
+    :adminHandler       => 'org.apache.solr.handler.admin.CoreAdminHandler',
+    :adminPath          => '/solr/admin',
+    :coreLoadThreads    => 3,
+    :managementPath     => nil,
+    :shareSchema        => 'false',
+    :transientCacheSize => 1000000,
+    :solrcloud  => {
+      :hostPort           => 8983,
+      :hostContext        => 'solr',
+      :distribUpdateConnTimeout   => 1000000,
+      :distribUpdateSoTimeout     => 1000000,
+      :leaderVoteWait     => 1000000,
+      :zkClientTimeout    => 15000,
+      :zkHost             => [], # Syntax: ["zkHost:zkPort"]
+      :genericCoreNodeNames       => 'true'
+    },
+    :shardHandlerFactory  => {
+      :socketTimeout      => 0,
+      :connTimeout        => 0
+    },
+    :logging          => {
+      :enabled        => 'true',
+      :loggingClass   => nil,
+      :watcher        => {
+        :loggingSize  => 1000,
+        :threshold    => 'INFO'
+      }
+    }
+  },
 
   :cores        => {}
 }
@@ -46,17 +73,8 @@ default[:solrcloud][:config_sets] = File.join(node.solrcloud.solr_home,'configse
 default[:solrcloud][:contrib]     = File.join(node.solrcloud.install_dir,'contrib')
 default[:solrcloud][:dist]        = File.join(node.solrcloud.install_dir,'dist')
 
-# Enable Local Zookeeper
-default[:solrcloud][:zookeeper][:self]  = false
-# Default Port for Zookeeper
-default[:solrcloud][:zookeeper][:port]  = 2181
-
-if node[:solrcloud][:zookeeper][:self]
-  default[:solrcloud][:zookeeper][:servers]  = ["#{node.ip_address}:#{node.solrcloud.zookeeper.port}"] 
-else
-# Syntax: [server:port, server:port]
-  default[:solrcloud][:zookeeper][:servers]  = []
-end
+default[:solrcloud][:config][:coreRootDirectory]  = node.solrcloud.cores_home
+default[:solrcloud][:config][:sharedLib]          = node.solrcloud.shared_lib
 
 default[:solrcloud][:source_dir]      = "/usr/local/solr-#{node.solrcloud.version}"
 default[:solrcloud][:tarball][:url]   = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
