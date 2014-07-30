@@ -49,15 +49,6 @@ template File.join(node.solrcloud.install_dir, 'etc', 'webdefault.xml') do
   notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
 end
 
-# Solr Configuration Files
-template File.join(node.solrcloud.solr_home, 'solr.xml') do
-  source "solr.xml.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0644
-  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
-end
-
 template File.join(node.solrcloud.install_dir, 'etc', 'jetty.xml') do
   source "jetty.xml.erb"
   owner node.solrcloud.user

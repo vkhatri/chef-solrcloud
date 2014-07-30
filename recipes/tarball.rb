@@ -137,7 +137,10 @@ ruby_block "require_pam_limits.so" do
   end
 end
 
-# Setup Jetty Config and Solr Service
+# Solr Config 
+include_recipe "solrcloud::jetty"
+
+# Jetty Config
 include_recipe "solrcloud::jetty"
 
 # Setup cores - node.solrcloud.cores

@@ -14,7 +14,9 @@ default[:solrcloud] = {
   :log_dir      => '/var/log/solr',
   :cookbook     => "solrcloud", # template source cookbook
   :templates_cookbook => "solrcloud", # template source cookbook
-  :enable_zookeeper   => true,
+  :zk_run       => false,
+  :num_shards   => 1,
+  :collections  => ["defaultcollection"],
 
   :limits => {
     :memlock    => 'unlimited',
