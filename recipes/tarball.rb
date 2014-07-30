@@ -138,7 +138,7 @@ ruby_block "require_pam_limits.so" do
 end
 
 # Solr Config 
-include_recipe "solrcloud::jetty"
+include_recipe "solrcloud::config"
 
 # Jetty Config
 include_recipe "solrcloud::jetty"

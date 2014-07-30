@@ -5,7 +5,7 @@
 <%if node.solrcloud.zk_run-%>
 JAVA_OPTIONS=" -DzkRun $JAVA_OPTIONS "
 <%end-%>
-JAVA_OPTIONS=" -Dsolr.solr.home=<%=node.solrcloud.install_dir-%>/solr -DnumShards=<%=node.solrcloud.num_shards-%> -Dbootstrap_confdir=<%=node.solrcloud.solr_home-%>/configsts -Dcollection.configName=<%=node.solrcloud.collections.join(',')-%> $JAVA_OPTIONS "
+JAVA_OPTIONS=" -Dsolr.solr.home=<%=node.solrcloud.install_dir-%>/solr -DnumShards=<%=node.solrcloud.num_shards-%> -Dbootstrap_confdir=<%=node.solrcloud.config_sets-%> -Dcollection.configName=<%=node.solrcloud.collections.join(',')-%> $JAVA_OPTIONS "
 JETTY_HOME=<%=node.solrcloud.install_dir%>
 JETTY_USER=<%=node.solrcloud.user%>
 JETTY_LOGS=<%=node.solrcloud.log_dir%>

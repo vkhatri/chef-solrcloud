@@ -16,7 +16,8 @@ default[:solrcloud] = {
   :templates_cookbook => "solrcloud", # template source cookbook
   :zk_run       => false,
   :num_shards   => 1,
-  :collections  => ["defaultcollection"],
+  :collections  => [],
+  :cores        => {},
 
   :limits => {
     :memlock    => 'unlimited',
@@ -62,9 +63,8 @@ default[:solrcloud] = {
         :threshold    => 'INFO'
       }
     }
-  },
+  }
 
-  :cores        => {}
 }
 
 # Solr Home
