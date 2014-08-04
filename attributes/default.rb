@@ -1,4 +1,5 @@
 default[:solrcloud] = {
+  :config_updater   => false, # node parameter to allow node to make Solr API calls
   :user         => 'solr',
   :group        => 'solr',
   :user_home    => nil,
@@ -16,8 +17,9 @@ default[:solrcloud] = {
   :templates_cookbook => "solrcloud", # template source cookbook
   :zk_run       => false,
   :num_shards   => 1,
-  :collections  => [],
+  :collections  => {},
   :cores        => {},
+  :mode         => 'solrcloud', # options: masterslave, solrcloud
 
   :limits => {
     :memlock    => 'unlimited',
@@ -26,8 +28,8 @@ default[:solrcloud] = {
   },
 
   :log4j        => {
-    :max_file_size    => '10MB',
-    :max_backup_index => '10'
+    :MaxFileSize      => '10MB',
+    :MaxBackupIndex   => '10'
   },
 
   :jetty        => {

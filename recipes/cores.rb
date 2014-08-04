@@ -23,30 +23,24 @@ node.solrcloud.cores.each { |core_name, core_options|
 
   case core_options[:action]
   when "remove"
-    directory File.join(node.solrcloud.config_sets, core_name) do
-      action    :delete
-    end
 
-    directory File.join(node.solrcloud.data_dir, core_name) do
-      action    :delete
-    end
+    [File.join(node.solrcloud.config_sets, core_name), File.join(node.solrcloud.cores_home, core_name), File.join(node.solrcloud.data_dir, core_name)].each {|d|
+      directory d do
+        action    :delete
+      end
+    }
+
   else
     # Core Config Set
     configset_dir = File.join(node.solrcloud.config_sets, core_name, 'conf')
-    directory configset_dir do
-      owner     node.solrcloud.user
-      group     node.solrcloud.group
-      mode      node.solrcloud.dir_mode
-     recursive true
-    end
-
-    # Core Data Directory
-    directory File.join(node.solrcloud.data_dir, core_name) do
-      owner     node.solrcloud.user
-      group     node.solrcloud.group
-      mode      node.solrcloud.dir_mode
-     recursive true
-    end
+    [configset_dir, File.join(node.solrcloud.data_dir, core_name), File.join(node.solrcloud.cores_home, core_name)].each { |d|
+      directory d do
+        owner     node.solrcloud.user
+        group     node.solrcloud.group
+        mode      node.solrcloud.dir_mode
+        recursive true
+      end
+    }
 
     # Core Properties
     template File.join(node.solrcloud.cores_home, core_name, 'core.properties') do
