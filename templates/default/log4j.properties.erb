@@ -14,7 +14,7 @@ log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} [%t] %-5p %c{1} %x -
 log4j.appender.file=org.apache.log4j.RollingFileAppender
 #log4j.appender.file.rollingPolicy=org.apache.log4j.rolling.TimeBasedRollingPolicy
 log4j.appender.file.MaxFileSize=<%=node.solrcloud.log4j.MaxFileSize%>
-log4j.appender.file.MaxBackupIndex=<%=node.solrcloud.log4j.MaxBackupIndexx%>
+log4j.appender.file.MaxBackupIndex=<%=node.solrcloud.log4j.MaxBackupIndex%>
 
 #- File to log to and log format
 log4j.appender.file.File=${solr.log}/solr.log

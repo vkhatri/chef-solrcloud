@@ -107,6 +107,7 @@ end
   node.solrcloud.cores_home,
   node.solrcloud.shared_lib,
   node.solrcloud.config_sets,
+  node.solrcloud.configsets_home,
   File.join(node.solrcloud.install_dir, 'etc'),
   File.join(node.solrcloud.install_dir, 'resources'),
   File.join(node.solrcloud.install_dir, 'webapps'),
@@ -143,8 +144,7 @@ include_recipe "solrcloud::config"
 # Jetty Config
 include_recipe "solrcloud::jetty"
 
-# Setup cores - node.solrcloud.cores
-include_recipe "solrcloud::cores"
+include_recipe "solrcloud::zkcli" if not node.default.solrcloud.zookeeper.zkcli
 
 service "solr" do
   supports :start => true, :stop => true, :restart => true, :status => true
@@ -155,3 +155,9 @@ end
 remote_file tarball_file do
   action :delete
 end
+
+# Setup collections - node.solrcloud.collections
+include_recipe "solrcloud::collections"
+
+# Setup configsets - node.solrcloud.configsets
+include_recipe "solrcloud::configsets"

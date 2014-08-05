@@ -2,12 +2,14 @@
 # Do NOT modify this file directly.
 
 #JAVA_HOME=
+cd <%=node.solrcloud.install_home%>
 <%case node.solrcloud.mode-%>
 <%when 'solrcloud'-%>
 <%if node.solrcloud.zk_run-%>
 JAVA_OPTIONS=" -DzkRun $JAVA_OPTIONS "
 <%end-%>
-JAVA_OPTIONS=" -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> -DnumShards=<%=node.solrcloud.num_shards-%> -Dbootstrap_confdir=<%=node.solrcloud.config_sets-%> -Dcollection.configName=<%=node.solrcloud.collections.join(',')-%> $JAVA_OPTIONS "
+JAVA_OPTIONS=" -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> $JAVA_OPTIONS "
+# JAVA_OPTIONS=" -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> -DnumShards=<%=node.solrcloud.num_shards-%> -Dbootstrap_confdir=<%=node.solrcloud.config_sets-%> -Dcollection.configName=< %=node.solrcloud.collections.join(',')-%> $JAVA_OPTIONS "
 <%when 'masterslave'-%>
 JAVA_OPTIONS=" -Dsolr.solr.home=<%=node.solrcloud.solr_home-%>  $JAVA_OPTIONS "
 <%end-%>
@@ -16,6 +18,6 @@ JETTY_HOME=<%=node.solrcloud.install_dir%>
 JETTY_USER=<%=node.solrcloud.user%>
 JETTY_LOGS=<%=node.solrcloud.log_dir%>
 JETTY_RUN=<%=node.solrcloud.pid_dir%>
-JETTY_PORT=<%=node.solrcloud.jetty.port%>
+JETTY_PORT=<%=node.solrcloud.port%>
 #JETTY_ARGS=
 

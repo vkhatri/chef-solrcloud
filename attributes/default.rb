@@ -14,12 +14,22 @@ default[:solrcloud] = {
   :pid_dir      => '/var/run/solr', # solr service user pid dir
   :log_dir      => '/var/log/solr',
   :cookbook     => "solrcloud", # template source cookbook
-  :templates_cookbook => "solrcloud", # template source cookbook
+  :configsets_cookbook => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
   :zk_run       => false,
   :num_shards   => 1,
   :collections  => {},
-  :cores        => {},
-  :mode         => 'solrcloud', # options: masterslave, solrcloud
+  :configsets   => {},
+  :mode         => 'solrcloud', # options: solrcloud
+  :port       => '8080',
+
+  # Note: This Cookbook does not manage Zookeeper Server/Cluster. 
+  # Use Zookeeper Cookbook instead for Zookeeper Cluster Management 
+  # Zookeeper Setup Only for Client zkCli.sh.
+  #
+  :zookeeper    => {
+    :zkcli      => nil, # Setting node.solrcloud.zookeeper.zkcli will skip zookeeper tar package setup and will use defined zkCli.sh instead
+    :version    => '3.4.6'
+  },
 
   :limits => {
     :memlock    => 'unlimited',
@@ -30,10 +40,6 @@ default[:solrcloud] = {
   :log4j        => {
     :MaxFileSize      => '10MB',
     :MaxBackupIndex   => '10'
-  },
-
-  :jetty        => {
-    :port       => '8080'
   },
 
   :config       => {
@@ -69,11 +75,13 @@ default[:solrcloud] = {
 
 }
 
-# Solr Home
+# Solr 
 default[:solrcloud][:solr_home]   = File.join(node.solrcloud.install_dir,'solr')
 default[:solrcloud][:cores_home]  = File.join(node.solrcloud.solr_home,'cores')
+#default[:solrcloud][:collections_home]  = File.join(node.solrcloud.install_dir,'collections')
 default[:solrcloud][:shared_lib]  = File.join(node.solrcloud.install_dir,'coreslib')
 default[:solrcloud][:config_sets] = File.join(node.solrcloud.solr_home,'configsets')
+default[:solrcloud][:configsets_home] = File.join(node.solrcloud.install_dir,'configs')
 default[:solrcloud][:contrib]     = File.join(node.solrcloud.install_dir,'contrib')
 default[:solrcloud][:dist]        = File.join(node.solrcloud.install_dir,'dist')
 
@@ -83,4 +91,10 @@ default[:solrcloud][:config][:sharedLib]          = node.solrcloud.shared_lib
 default[:solrcloud][:source_dir]      = "/usr/local/solr-#{node.solrcloud.version}"
 default[:solrcloud][:tarball][:url]   = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
 default[:solrcloud][:tarball][:md5]   = '316f11ed8e81cf07ebfa6ad9443add09'
+
+# Zookeeper Client Setup
+default[:solrcloud][:zookeeper][:source_dir]      = File.join(node.solrcloud.source_dir, "zookeeper-#{node.solrcloud.zookeeper.version}")
+default[:solrcloud][:zookeeper][:install_dir]     = File.join(node.solrcloud.install_dir, 'zookeeper')
+default[:solrcloud][:zookeeper][:tarball][:url]   = "https://archive.apache.org/dist/zookeeper/zookeeper-#{node.solrcloud.zookeeper.version}/zookeeper-#{node.solrcloud.zookeeper.version}.tar.gz"
+default[:solrcloud][:zookeeper][:tarball][:md5]   = '971c379ba65714fd25dc5fe8f14e9ad1'
 
