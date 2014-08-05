@@ -8,6 +8,7 @@ version          '0.1.5'
 
 depends "java"
 depends "ulimit"
+depends "solrcloudconfig"
 
 %w{ubuntu centos redhat fedora amazon}.each do |os|
   supports os

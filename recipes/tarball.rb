@@ -144,7 +144,11 @@ include_recipe "solrcloud::config"
 # Jetty Config
 include_recipe "solrcloud::jetty"
 
-include_recipe "solrcloud::zkcli" if not node.default.solrcloud.zookeeper.zkcli
+# Zookeeper Client
+#if not node.solrcloud.zookeeper.zkcli
+#  node.default.solrcloud.zookeeper.zkcli = ::File.join(node.solrcloud.zookeeper.install_dir, 'bin', 'zkCli.sh')
+  include_recipe "solrcloud::zkcli" 
+#end
 
 service "solr" do
   supports :start => true, :stop => true, :restart => true, :status => true
@@ -156,8 +160,9 @@ remote_file tarball_file do
   action :delete
 end
 
-# Setup collections - node.solrcloud.collections
-include_recipe "solrcloud::collections"
-
 # Setup configsets - node.solrcloud.configsets
 include_recipe "solrcloud::configsets"
+
+# Setup collections - node.solrcloud.collections
+# include_recipe "solrcloud::collections"
+

@@ -26,11 +26,11 @@ node.solrcloud.collections.each { |collection_name, options|
     async           options[:async]
     router_name     options[:router_name]
     router_field    options[:router_field]
-    create_node_set options[:create_node_set]
+    create_node_set         options[:create_node_set]
     replication_factor      options[:replication_factor]
     max_shards_per_node     options[:max_shards_per_node]
     collection_config_name  options[:collection_config_name]
-    action          options[:action]
+    action          options[:action] || :create
   end
 
 }

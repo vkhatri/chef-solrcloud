@@ -20,8 +20,6 @@
 # This recipe only setup zookeeper package for zkCli.sh.
 #
 
-node.default.solrcloud.zookeeper.zkcli = File.join(node.solrcloud.zookeeper.install_dir, 'bin', 'zkCli.sh')
-
 require "tmpdir"
 
 temp_d        = Dir.tmpdir

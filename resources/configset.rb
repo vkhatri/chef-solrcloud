@@ -16,15 +16,16 @@
 # limitations under the License.
 #
  
-actions :create, :delete, :nothing
+actions :create, :delete
 
-default_action :nothing
+default_action :create
 
 attribute :configset_name,  :kind_of => String, :regex => /.*/, :default => :name
 attribute :user,            :kind_of => String, :regex => /.*/, :default => node.solrcloud.user
 attribute :group,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.group
+attribute :skip_zk,         :kind_of => String, :regex => /.*/, :default => false
 attribute :zkcli,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.zkcli
-attribute :zkhost,          :kind_of => String, :regex => /.*/, :default => node.solrcloud.config.solrcloud.zkHost.first
+attribute :zkhost,          :kind_of => String, :regex => /.*/, :default => node.solrcloud.config.solrcloud.zkHost.first # Need only one node
 attribute :configsets_home, :kind_of => String, :regex => /.*/, :default => node.solrcloud.configsets_home
 attribute :configsets_cookbook, :kind_of => String, :regex => /.*/, :default => node.solrcloud.configsets_cookbook
 
