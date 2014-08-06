@@ -17,11 +17,13 @@
 # limitations under the License.
 #
 
-action :create do
-  #Chef::Resource::User.send(:include, SolrCloud::Helper)
-  #Chef::Recipe.send(:include, SolrCloud)
+def whyrun_supported?
+  true
+end
 
-  SolrCloud::SolrCollection.new(:num_shards     => new_resource.num_shards,
+action :create do
+
+  obj = SolrCloud::SolrCollection.new(:num_shards     => new_resource.num_shards,
                                 :shards         => new_resource.shards,
                                 :name           => new_resource.name,
                                 :router_field   => new_resource.router_field,
@@ -37,12 +39,22 @@ action :create do
                                 :max_shards_per_node    => new_resource.max_shards_per_node,
                                 :collection_config_name => new_resource.collection_config_name
                                )
+  if obj.collection? new_resource.name
+    Chef::Log.info("solr collection #{new_resource.name} up to date")
+  else
+    new_resource.updated_by_last_action(true) if obj.add_collection
+  end
 end
 
 action :delete do
 
-  SolrCloud::SolrCollection.new(:name           => new_resource.name,
+  obj = SolrCloud::SolrCollection.new(:name           => new_resource.name,
                                 :action         => 'delete'
                                )
+  if obj.collection? new_resource.name
+    new_resource.updated_by_last_action(true) if obj.delete_collection
+  else
+    Chef::Log.info("solr collection #{new_resource.name} up to date")
+  end
 end
 

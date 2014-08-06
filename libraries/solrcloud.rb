@@ -53,45 +53,37 @@ module SolrCloud
       end
     end
 
-    def add_collection(opts)
-      if collection? @options[:name]
-        Chef::Log.info("collection #{@options[:name]} already exists")
+    def add_collection
+      Chef::Log.info("collection #{@options[:name]} adding ..")
+      url = "/solr/admin/collections?wt=json&action=CREATE&name=#{@options[:name]}&replicationFactor=#{@options[:replicationFactor]}"
+      url << "&numShards=#{@options[:num_shards]}" if @options[:num_shards]
+      url << "&shards=#{@options[:shards]}" if @options[:shards]
+      url << "&maxShardsPerNode=#{@options[:max_shards_per_node]}" if @options[:max_shards_per_node]
+      url << "&createNodeSet=#{@options[:create_node_set]}" if @options[:create_node_set]
+      url << "&collection.configName=#{@options[:collection_config_name]}" if @options[:collection_config_name]
+      url << "&router.name=#{@options[:router_name]}" if @options[:router_name]
+      url << "&router.field=#{@options[:router_field]}" if @options[:router_field]
+      url << "&async=#{@options[:async]}" if @options[:async]
+      reply = conn.request Net::HTTP::Post.new url
+      if reply.code.to_i == 200
+        Chef::Log.info("collection #{@options[:name]} added. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        return true
       else
-        Chef::Log.info("collection #{@options[:name]} adding ..")
-        url = "/solr/admin/collections?wt=json&action=CREATE&name=#{@options[:name]}&replicationFactor=#{@options[:replicationFactor]}"
-        url = url + "&numShards=#{@options[:num_shards]}" if @options[:num_shards]
-        url = url + "&shards=#{@options[:shards]}" if @options[:shards]
-        url = url + "&maxShardsPerNode=#{@options[:max_shards_per_node]}" if @options[:max_shards_per_node]
-        url = url + "&createNodeSet=#{@options[:create_node_set]}" if @options[:create_node_set]
-        url = url + "&collection.configName=#{@options[:collection_config_name]}" if @options[:collection_config_name]
-        url = url + "&router.name=#{@options[:router_name]}" if @options[:router_name]
-        url = url + "&router.field=#{@options[:router_field]}" if @options[:router_field]
-        url = url + "&async=#{@options[:async]}" if @options[:async]
-        reply = conn.request Net::HTTP::Post.new url
-        if reply.code.to_i == 200
-          Chef::Log.info(JSON.pretty_generate(JSON.parse(reply.body)))
-          Chef::Log.info("collection #{@options[:name]} added.")
-        else
-          Chef::Log.error(JSON.pretty_generate(JSON.parse(reply.body)))
-          Chef::Log.error("collection #{@options[:name]} failed to add.")
-        end
+        Chef::Log.error("collection #{@options[:name]} failed to add. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        return false
       end
     end
 
-    def delete_collection(opts)
-      if collection? @options[:name]
-        Chef::Log.info("collection #{@options[:name]} deleting ..")
-        url = "/solr/admin/collections?wt=json&action=DELETE&name=#{@options[:name]}"
-        reply = conn.request Net::HTTP::Post.new url
-        if reply.code.to_i == 200
-          Chef::Log.info(JSON.pretty_generate(JSON.parse(reply.body)))
-          Chef::Log.info("collection #{@options[:name]} deleted.")
-        else
-          Chef::Log.error(JSON.pretty_generate(JSON.parse(reply.body)))
-          Chef::Log.error("collection #{@options[:name]} failed to delete.")
-        end
+    def delete_collection
+      Chef::Log.info("collection #{@options[:name]} deleting ..")
+      url = "/solr/admin/collections?wt=json&action=DELETE&name=#{@options[:name]}"
+      reply = conn.request Net::HTTP::Post.new url
+      if reply.code.to_i == 200
+        Chef::Log.info("collection #{@options[:name]} deleted. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        return true
       else
-        Chef::Log.info("collection #{@options[:name]} does not exists")
+        Chef::Log.error("collection #{@options[:name]} failed to delete. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        return false
       end
     end
 

@@ -148,9 +148,9 @@ include_recipe "solrcloud::jetty"
 include_recipe "solrcloud::zkcli"
 
 service "solr" do
-  supports :start => true, :stop => true, :restart => true, :status => true
-  service_name node.solrcloud.service_name
-  action [:enable, :start]
+  supports      :start => true, :stop => true, :restart => true, :status => true
+  service_name  node.solrcloud.service_name
+  action        [:enable, :start]
 end
 
 remote_file tarball_file do

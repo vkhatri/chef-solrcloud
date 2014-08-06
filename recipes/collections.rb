@@ -19,6 +19,7 @@
 
 node.solrcloud.collections.each { |collection_name, options|
 
+  puts "collection_name=#{collection_name}, options=#{options.inspect}"
   solrcloud_collection collection_name do
     num_shards      options[:num_shards]
     shards          options[:shards]
@@ -30,7 +31,7 @@ node.solrcloud.collections.each { |collection_name, options|
     replication_factor      options[:replication_factor]
     max_shards_per_node     options[:max_shards_per_node]
     collection_config_name  options[:collection_config_name]
-    action          options[:action] || :create
+    action          options[:action] 
   end
 
 }
