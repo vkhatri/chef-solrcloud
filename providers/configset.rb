@@ -23,24 +23,15 @@ end
 
 action :delete do
 
-  if @current_resource.exists
-    Chef::Log.info "#{ @new_resource } already exists - nothing to do."
-  else
-    #converge_by("removing configset #{ @new_resource } from zookeeper #{new_resource.config.solrcloud.zkHost}")
-    bash "delete_config_set_#{new_resource.name}" do
-      user  "root"
-      cwd   "/tmp"
-      code <<-EOS
-      # #{new_resource.zkcli} -zkhost #{new_resource.zkHost} -cmd downconfig -confdir #{::File.join(new_resource.configsets_home, new_resource.name, 'conf')} -confname #{new_resource.name};
-      EOS
-      action  :run
-      only_if { not new_resource.skip_zk }
-    end
+  execute "zk_config_set_upconfig_#{new_resource.name}" do
+    # TODO: Use Zookeeper gem to get the status instead using zkCli.sh
+    command "echo 'rmr /configs/#{new_resource.name}' | #{new_resource.zkcli} -server #{new_resource.zkhost} 2>&1"
+    only_if "echo 'ls /configs/#{new_resource.name}' | #{new_resource.zkcli} -server #{new_resource.zkhost} 2>&1 | egrep -o 'solrconfig.xml|schema.xml' > /dev/null"
+  end
 
-    #converge_by("removing configset #{ @new_resource } directory")
-    directory ::File.join(new_resource.configsets_home, new_resource.name) do
-      action    :delete
-    end
+  directory ::File.join(new_resource.configsets_home, new_resource.name) do
+    recursive true
+    action    :delete
   end
 
 end
@@ -70,23 +61,10 @@ action :create do
   end
 
   execute "zk_config_set_upconfig_#{new_resource.name}" do
-    command "#{new_resource.zkcli} -zkhost #{new_resource.zkhost} -cmd upconfig -confdir #{::File.join(new_resource.configsets_home, new_resource.name, 'conf')} -confname #{new_resource.name};"
-    #not_if { ::File.exists?("/tmp/#{pet_name}")}
+    # TODO: Use Zookeeper gem to get the status instead using zkCli.sh
+    command "#{new_resource.solr_zkcli} -zkhost #{new_resource.zkhost} -cmd upconfig -confdir #{::File.join(new_resource.configsets_home, new_resource.name, 'conf')} -confname #{new_resource.name} 2>&1"
+    only_if "echo 'ls /configs/#{new_resource.name}' | #{new_resource.zkcli} -server #{new_resource.zkhost} 2>&1 | egrep -o 'Node does not exist: /configs/#{new_resource.name}' > /dev/null"
   end
-
-=begin
-  Chef::Log.info("executing #{new_resource.zkcli} -zkhost #{new_resource.zkcli} -cmd upconfig -confdir #{::File.join(new_resource.configsets_home, new_resource.name, 'conf')} -confname #{new_resource.name};")
-
-  bash "create_config_set_#{new_resource.name}" do
-    user  "root"
-    cwd   "/tmp"
-    code <<-EOS
-    #{new_resource.zkcli} -zkhost #{new_resource.zkcli} -cmd upconfig -confdir #{::File.join(new_resource.configsets_home, new_resource.name, 'conf')} -confname #{new_resource.name}
-    EOS
-    action  :run
-    only_if { ::File.exists?(::File.join(new_resource.configsets_home, new_resource.name, 'conf')) and not new_resource.skip_zk }
-  end
-=end
 
 end
 

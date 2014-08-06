@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-Chef::Application.fatal!("attribute node['solrcloud']['cluster_name'] not defined") unless node.solrcloud.cluster_name
+#Chef::Application.fatal!("attribute node['solrcloud']['cluster_name'] not defined") unless node.solrcloud.cluster_name
 
 # Setup Solr Service User
 if node.solrcloud.setup_user
@@ -144,11 +144,8 @@ include_recipe "solrcloud::config"
 # Jetty Config
 include_recipe "solrcloud::jetty"
 
-# Zookeeper Client
-#if not node.solrcloud.zookeeper.zkcli
-#  node.default.solrcloud.zookeeper.zkcli = ::File.join(node.solrcloud.zookeeper.install_dir, 'bin', 'zkCli.sh')
-  include_recipe "solrcloud::zkcli" 
-#end
+# Zookeeper Client Setup
+include_recipe "solrcloud::zkcli"
 
 service "solr" do
   supports :start => true, :stop => true, :restart => true, :status => true
@@ -161,8 +158,8 @@ remote_file tarball_file do
 end
 
 # Setup configsets - node.solrcloud.configsets
-include_recipe "solrcloud::configsets"
+include_recipe "solrcloud::configsets" if node.solrcloud.configset_manager
 
 # Setup collections - node.solrcloud.collections
-# include_recipe "solrcloud::collections"
+include_recipe "solrcloud::collections"
 

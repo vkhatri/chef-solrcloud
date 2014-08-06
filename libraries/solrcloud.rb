@@ -22,7 +22,7 @@ require 'json'
 
 module SolrCloud
   class SolrCollection
-    attr_accessor :options, :conn, :collections
+    attr_accessor :options, :conn
 
     def initialize(opts={})
       @options    = opts

@@ -20,7 +20,7 @@ actions :create, :delete
 
 default_action :create
 
-attribute :num_shards,    :kind_of => String, :regex => /.*/, :default => '1'
+attribute :num_shards,    :kind_of => [String, Integer], :regex => /.*/, :default => '1'
 attribute :shards,        :kind_of => String, :regex => /.*/, :default => nil
 attribute :router_field,  :kind_of => String, :regex => /.*/, :default => nil
 attribute :async,         :kind_of => [TrueClass, FalseClass], :default => true
