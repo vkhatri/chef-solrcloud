@@ -151,6 +151,15 @@ service "solr" do
   supports      :start => true, :stop => true, :restart => true, :status => true
   service_name  node.solrcloud.service_name
   action        [:enable, :start]
+  notifies      :run, "ruby_block[wait_start_up]", :immediately
+end
+
+# Waiting for Service 
+ruby_block "wait_start_up" do
+  block  do
+    sleep 10
+  end
+  action :nothing
 end
 
 remote_file tarball_file do

@@ -38,7 +38,7 @@
   <str name="adminPath"><%=node.solrcloud.config.adminPath-%></str>
   <int name="coreLoadThreads"><%=node.solrcloud.config.coreLoadThreads-%></int>
   <str name="coreRootDirectory"><%=node.solrcloud.config.coreRootDirectory-%></str> <!-- usually solrHome  -->
-  <str name="managementPath">${managementPath:<%=node.solrcloud.config.managementPath-%>}</str>
+  <!-- <str name="managementPath">${managementPath:<%=node.solrcloud.config.managementPath-%>}</str> -->
   <str name="sharedLib"><%=node.solrcloud.config.sharedLib-%></str>
   <str name="shareSchema"><%=node.solrcloud.config.shareSchema-%></str>
   <int name="transientCacheSize">${transientCacheSize:<%=node.solrcloud.config.transientCacheSize-%>}</int> <!-- ignored unless cores are defined with transient=true --> 
@@ -61,6 +61,7 @@
     <int name="connTimeout">${connTimeout:<%=node.solrcloud.config.shardHandlerFactory.connTimeout-%>}</int>
   </shardHandlerFactory>
 
+  <!--
   <logging>
     <str name="class">${loggingClass:<%=node.solrcloud.config.logging.loggingClass-%>}</str>
     <str name="enabled">${loggingEnabled:<%=node.solrcloud.config.logging.enabled-%>}</str>
@@ -69,5 +70,6 @@
       <int name="threshold">${loggingThreshold:<%=node.solrcloud.config.logging.watcher.threshold-%>}</int>
     </watcher>
   </logging>
+  -->
 
 </solr>
