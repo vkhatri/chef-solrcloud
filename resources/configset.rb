@@ -28,7 +28,7 @@ attribute :force,           :kind_of => [TrueClass, FalseClass], :default => fal
 attribute :solr_zkcli,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.solr_zkcli
 attribute :zkcli,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.zkcli
 attribute :zkhost,          :kind_of => String, :regex => /.*/, :default => node.solrcloud.config.solrcloud.zkHost.first # Need only one node
-attribute :configsets_home, :kind_of => String, :regex => /.*/, :default => node.solrcloud.configsets_home
-attribute :configsets_cookbook, :kind_of => String, :regex => /.*/, :default => node.solrcloud.configsets_cookbook
+attribute :config_sets_home,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.config_sets_home
+attribute :config_sets_cookbook,  :kind_of => String, :regex => /.*/, :default => node.solrcloud.config_sets_cookbook
 
 

@@ -37,8 +37,12 @@
   <str name="adminHandler"><%=node.solrcloud.config.adminHandler-%></str>
   <str name="adminPath"><%=node.solrcloud.config.adminPath-%></str>
   <int name="coreLoadThreads"><%=node.solrcloud.config.coreLoadThreads-%></int>
+  <%if node.solrcloud.cores_home and node.solrcloud.cores_home != node.solrcloud.solr_home-%>
   <str name="coreRootDirectory"><%=node.solrcloud.config.coreRootDirectory-%></str> <!-- usually solrHome  -->
-  <!-- <str name="managementPath">${managementPath:<%=node.solrcloud.config.managementPath-%>}</str> -->
+  <%else-%>
+  <!-- <str name="coreRootDirectory"><%=node.solrcloud.config.coreRootDirectory-%></str> --> <!-- usually solrHome  -->
+  <%end-%>
+  <!-- <str name="managementPath">${managementPath:<%=node.solrcloud.config.managementPath-%>}</str> --> 
   <str name="sharedLib"><%=node.solrcloud.config.sharedLib-%></str>
   <str name="shareSchema"><%=node.solrcloud.config.shareSchema-%></str>
   <int name="transientCacheSize">${transientCacheSize:<%=node.solrcloud.config.transientCacheSize-%>}</int> <!-- ignored unless cores are defined with transient=true --> 

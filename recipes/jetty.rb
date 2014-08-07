@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-# Link Solr start-xyz.war to webapps/
 link File.join(node.solrcloud.install_dir, 'webapps', 'solr.war') do
   to      File.join(node.solrcloud.install_dir,'dist',"solr-#{node.solrcloud.version}.war")
   owner   node.solrcloud.user

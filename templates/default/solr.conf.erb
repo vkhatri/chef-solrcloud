@@ -4,7 +4,7 @@
 
 cd <%=node.solrcloud.install_dir%>
 #JAVA_HOME=
-JAVA_OPTIONS=" -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> $JAVA_OPTIONS "
+JAVA_OPTIONS=" -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> -Dsolr.data.dir=<%=node.solrcloud.data_dir-%> $JAVA_OPTIONS "
 JETTY_HOME=<%=node.solrcloud.install_dir%>
 JETTY_USER=<%=node.solrcloud.user%>
 JETTY_LOGS=<%=node.solrcloud.log_dir%>

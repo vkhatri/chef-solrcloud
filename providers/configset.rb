@@ -29,7 +29,7 @@ action :delete do
     only_if "echo 'ls /configs/#{new_resource.name}' | #{new_resource.zkcli} -server #{new_resource.zkhost} 2>&1 | egrep -o 'solrconfig.xml|schema.xml' > /dev/null"
   end
 
-  directory ::File.join(new_resource.configsets_home, new_resource.name) do
+  directory ::File.join(new_resource.config_sets_home, new_resource.name) do
     recursive true
     action    :delete
   end
@@ -38,9 +38,9 @@ end
 
 action :create do
 
-  puts "new_resource.configsets_home=#{new_resource.configsets_home}"
+  puts "new_resource.config_sets_home=#{new_resource.config_sets_home}"
 
-  directory ::File.join(new_resource.configsets_home, new_resource.name) do
+  directory ::File.join(new_resource.config_sets_home, new_resource.name) do
     owner       new_resource.user
     group       new_resource.group
     mode        0644
@@ -48,8 +48,8 @@ action :create do
     action      :create
   end
 
-  remote_directory ::File.join(new_resource.configsets_home, new_resource.name) do
-    cookbook    new_resource.configsets_cookbook
+  remote_directory ::File.join(new_resource.config_sets_home, new_resource.name) do
+    cookbook    new_resource.config_sets_cookbook
     source      new_resource.name
     owner       new_resource.user
     group       new_resource.group
@@ -58,12 +58,14 @@ action :create do
     files_owner new_resource.user
     files_group new_resource.group
     action      :create
+    notifies    :run, "execute[zk_config_set_upconfig_#{new_resource.name}]", :immediately
   end
 
   execute "zk_config_set_upconfig_#{new_resource.name}" do
     # TODO: Use Zookeeper gem to get the status instead using zkCli.sh
-    command "#{new_resource.solr_zkcli} -zkhost #{new_resource.zkhost} -cmd upconfig -confdir #{::File.join(new_resource.configsets_home, new_resource.name, 'conf')} -confname #{new_resource.name} 2>&1"
-    only_if "echo 'ls /configs/#{new_resource.name}' | #{new_resource.zkcli} -server #{new_resource.zkhost} 2>&1 | egrep -o 'Node does not exist: /configs/#{new_resource.name}' > /dev/null"
+    command   "#{new_resource.solr_zkcli} -zkhost #{new_resource.zkhost} -cmd upconfig -confdir #{::File.join(new_resource.config_sets_home, new_resource.name, 'conf')} -confname #{new_resource.name} 2>&1"
+    action    :nothing
+    #only_if  "echo 'ls /configs/#{new_resource.name}' | #{new_resource.zkcli} -server #{new_resource.zkhost} 2>&1 | egrep -o 'Node does not exist: /configs/#{new_resource.name}' > /dev/null"
   end
 
 end

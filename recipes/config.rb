@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-# Solr Configuration File
 template File.join(node.solrcloud.solr_home, 'solr.xml') do
   source "solr.xml.erb"
   owner node.solrcloud.user

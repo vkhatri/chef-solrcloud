@@ -19,7 +19,8 @@
 
 node.solrcloud.collections.each { |collection_name, options|
 
-  puts "collection_name=#{collection_name}, options=#{options.inspect}"
+  Chef::Log.error("collection #{collection_name} is missing option :collection_config_name (zookeeper config set)")
+
   solrcloud_collection collection_name do
     num_shards      options[:num_shards]
     shards          options[:shards]

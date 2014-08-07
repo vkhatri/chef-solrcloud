@@ -20,9 +20,7 @@
 #Chef::Application.fatal!("attribute node['solrcloud']['cluster_name'] not defined") unless node.solrcloud.cluster_name
 
 # Setup Solr Service User
-if node.solrcloud.setup_user
-  include_recipe "solrcloud::user"
-end
+include_recipe "solrcloud::user" if node.solrcloud.setup_user
 
 require "tmpdir"
 
@@ -81,16 +79,6 @@ link File.join(node.solrcloud.install_dir, 'lib') do
   action :create
 end
 
-=begin
-# Link Solr lib dir
-link File.join(node.solrcloud.install_dir, 'lib', 'solr') do
-  to      File.join(node.solrcloud.install_dir,'dist')
-  owner   node.solrcloud.user
-  group   node.solrcloud.group
-  action :create
-end
-=end
-
 # Link Solr start.jar
 link File.join(node.solrcloud.install_dir, 'start.jar') do
   to      File.join(node.solrcloud.install_dir,'example','start.jar')
@@ -104,15 +92,14 @@ end
   node.solrcloud.pid_dir,
   node.solrcloud.data_dir,
   node.solrcloud.solr_home,
-  node.solrcloud.cores_home,
   node.solrcloud.shared_lib,
   node.solrcloud.config_sets,
-  node.solrcloud.configsets_home,
+  node.solrcloud.config_sets_home,
   File.join(node.solrcloud.install_dir, 'etc'),
   File.join(node.solrcloud.install_dir, 'resources'),
   File.join(node.solrcloud.install_dir, 'webapps'),
   File.join(node.solrcloud.install_dir, 'contexts'),
-  File.join(node.solrcloud.install_dir, 'solr-webapp')
+  File.join(node.solrcloud.install_dir, 'solr-webapp', 'webapp')
 ].each {|dir|
   directory dir do
     owner     node.solrcloud.user
@@ -122,6 +109,17 @@ end
     action    :create
   end 
 }
+
+# Likely to be removed or changed in future
+if node.solrcloud.cores_home and node.solrcloud.cores_home != node.solrcloud.solr_home
+  directory node.solrcloud.cores_home do
+    owner     node.solrcloud.user
+    group     node.solrcloud.group
+    mode      0755
+    recursive true
+    action    :create
+  end
+end
 
 # Solr Service User limits
 user_ulimit node.solrcloud.user do
@@ -168,6 +166,7 @@ end
 
 # Setup configsets - node.solrcloud.configsets
 include_recipe "solrcloud::configsets" if node.solrcloud.configset_manager
+
 
 # Setup collections - node.solrcloud.collections
 include_recipe "solrcloud::collections"

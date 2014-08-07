@@ -20,7 +20,9 @@
 # WARNING:
 # User setup by this recipe may not provide a unique 
 # user/group id across nodes and could create problem 
-# for next available user id management.
+# of non-unique next available user id for User 
+# management cookbook.
+#
 # It is advised to use a User management recipe instead 
 # for Production systems.
 #

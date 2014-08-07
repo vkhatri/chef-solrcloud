@@ -26,14 +26,14 @@ temp_d        = Dir.tmpdir
 tarball_file  = File.join(temp_d, "zookeeper-#{node.solrcloud.zookeeper.version}.tar.gz")
 tarball_dir   = File.join(temp_d, "zookeeper-#{node.solrcloud.zookeeper.version}")
 
-# Solr Version Package File
+# Zookeeper Version Package File
 remote_file tarball_file do
   source node.solrcloud.zookeeper.tarball.url
   not_if { File.exists?("#{node.solrcloud.zookeeper.source_dir}/zookeeper-#{node.solrcloud.zookeeper.version}.jar") }
 end
 
-# Extract and Setup Solr Source directories
-bash "extract_solr_tarball" do
+# Extract and Setup Zookeeper Source directories
+bash "extract_zookeeper_tarball" do
   user  "root"
   cwd   "/tmp"
 

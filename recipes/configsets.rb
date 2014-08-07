@@ -20,7 +20,7 @@
 node.solrcloud.configsets.each { |configset_name, options|
 
   solrcloud_configset configset_name do
-    action    options[:action] || :create
+    action    options[:action]
   end
 
 }

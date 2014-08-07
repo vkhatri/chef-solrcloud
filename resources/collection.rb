@@ -23,15 +23,14 @@ default_action :create
 attribute :num_shards,    :kind_of => [String, Integer], :regex => /.*/, :default => '1'
 attribute :shards,        :kind_of => String, :regex => /.*/, :default => nil
 attribute :router_field,  :kind_of => String, :regex => /.*/, :default => nil
-attribute :async,         :kind_of => [TrueClass, FalseClass], :default => true
+attribute :async,         :kind_of => String, :regex => /.*/, :default => nil
 attribute :router_name,   :kind_of => String, :regex => /.*/, :default => nil
 attribute :router_field,  :kind_of => String, :regex => /.*/, :default => nil
 attribute :host,          :kind_of => String, :regex => /.*/, :default => node.ipaddress
-attribute :port,          :kind_of => String, :regex => /.*/, :default => node.solrcloud.port
+attribute :port,          :kind_of => [String, Integer], :regex => /.*/, :default => node.solrcloud.port
 attribute :ssl,           :kind_of => [TrueClass, FalseClass], :default => false
 attribute :create_node_set,         :kind_of => String, :regex => /.*/, :default => nil
 attribute :replication_factor,      :kind_of => String, :regex => /.*/, :default => 1
-attribute :max_shards_per_node,     :kind_of => String, :regex => /.*/, :default => nil
+attribute :max_shards_per_node,     :kind_of => [String, Integer], :regex => /.*/, :default => nil
 attribute :collection_config_name,  :kind_of => String, :regex => /.*/, :default => nil
 
-#Chef::Log.error("collection #{params[:name]} is missing :collection_config_name") if not params[:collection_config_name] and params[:action] == 'create'

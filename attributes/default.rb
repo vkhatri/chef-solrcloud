@@ -1,5 +1,5 @@
 default[:solrcloud] = {
-  :configset_manager  => false, # node parameter to allow node to make Solr API calls
+  :configset_manager  => false, # set it true for node to manage zookeeper configuration
   :user         => 'solr',
   :group        => 'solr',
   :user_home    => nil,
@@ -9,18 +9,14 @@ default[:solrcloud] = {
   :data_dir     => '/opt/solr',
   :notify_restart   => false, # notify service restart on config change 
   :service_name     => 'solr', 
-  :solr_role        => 'master', # keeping it around for developemnt releases
   :dir_mode     => '0755', # default directory permissions used by solrcloud cookbook
   :pid_dir      => '/var/run/solr', # solr service user pid dir
   :log_dir      => '/var/log/solr',
   :cookbook     => "solrcloud", # template source cookbook
-  :configsets_cookbook => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
-  :zk_run       => false,
-  :num_shards   => 1,
-  :collections  => {},
-  :configsets   => {},
-  :mode         => 'solrcloud', # options: solrcloud
-  :port       => '8080',
+  :config_sets_cookbook   => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
+  :collections  => {}, # solr collections 
+  :configsets   => {}, # solr zookeeper config sets
+  :port         => '8983',
 
   # Note: This Cookbook does not manage Zookeeper Server/Cluster. 
   # Use Zookeeper Cookbook instead for Zookeeper Cluster Management 
@@ -36,6 +32,7 @@ default[:solrcloud] = {
     :nproc      => 'unlimited'
   },
 
+    # log4j.properties config
   :log4j        => {
     :MaxFileSize      => '10MB',
     :MaxBackupIndex   => '10'
@@ -49,8 +46,7 @@ default[:solrcloud] = {
     :shareSchema        => 'false',
     :transientCacheSize => 1000000,
     :solrcloud  => {
-      :hostPort           => 8983,
-      :hostContext        => 'solr',
+      :hostContext      => 'solr',
       :distribUpdateConnTimeout   => 1000000,
       :distribUpdateSoTimeout     => 1000000,
       :leaderVoteWait     => 1000000,
@@ -74,18 +70,22 @@ default[:solrcloud] = {
 
 }
 
-# Solr 
+# Solr Directories
 default[:solrcloud][:solr_home]   = File.join(node.solrcloud.install_dir,'solr')
-default[:solrcloud][:cores_home]  = File.join(node.solrcloud.solr_home,'cores')
-#default[:solrcloud][:collections_home]  = File.join(node.solrcloud.install_dir,'collections')
-default[:solrcloud][:shared_lib]  = File.join(node.solrcloud.install_dir,'coreslib')
+default[:solrcloud][:cores_home]  = File.join(node.solrcloud.solr_home, 'cores/')
+default[:solrcloud][:shared_lib]  = File.join(node.solrcloud.install_dir,'lib') 
 default[:solrcloud][:config_sets] = File.join(node.solrcloud.solr_home,'configsets')
-default[:solrcloud][:configsets_home] = File.join(node.solrcloud.install_dir,'configs')
+
+# Solr Config Sets for Zookeeper (collection.configName)
+default[:solrcloud][:config_sets_home] = File.join(node.solrcloud.install_dir,'configs')
+
 default[:solrcloud][:contrib]     = File.join(node.solrcloud.install_dir,'contrib')
 default[:solrcloud][:dist]        = File.join(node.solrcloud.install_dir,'dist')
 
-default[:solrcloud][:config][:coreRootDirectory]  = node.solrcloud.cores_home
-default[:solrcloud][:config][:sharedLib]          = node.solrcloud.shared_lib
+default[:solrcloud][:config][:coreRootDirectory]      = node.solrcloud.cores_home
+default[:solrcloud][:config][:sharedLib]              = node.solrcloud.shared_lib
+default[:solrcloud][:config][:solrcloud][:hostPort]   = node.solrcloud.port
+
 
 default[:solrcloud][:source_dir]      = "/usr/local/solr-#{node.solrcloud.version}"
 default[:solrcloud][:tarball][:url]   = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
