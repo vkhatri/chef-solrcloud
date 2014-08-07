@@ -1,0 +1,44 @@
+{
+  "name": "solrcloud_cluster_sample",
+  "description": "Solr Cloud Cluster Sample",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "solrcloud": {
+      "config_updater": true,
+      "config": {
+        "solrcloud": {
+          "zkHost": [
+            "10.0.0.1:2181" 
+          ]
+        }
+      },
+      "collections": {
+        "abc": {
+          "action": "create",
+          "num_shards": "1",
+          "name": "abc",
+          "replication_factor": "1",
+          "collection_config_name": "abc"
+        },
+        "xyz": {
+          "name": "xyz",
+          "collection_config_name": "xyz"
+        }
+
+      },
+      "configsets": {
+        "abc": {
+          "action": "create"
+        },
+        "xyz": {
+        }
+      }
+    }
+  },
+  "override_attributes": {
+  },
+  "chef_type": "role",
+  "run_list": [],
+  "env_run_lists": {
+  }
+}

@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-#Chef::Application.fatal!("attribute node['solrcloud']['cluster_name'] not defined") unless node.solrcloud.cluster_name
-
 # Setup Solr Service User
 include_recipe "solrcloud::user" if node.solrcloud.setup_user
 

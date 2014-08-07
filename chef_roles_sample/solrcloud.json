@@ -1,0 +1,53 @@
+{
+  "name": "solrcloud",
+  "description": "Solr Cloud",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "users": {
+      "solr": {}
+    },
+    "solrcloud": {
+      "port": "8080",
+      "configsets_cookbook": "solrcloudconfig",
+      "data_dir": "/mnt/solr",
+      "setup_user": false,
+      "notify_restart": false
+    },
+    "authorization": {
+      "sudo": {
+        "groups": [
+          "solr_admin"
+        ]
+      }
+    },
+    "groups": {
+      "solr_admin": {}
+    }
+  },
+  "override_attributes": {
+  },
+  "chef_type": "role",
+  "run_list": [],
+  "env_run_lists": {
+    "production": [
+      "role[base]",
+      "recipe[solrcloud::tarball]",
+      "recipe[services]"
+    ],
+    "development": [
+      "role[base]",
+      "recipe[solrcloud::tarball]",
+      "recipe[services]"
+    ],
+    "qa": [
+      "role[base]",
+      "recipe[solrcloud::tarball]",
+      "recipe[services]"
+    ],
+    "stage": [
+      "role[base]",
+      "recipe[solrcloud::tarball]",
+      "recipe[services]"
+    ]
+  }
+}
