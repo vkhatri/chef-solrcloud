@@ -1,67 +1,62 @@
 solrcloud Cookbook
 ==================
-Development Chef Cookbook for Apache SolrCloud Management.
+This is an OpsCode Chef cookbook for Apache SolrCloud.
 
-Note: Currently cookbook is develpment stage.
+It was primarily developed for Testing SolrCloud and its features. 
+
+Currently it supports only In-built Jetty based SolrCloud deployment, more
+features and attributes will be added over time, **feel free to contribute** 
+what you find missing!
+
+SolrCloud is the default deployment and Solr Master/Slave setup is not supported
+by this cookbook and has no plan of adding support for it.
 
 
-Requirements
-------------
+## Supported Solr Runtime 
+
+* In Built Jetty Based SolrCloud deployment
 
 
-#### recipes
-- `ulimit` - ulimit recipe to set users limits.
+## Supported Solr Package Deployments
 
-Attributes
-----------
-TODO: List your cookbook attributes here.
+* Apache Solr Tarball based deployments
 
-e.g.
-#### solrcloud::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['solrcloud']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
 
-Usage
------
-#### solrcloud::tarball
+## Support JDK Versions
 
-Setup Apache SolrCloud downloaded from Source Package.
+Check Apache Solr for JDK Version requirement, Oracle JDK 7 is recommended.
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[solrcloud::tarball]"
-  ]
-}
-```
 
-Contributing
-------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
+## Recipes
 
-e.g.
+
+## SolrCloud Collection LWRP
+
+## SolrCloud Config Set - Zookeeper LWRP
+
+## Core Attributes
+
+## Advanced Attributes
+
+## Dependencies
+
+* ulimit cookbook
+* java cookbook
+
+## Usage
+
+
+## Contributing
+
 1. Fork the repository on Github
 2. Create a named feature branch (like `add_component_x`)
 3. Write your change
 4. Write tests for your change (if applicable)
 5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+6. Write description about changes 
+7. Submit a Pull Request using Github
 
-License and Authors
--------------------
+## Copyright & License
 
 Authors:: Virender Khatri (vir.khatri@gmail.com)
 
