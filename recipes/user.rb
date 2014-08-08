@@ -34,11 +34,7 @@ end
 user node.solrcloud.user do
   home    node.solrcloud.user_home if node.solrcloud.user_home
   shell   "/bin/bash"
+  gid     node.solrcloud.group
   action  :create
-end
-
-group node.solrcloud.group do
-  members [node.solrcloud.user]
-  action :manage
 end
 
