@@ -91,8 +91,7 @@ end
   File.join(node.solrcloud.install_dir, 'etc'),
   File.join(node.solrcloud.install_dir, 'resources'),
   File.join(node.solrcloud.install_dir, 'webapps'),
-  File.join(node.solrcloud.install_dir, 'contexts'),
-  File.join(node.solrcloud.install_dir, 'solr-webapp', 'webapp')
+  File.join(node.solrcloud.install_dir, 'contexts')
 ].each {|dir|
   directory dir do
     owner     node.solrcloud.user
