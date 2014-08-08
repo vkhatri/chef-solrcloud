@@ -86,7 +86,7 @@
 
 usage()
 {
-    echo "Usage: ${0##*/} [-d] {start|stop|run|restart|check|supervise} [ CONFIGS ... ] "
+    echo "Usage: ${0##*/} [-d] {start|stop|status|run|restart|check|supervise} [ CONFIGS ... ] "
     exit 1
 }
 
@@ -140,7 +140,7 @@ shift
 ##################################################
 # Read any configuration files
 ##################################################
-for CONFIG in /etc/default/jetty{,7} $HOME/.jettyrc; do
+for CONFIG in /etc/default/solr{,7} $HOME/.jettyrc; do
   if [ -f "$CONFIG" ] ; then 
     readConfig "$CONFIG"
   fi
@@ -398,10 +398,25 @@ then
   echo "RUN_CMD        =  ${RUN_CMD}"
 fi
 
+is_running()
+{
+    [ -f $JETTY_PID -a -d /proc/$(cat $JETTY_PID) ] && return 0
+    return 1
+}
+
 ##################################################
 # Do the action
 ##################################################
 case "$ACTION" in
+  status)
+    is_running > /dev/null 2>&1
+    stat=$?
+    case "$stat" in
+      0) echo "jetty is running (`cat $JETTY_PID`) .." ;;
+      *) echo "jetty is not running." ;;
+    esac
+    exit "$stat"
+    ;;
   start)
     echo -n "Starting Jetty: "
 
