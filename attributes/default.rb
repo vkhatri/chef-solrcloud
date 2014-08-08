@@ -19,7 +19,7 @@ default[:solrcloud] = {
   :template_cookbook        => "solrcloud", # template source cookbook
 
   :zkconfigsets_cookbook    => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
-  :zkconfigsets_manager  => false, # set it true for node to manage zookeeper configuration
+  :manager                  => true, # manage zookeeper configs and solrcloud collections
   :zk_run       => false, # start solr with zookeeper, useful for testing purpose
   :zk_run_port  => 2181, # start solr with zookeeper, useful for testing purpose
 

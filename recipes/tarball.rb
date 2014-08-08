@@ -166,10 +166,9 @@ remote_file tarball_file do
   action :delete
 end
 
-# Setup configsets - node.solrcloud.configsets
-include_recipe "solrcloud::zkconfigsets" if node.solrcloud.zkconfigsets_manager
-
-
-# Setup collections - node.solrcloud.collections
-include_recipe "solrcloud::collections"
+# Setup configsets - node.solrcloud.zkconfigsets and collections - node.solrcloud.collections
+if node.solrcloud.manager
+  include_recipe "solrcloud::zkconfigsets" 
+  include_recipe "solrcloud::collections"
+end
 
