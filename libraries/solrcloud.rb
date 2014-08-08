@@ -50,7 +50,7 @@ module SolrCloud
       if reply.code.to_i == 200
         return (JSON.parse(reply.body))['collections']
       else
-        Chef::Log.error("/solr/admin/collections?wt=json&action=LIST api call failed")
+        Chef::Application.fatal!("/solr/admin/collections?wt=json&action=LIST api call failed. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
         return []
       end
     end
@@ -71,7 +71,7 @@ module SolrCloud
         Chef::Log.info("collection #{@options[:name]} created. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
         return true
       else
-        Chef::Log.error("collection #{@options[:name]} failed to create. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        Chef::Application.fatal!("#{url}, collection #{@options[:name]} failed to create. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
         return false
       end
     end
@@ -84,7 +84,7 @@ module SolrCloud
         Chef::Log.info("collection #{@options[:name]} deleted. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
         return true
       else
-        Chef::Log.error("collection #{@options[:name]} failed to delete. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        Chef::Application.fatal!("#{url}, collection #{@options[:name]} failed to delete. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
         return false
       end
     end
