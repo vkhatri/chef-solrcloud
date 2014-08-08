@@ -130,11 +130,9 @@ Parameters:
 
 **LWRP configSet source cookbook/location**
 
-All configSet content must be stored under `node.solrcloud.zkconfigsets_cookbook `/files/default/config set name`.
+All configSet content must be stored under `node.solrcloud.zkconfigsets_cookbook `/files/default/config set name/conf/`.
 
-> Note: All the config file must resides on location `/files/default/config set name`, not inside conf/ folder 
-
-configSets source cookbook is default set to `solrcloud`, managed by attribute `node.solrcloud.zkconfigsets_cookbook`.
+configSets source cookbook is default set to `solrcloud` and can be changed via attribute `node.solrcloud.zkconfigsets_cookbook`.
 
 
 ## SolrCloud Collection LWRP
