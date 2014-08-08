@@ -19,7 +19,7 @@
 
 node.solrcloud.zkconfigsets.each { |configset_name, options|
 
-  solrcloud_configset configset_name do
+  solrcloud_zkconfigset configset_name do
     action    options[:action]
   end
 

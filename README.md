@@ -28,6 +28,7 @@ Currently this cookbook only supports Apache Solr Tarball based deployment.
 Currently this cookbook only support SolrCloud Cluster deployment. It does not
 support Apache Solr Master/Slave Cluster deployment.
 
+
 ## Supported JDK Versions
 
 Check [Apache Solr] Documentation for JDK Version requirement for current Solr version, Oracle JDK 7 is recommended.
@@ -55,6 +56,8 @@ Check [Apache Solr] Documentation for JDK Version requirement for current Solr v
 
 * `solrcloud::collections` 	- create/delete solrcloud collection on solrcloud node via LWRP
 
+
+> `solrcloud::tarball` is the main recipe which includes all other recipe. For `run_list` use only `solrcloud::tarball`.
 
 
 ## SolrCloud configSet (Zookeeper Configs) LWRP
@@ -97,16 +100,16 @@ one of the configured zookeeper server via attribute `node.solrcloud.config.solr
             "action": "delete"
           },
           "xyz": {
-            "action": "delete",
-			"option name": "option value"
+	        "option name": "option value"
           }
         }
-	  }
+      }
     }
 
 > configSets can either be configured in recipe using LWRP or using node attribute `node.solrcloud.zkconfigsets`. 
 
 > configSets defined using attribute `node.solrcloud.zkconfigsets` does not require LWRP.
+
 
 **LWRP Options**
 
@@ -123,7 +126,6 @@ Parameters:
 - *zkhost (optional)*					- zookeeper server, default value `node.solrcloud.zkHost.first`
 - *zkconfigsets_home (optional)*		- configSet directory to sore on solrcloud node, default value `node.solrcloud.zkconfigsets_home`
 - *zkconfigsets_cookbook (optional)*	- configSet cookbook name, default value `node.solrcloud.zkconfigsets_cookbook`
-
 
 
 **LWRP configSet source cookbook/location**
@@ -173,16 +175,17 @@ SolrCloud collection is managed via LWRP - `solrcloud_collection`.
             "name": "xyz",
             "replication_factor": "1",
             "collection_config_name": "xyz",
-		    "option name": "value"
+            "option name": "value"
           }
 	    }
       }
-	}
+    }
 
 
 > collections can either be configured in recipe using LWRP or using node attribute `node.solrcloud.collections`. 
 
 > collections defined using attribute `node.solrcloud.collections` does not require LWRP.
+
 
 **LWRP Options**
 
@@ -217,12 +220,18 @@ Parameters:
  * `default[:solrcloud][:notify_restart]` (default: false): notify solr service on a solrcloud resource change
  
  * `default[:solrcloud][:version]` (default: 4.9.0): solr package version
+ * `default[:solrcloud][:zk_run]` (default: false): if true solr will start up with embedded zookeeper
+ 
+    Note: Setting option `node[:solrcloud][:zk_run]` will remove solrcloud config zkHost from solr.xml, mainly meant for testing purpose
 
+ * `default[:solrcloud][:zk_run_data_dir]` (default: `node[:solrcloud][:install_dir]/zookeeperdata`): embedded zookeeper data directory
+ * `default[:solrcloud][:zk_run_port]` (default: 2181): embedded zookeeper port 
+  
  * `default[:solrcloud][:install_dir]` (default: /usr/local/solr): jetty home directory - jetty.home
  * `default[:solrcloud][:data_dir]` (default: /opt/solr): solr collection data directory - solr.data.dir 
    
-			solrconfig.xml for each configSet needs to set dataDir for this location usage, like:
-			<dataDir>${solr.data.dir:}/samplecollection</dataDir>
+    solrconfig.xml for each configSet needs to set dataDir for this location usage, like:
+    <dataDir>${solr.data.dir:}/collection name</dataDir>
 			
  * `default[:solrcloud][:solr_home]` (default: `node[:solrcloud][:install_dir]/solr`): solr home 
  * `default[:solrcloud][:cores_home]` (default: `node[:solrcloud][:solr_home]/cores`): solr collection/core home
@@ -242,6 +251,7 @@ Parameters:
  * `default[:solrcloud][:port]` (default: 8983): solr service port 
  * `default[:solrcloud][:zookeeper][:version]` (default: 3.4.6): zookeeper package setup for zkCli.sh
 
+
 ## Cookbook Ulimit Attributes
 
  * `default[:solrcloud][:limits][:memlock]` (default: unlimited): solr service user memory limit
@@ -253,6 +263,7 @@ Parameters:
  * `default[:solrcloud][:log4j][:MaxFileSize]` (default: 10MB): 
  * `default[:solrcloud][:log4j][:MaxBackupIndex]` (default: 10):
  
+
 ## Cookbook solr.xml Config Attributes
 
 solr.xml Reference: https://cwiki.apache.org/confluence/display/solr/Format+of+solr.xml
@@ -295,65 +306,147 @@ solr.xml Reference: https://cwiki.apache.org/confluence/display/solr/Format+of+s
 * `ulimit` cookbook
 * `java` cookbook
 
-## A Simple Cluster Deployment
 
-To use this cookbook, simply add `recipe[solrcloud::tarball]` to node or role run_list.
+## SolrCloud Deployment Requirement
 
-*Update common options if required:*
+To deploy solrcloud using this cookbook, below items are required:
+
+- a zookeeper server or cluster
+- configSet(s) to upload to zookeeper for collection/core
+- collection(s) name to deploy in solrcloud 
+
+
+## SolrCloud configSet Cookbook / Environments / Versioning
+
+*Directory Structure*
+
+SorlCloud configSet stored in zookeeper are configured as file resources.
+
+Each configSet is stored under `node[:solrcloud][:zkconfigsets_cookbook]/files/default/configSet name`.
+
+configSet folder follows the standard of having a `conf` folder with all the configuration files.
+
+So, the directory structure will look like - `node[:solrcloud][:zkconfigsets_cookbook]/files/default/configSet name/conf`.
+
+*Managing same configSet for Multiple Environments*
+
+Managing configSet configuration across environments can be achieved in different ways, like
+
+- maintain different `node[:solrcloud][:zkconfigsets_cookbook]` per environment
+OR
+- maintain a single cookbook with versioning
+
+
+Simply, update `node[:solrcloud][:zkconfigsets_cookbook]` attribute with your configSet cookbook and update metadata.rb
+file with line:
+
+'depends `node[:solrcloud][:zkconfigsets_cookbook]`'. 
+
+
+## Single Node SolrCloud Test Cluster Deployment
+
+
+Adjust the attributes according to your requirement. Below mentioned attributes 
+will work just fine for a single node solrcloud cluster.
+
 
 	"default_attributes": {
       "solrcloud": {
-        "port": "8080",
-        "zkconfigsets_cookbook": "solrcloudconfig",
-        "data_dir": "/mnt/solr",
-        "setup_user": false,
-        "notify_restart": false
-      } 
-	}
-
-*Update cluster/environment specific options if required:*
-
-    "default_attributes": {
-      "solrcloud": {
+		"zk_run": true,
+        "port": "80",
+        "setup_user": true,
         "zkconfigsets_manager": true,
-        "config": {
-          "solrcloud": {
-            "zkHost": [
-              "10.0.0.1:9983"
-            ]
-          }
+        "zkconfigsets": {
+          "samplecollection": {}
         },
         "collections": {
-          "abc": {
-            "action": "create",
-            "num_shards": "1",
-            "name": "abc",
-            "replication_factor": "1",
-            "collection_config_name": "abc"
-          },
-          "xyz": {
-            "name": "xyz",
-            "collection_config_name": "xyz"
-          }
-        },
-        "zkconfigsets": {
-          "abc": {
-            "action": "create"
-          },
-          "xyz": {
+          "samplecollection": {
+            "collection_config_name": "samplecollection"
           }
         }
       }
   	}
   
-For testing purpose one of the node can start zookeeper (e.g. 10.0.0.1), to start solr with zookeeper 
-on a node, add below parameter to the node:
 
+## Multi Node SolrCloud Test Cluster Deployment with zookeeper Cluster
+
+
+Adjust the attributes according to your requirement. Below mentioned attributes 
+will work just fine for a single node solrcloud cluster.
+
+
+	"default_attributes": {
       "solrcloud": {
-	    "zk_run": true
-	  }
+        "config": {
+          "solrcloud": {
+            "zkHost": [
+              "zookeeper_ip:zookeeper_port"
+            ]
+          }
+		},		  
+        "port": "80",
+        "setup_user": true,
+        "zkconfigsets_manager": true,
+        "zkconfigsets": {
+          "samplecollection": {}
+        },
+        "collections": {
+          "samplecollection": {
+            "collection_config_name": "samplecollection"
+          }
+        }
+      }
+  	}
   
-Adjust node with zookeeper ip address, example is using ip address 10.0.0.1.
+> Note: You might want to enable attribute `"zkconfigsets_manager": true` on limited cluster nodes. In a large 
+> cluster, enabling this value on limited nodes would create less overhead for zookeeper.
+
+
+## Multi Node SolrCloud Test Cluster Deployment with embedded zookeeper 
+
+
+Adjust the attributes according to your requirement. Below mentioned attributes 
+will work just fine for a single node solrcloud cluster.
+
+
+On `any one` of the cluster node, enable attribute `node[:solrcloud][:zk_run]` and use its ip address as zookeeper server.
+
+	"default_attributes": {
+      "solrcloud": {
+        "config": {
+          "solrcloud": {
+            "zkHost": [
+              "instance_with_zk_run_ip:zookeeper_port_default_2181"
+            ]
+          }
+		},		  
+        "port": "80",
+        "setup_user": true,
+        "zkconfigsets_manager": true,
+        "zkconfigsets": {
+          "samplecollection": {}
+        },
+        "collections": {
+          "samplecollection": {
+            "collection_config_name": "samplecollection"
+          }
+        }
+      }
+  	}
+  
+  
+## Multiple SolrCloud Cluster Deployment 
+
+To deploy multiple clusters, simply create multiple roles with different zookeeper server or update 
+node attribute with respective cluster zookeeper server(s).
+
+Zookeeper server attribute - `node[:solrcloud][:config][:solrcloud][:zkHost]`
+  
+
+## SolrCloud on HDFS Cluster Deployment
+
+SolrCloud on HDFS has not been tested yet, but configuration from Apache Solr documentation has been
+added to the cookbook.
 
 
 ## Contributing
@@ -365,6 +458,7 @@ Adjust node with zookeeper ip address, example is using ip address 10.0.0.1.
 5. Run the tests, ensuring they all pass
 6. Write description about changes 
 7. Submit a Pull Request using Github
+
 
 ## Copyright & License
 

@@ -38,16 +38,6 @@ end
 
 action :create do
 
-=begin
-  directory ::File.join(new_resource.zkconfigsets_home, new_resource.name) do
-    owner       new_resource.user
-    group       new_resource.group
-    mode        0644
-    recursive   true
-    action      :create
-  end
-=end
-
   remote_directory ::File.join(new_resource.zkconfigsets_home, new_resource.name) do
     cookbook    new_resource.zkconfigsets_cookbook
     source      new_resource.name

@@ -21,6 +21,7 @@ default[:solrcloud] = {
   :zkconfigsets_cookbook    => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
   :zkconfigsets_manager  => false, # set it true for node to manage zookeeper configuration
   :zk_run       => false, # start solr with zookeeper, useful for testing purpose
+  :zk_run_port  => 2181, # start solr with zookeeper, useful for testing purpose
 
   :collections  => {}, # solr collections 
 
@@ -94,6 +95,11 @@ default[:solrcloud][:shared_lib]  = File.join(node.solrcloud.install_dir,'lib')
 
 # Solr default configSets directory
 default[:solrcloud][:config_sets] = File.join(node.solrcloud.solr_home,'configsets')
+
+default[:solrcloud][:zk_run_data_dir]  = File.join(node.solrcloud.install_dir,'zookeeperdata') 
+
+# Set zkHost for zookeeper configSet management
+default[:solrcloud][:config][:solrcloud][:zkHost]     = ["#{node.ipaddress}:#{node.solrcloud.zk_run_port}"] if node.solrcloud.zk_run
 
 # Solr Zookeeper configSets directory (collection.configName)
 default[:solrcloud][:zkconfigsets_home] = File.join(node.solrcloud.install_dir,'zkconfigs')

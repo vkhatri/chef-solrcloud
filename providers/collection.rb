@@ -23,6 +23,8 @@ end
 
 action :create do
 
+  Chef::Log.error("collection #{new_resource.name} is missing option :collection_config_name (zookeeper config set)") if not new_resource.collection_config_name
+
   obj = SolrCloud::SolrCollection.new(:num_shards     => new_resource.num_shards,
                                       :shards         => new_resource.shards,
                                       :name           => new_resource.name,

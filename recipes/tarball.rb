@@ -114,6 +114,16 @@ if node.solrcloud.cores_home and node.solrcloud.cores_home != node.solrcloud.sol
   end
 end
 
+if node.solrcloud.zk_run
+  directory node.solrcloud.zk_run_data_dir do
+    owner     node.solrcloud.user
+    group     node.solrcloud.group
+    mode      0755
+    recursive true
+    action    :create
+  end
+end
+
 # Solr Service User limits
 user_ulimit node.solrcloud.user do
   filehandle_limit node.solrcloud.limits.nofile

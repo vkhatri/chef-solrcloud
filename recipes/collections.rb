@@ -19,7 +19,7 @@
 
 node.solrcloud.collections.each { |collection_name, options|
 
-  Chef::Log.error("collection #{collection_name} is missing option :collection_config_name (zookeeper config set)")
+  collection_name = options[:name] if options[:name]
 
   solrcloud_collection collection_name do
     num_shards      options[:num_shards]

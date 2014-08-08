@@ -55,7 +55,11 @@
     <int name="hostPort">${jetty.port:<%=node.solrcloud.config.solrcloud.hostPort-%>}</int>
     <str name="hostContext">${hostContext:<%=node.solrcloud.config.solrcloud.hostContext-%>}</str>
     <int name="zkClientTimeout">${zkClientTimeout:<%=node.solrcloud.config.solrcloud.zkClientTimeout-%>}</int>
+    <%if node.solrcloud.zk_run-%>
+    <!-- <str name="zkHost">${zkHost:<%=node.solrcloud.config.solrcloud.zkHost.join(',')-%>}</str> -->
+    <%else-%>
     <str name="zkHost">${zkHost:<%=node.solrcloud.config.solrcloud.zkHost.join(',')-%>}</str>
+    <%end-%>
     <bool name="genericCoreNodeNames">${genericCoreNodeNames:<%=node.solrcloud.config.solrcloud.genericCoreNodeNames-%>}</bool>
   </solrcloud>
 
