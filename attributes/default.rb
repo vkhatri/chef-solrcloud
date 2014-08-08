@@ -1,22 +1,39 @@
 default[:solrcloud] = {
-  :configset_manager  => false, # set it true for node to manage zookeeper configuration
   :user         => 'solr',
   :group        => 'solr',
   :user_home    => nil,
   :setup_user   => true, # ideally it must be set to false for Production environment and advised to manage solr user via different cookbook
+
   :version      => '4.9.0',
+
   :install_dir  => '/usr/local/solr',
   :data_dir     => '/opt/solr',
+
   :notify_restart   => false, # notify service restart on config change 
   :service_name     => 'solr', 
+
   :dir_mode     => '0755', # default directory permissions used by solrcloud cookbook
   :pid_dir      => '/var/run/solr', # solr service user pid dir
   :log_dir      => '/var/log/solr',
-  :cookbook     => "solrcloud", # template source cookbook
-  :config_sets_cookbook   => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
+
+  :template_cookbook        => "solrcloud", # template source cookbook
+
+  :zkconfigsets_cookbook    => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
+  :zkconfigsets_manager  => false, # set it true for node to manage zookeeper configuration
+  :zk_run       => false, # start solr with zookeeper, useful for testing purpose
+
   :collections  => {}, # solr collections 
-  :configsets   => {}, # solr zookeeper config sets
+
+  :zkconfigsets => {}, # solr zookeeper configSets
+
   :port         => '8983',
+
+  :hdfs         => {
+    :enable             => false,
+    :directory_factory  => 'HdfsDirectoryFactory',
+    :lock_type          => 'hdfs',
+    :hdfs_home          => nil # syntax: 'hdfs://host:port/path'
+  },
 
   # Note: This Cookbook does not manage Zookeeper Server/Cluster. 
   # Use Zookeeper Cookbook instead for Zookeeper Cluster Management 
@@ -74,13 +91,15 @@ default[:solrcloud] = {
 default[:solrcloud][:solr_home]   = File.join(node.solrcloud.install_dir,'solr')
 default[:solrcloud][:cores_home]  = File.join(node.solrcloud.solr_home, 'cores/')
 default[:solrcloud][:shared_lib]  = File.join(node.solrcloud.install_dir,'lib') 
+
+# Solr default configSets directory
 default[:solrcloud][:config_sets] = File.join(node.solrcloud.solr_home,'configsets')
 
-# Solr Config Sets for Zookeeper (collection.configName)
-default[:solrcloud][:config_sets_home] = File.join(node.solrcloud.install_dir,'configs')
+# Solr Zookeeper configSets directory (collection.configName)
+default[:solrcloud][:zkconfigsets_home] = File.join(node.solrcloud.install_dir,'zkconfigs')
 
-default[:solrcloud][:contrib]     = File.join(node.solrcloud.install_dir,'contrib')
-default[:solrcloud][:dist]        = File.join(node.solrcloud.install_dir,'dist')
+# default[:solrcloud][:contrib]     = File.join(node.solrcloud.install_dir,'contrib')
+# default[:solrcloud][:dist]        = File.join(node.solrcloud.install_dir,'dist')
 
 default[:solrcloud][:config][:coreRootDirectory]      = node.solrcloud.cores_home
 default[:solrcloud][:config][:sharedLib]              = node.solrcloud.shared_lib
@@ -88,7 +107,7 @@ default[:solrcloud][:config][:solrcloud][:hostPort]   = node.solrcloud.port
 
 
 default[:solrcloud][:source_dir]      = "/usr/local/solr-#{node.solrcloud.version}"
-default[:solrcloud][:tarball][:url]   = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
+default[:solrcloud][:tarball][:url]   = "https://archive.apache.org/dist/lucene/solr/#{node.solrcloud.version}/solr-#{node.solrcloud.version}.tgz"
 default[:solrcloud][:tarball][:md5]   = '316f11ed8e81cf07ebfa6ad9443add09'
 
 # Zookeeper Client Setup

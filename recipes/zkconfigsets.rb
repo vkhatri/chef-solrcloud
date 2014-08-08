@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: solrcloud
-# Recipe:: configsets
+# Recipe:: zkconfigsets
 #
 # Copyright 2014, Virender Khatri
 #
@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-node.solrcloud.configsets.each { |configset_name, options|
+node.solrcloud.zkconfigsets.each { |configset_name, options|
 
   solrcloud_configset configset_name do
     action    options[:action]

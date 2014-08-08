@@ -4,6 +4,12 @@
 
 cd <%=node.solrcloud.install_dir%>
 #JAVA_HOME=
+<%if node.solrcloud.zk_run-%>
+JAVA_OPTIONS=" -DzkRun $JAVA_OPTIONS "
+<%end-%>
+<%if node.solrcloud.hdfs.enable and node.solrcloud.hdfs.hdfs_home-%>
+JAVA_OPTIONS=" -Dsolr.directoryFactory=<%=node.solrcloud.hdfs.directory_factory-%> -Dsolr.lock.type=<%=node.solrcloud.hdfs.lock_type-%> -Dsolr.hdfs.home=<%=node.solrcloud.hdfs.hdfs_home-%> $JAVA_OPTIONS "
+<%end-%>
 JAVA_OPTIONS=" -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> -Dsolr.data.dir=<%=node.solrcloud.data_dir-%> $JAVA_OPTIONS "
 JETTY_HOME=<%=node.solrcloud.install_dir%>
 JETTY_USER=<%=node.solrcloud.user%>

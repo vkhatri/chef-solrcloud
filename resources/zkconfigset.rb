@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
- 
+
 actions :create, :delete
 
 default_action :create
@@ -23,12 +23,12 @@ default_action :create
 attribute :configset_name,  :kind_of => String, :regex => /.*/, :default => :name
 attribute :user,            :kind_of => String, :regex => /.*/, :default => node.solrcloud.user
 attribute :group,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.group
-attribute :skip_zk,         :kind_of => [TrueClass, FalseClass], :default => false
-attribute :force,           :kind_of => [TrueClass, FalseClass], :default => false
+# attribute :skip_zk,         :kind_of => [TrueClass, FalseClass], :default => false
+# attribute :force,           :kind_of => [TrueClass, FalseClass], :default => false
 attribute :solr_zkcli,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.solr_zkcli
 attribute :zkcli,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.zkcli
 attribute :zkhost,          :kind_of => String, :regex => /.*/, :default => node.solrcloud.config.solrcloud.zkHost.first # Need only one node
-attribute :config_sets_home,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.config_sets_home
-attribute :config_sets_cookbook,  :kind_of => String, :regex => /.*/, :default => node.solrcloud.config_sets_cookbook
+attribute :zkconfigsets_home,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.zkconfigsets_home
+attribute :zkconfigsets_cookbook,  :kind_of => String, :regex => /.*/, :default => node.solrcloud.zkconfigsets_cookbook
 
 

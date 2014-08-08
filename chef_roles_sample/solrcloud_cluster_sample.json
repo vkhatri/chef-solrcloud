@@ -4,7 +4,7 @@
   "json_class": "Chef::Role",
   "default_attributes": {
     "solrcloud": {
-      "config_updater": true,
+      "zkconfigsets_manager": true,
       "config": {
         "solrcloud": {
           "zkHost": [
@@ -26,7 +26,7 @@
         }
 
       },
-      "configsets": {
+      "zkconfigsets": {
         "abc": {
           "action": "create"
         },

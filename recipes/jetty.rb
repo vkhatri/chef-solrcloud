@@ -55,6 +55,13 @@ template File.join(node.solrcloud.install_dir, 'etc', 'jetty.xml') do
   mode  0644
 end
 
+template File.join(node.solrcloud.install_dir, 'etc', 'create-solrtest.keystore.sh') do
+  source "create-solrtest.keystore.sh.erb"
+  owner node.solrcloud.user
+  group node.solrcloud.group
+  mode  0644
+end
+
 template "solr_config" do
   source  "solr.conf.erb"
   owner   node.solrcloud.user

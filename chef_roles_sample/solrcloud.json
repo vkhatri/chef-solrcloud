@@ -8,7 +8,7 @@
     },
     "solrcloud": {
       "port": "8080",
-      "configsets_cookbook": "solrcloudconfig",
+      "zkconfigsets_cookbook": "solrcloudconfig",
       "data_dir": "/mnt/solr",
       "setup_user": false,
       "notify_restart": false

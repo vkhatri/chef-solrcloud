@@ -92,3 +92,7 @@ Vagrantfile
 # Travis #
 ##########
 .travis.yml
+
+# Sample Files
+solrcloud_collection_sample/*
+chef_roles_sample/*

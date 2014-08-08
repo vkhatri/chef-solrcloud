@@ -22,11 +22,6 @@ include_recipe "solrcloud::user" if node.solrcloud.setup_user
 
 require "tmpdir"
 
-# If running solrCloud, maintain Zookeeper in its own recipe
-# Adding Zookeeper cookbook depending upon node.solrcloud.node_type
-# include_recipe "zookeeper" if node.solrcloud.node_type == 'cloud_zk'
-# Disabling Zookeeper Integration Cookbook for now
-
 temp_d        = Dir.tmpdir
 tarball_file  = File.join(temp_d, "solr-#{node.solrcloud.version}.tgz")
 tarball_dir   = File.join(temp_d, "solr-#{node.solrcloud.version}")
@@ -92,7 +87,7 @@ end
   node.solrcloud.solr_home,
   node.solrcloud.shared_lib,
   node.solrcloud.config_sets,
-  node.solrcloud.config_sets_home,
+  node.solrcloud.zkconfigsets_home,
   File.join(node.solrcloud.install_dir, 'etc'),
   File.join(node.solrcloud.install_dir, 'resources'),
   File.join(node.solrcloud.install_dir, 'webapps'),
@@ -163,7 +158,7 @@ remote_file tarball_file do
 end
 
 # Setup configsets - node.solrcloud.configsets
-include_recipe "solrcloud::configsets" if node.solrcloud.configset_manager
+include_recipe "solrcloud::zkconfigsets" if node.solrcloud.zkconfigsets_manager
 
 
 # Setup collections - node.solrcloud.collections
