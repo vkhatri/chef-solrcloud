@@ -71,7 +71,7 @@ SolrCloud Zookeeper configSets management is enabled by default for all nodes.
 It means all nodes will get the configSets and will try to manage it against 
 one of the configured zookeeper server via attribute `node.solrcloud.config.solrcloud.zkHost`.
  		
-    Modify attribute `node.solrcloud.zkconfigsets_manager` to limit zookeeper 
+    Modify attribute `node.solrcloud.manager` to limit zookeeper 
 	configSet management to certain nodes in solrcloud cluster.
 		
 
@@ -207,7 +207,20 @@ Parameters:
 - *replication_factor* (optional)				- collection API parameter replicationFactor, default value 1
 - *max_shards_per_node* (optional)				- collection API parameter maxShardsPerNode, default value nil
 
-  
+
+## Cookbook Advanced Attributes
+
+ * `default[:solrcloud][:manager]` (default: true): if set true, manages solrcloud collections and conigSets/configs in zookeeper.
+ 
+    This attribute should be enabled for limited nodes in solrcloud cluster if possible.
+	
+ * `default[:solrcloud][:notify_restart]` (default: false): notify solr service on a solrcloud resource change like config file/template etc.
+   
+ * `default[:solrcloud][:zk_run]` (default: false): if true solr will start up with embedded zookeeper
+ 
+    Note: Setting option `node[:solrcloud][:zk_run]` will remove solrcloud config zkHost from solr.xml, mainly meant for testing purpose
+	
+	   
 ## Cookbook Core Attributes
 
  * `default[:solrcloud][:user]` (default: solr): solr service user
@@ -215,12 +228,8 @@ Parameters:
  * `default[:solrcloud][:user_home]` (default: ): solr service user home
  
  * `default[:solrcloud][:setup_user]` (default: true): manage solr user for solr service using `solrcloud::user` cookbook
- * `default[:solrcloud][:notify_restart]` (default: false): notify solr service on a solrcloud resource change
- 
+
  * `default[:solrcloud][:version]` (default: 4.9.0): solr package version
- * `default[:solrcloud][:zk_run]` (default: false): if true solr will start up with embedded zookeeper
- 
-    Note: Setting option `node[:solrcloud][:zk_run]` will remove solrcloud config zkHost from solr.xml, mainly meant for testing purpose
 
  * `default[:solrcloud][:zk_run_data_dir]` (default: `node[:solrcloud][:install_dir]/zookeeperdata`): embedded zookeeper data directory
  * `default[:solrcloud][:zk_run_port]` (default: 2181): embedded zookeeper port 
@@ -353,7 +362,7 @@ will work just fine for a single node solrcloud cluster.
 		"zk_run": true,
         "port": "80",
         "setup_user": true,
-        "zkconfigsets_manager": true,
+        "manager": true,
         "zkconfigsets": {
           "samplecollection": {}
         },
@@ -384,7 +393,7 @@ will work just fine for a single node solrcloud cluster.
 		},		  
         "port": "80",
         "setup_user": true,
-        "zkconfigsets_manager": true,
+        "manager": true,
         "zkconfigsets": {
           "samplecollection": {}
         },
@@ -396,7 +405,7 @@ will work just fine for a single node solrcloud cluster.
       }
   	}
   
-> Note: You might want to enable attribute `"zkconfigsets_manager": true` on limited cluster nodes. In a large 
+> Note: You might want to enable attribute `"manager": true` on limited cluster nodes. In a large 
 > cluster, enabling this value on limited nodes would create less overhead for zookeeper.
 
 
@@ -420,7 +429,7 @@ On `any one` of the cluster node, enable attribute `node[:solrcloud][:zk_run]` a
 		},		  
         "port": "80",
         "setup_user": true,
-        "zkconfigsets_manager": true,
+        "manager": true,
         "zkconfigsets": {
           "samplecollection": {}
         },
