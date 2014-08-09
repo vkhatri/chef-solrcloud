@@ -1,3 +1,4 @@
+#
 # Cookbook Name:: solrcloud
 # Resource:: solrcloud_collection
 #

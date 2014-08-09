@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: solrcloud
-# Definition:: solrcloud_configset
+# Provider:: solrcloud_zkconfigset
 #
 # Copyright 2014, Virender Khatri
 #

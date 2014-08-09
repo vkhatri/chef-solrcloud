@@ -1,5 +1,6 @@
+#
 # Cookbook Name:: solrcloud
-# Resource:: solrcloud_configset
+# Resource:: solrcloud_zkconfigset
 #
 # Copyright 2014, Virender Khatri
 #

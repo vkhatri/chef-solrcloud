@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: solrcloud
-# Recipe:: default
+# Recipe:: config
 #
 # Copyright 2014, Virender Khatri
 #
