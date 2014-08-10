@@ -41,6 +41,15 @@ module SolrCloud
       end
     end
 
+    def host_up?
+      begin
+        TCPSocket.new(@options[:host], @options[:port])
+        return true
+      rescue => error
+        return false
+      end
+    end
+
     def collection? collection
       collections.include? collection
     end

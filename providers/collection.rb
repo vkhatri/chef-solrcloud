@@ -18,48 +18,58 @@
 #
 
 def whyrun_supported?
-  true
+  false
 end
 
 action :create do
 
-  Chef::Log.error("collection #{new_resource.name} is missing option :collection_config_name (zookeeper config set)") if not new_resource.collection_config_name
+  if node.solrcloud.manage_collections
 
-  obj = SolrCloud::SolrCollection.new(:num_shards     => new_resource.num_shards,
-                                      :shards         => new_resource.shards,
-                                      :name           => new_resource.name,
-                                      :router_field   => new_resource.router_field,
-                                      :async          => new_resource.async,
-                                      :router_name    => new_resource.router_name,
-                                      :router_field   => new_resource.router_field,
-                                      :host           => new_resource.host,
-                                      :port           => new_resource.port,
-                                      :ssl            => new_resource.ssl,
-                                      :action         => 'create',
-                                      :create_node_set        => new_resource.create_node_set,
-                                      :replication_factor     => new_resource.replication_factor,
-                                      :max_shards_per_node    => new_resource.max_shards_per_node,
-                                      :collection_config_name => new_resource.collection_config_name
-                                     )
-  if obj.collection? new_resource.name
-    Chef::Log.info("solr collection #{new_resource.name} already exists")
-  else
-    new_resource.updated_by_last_action(true) if obj.create_collection
+    Chef::Log.error("collection #{new_resource.name} is missing option :collection_config_name (zookeeper configSet)") if not new_resource.collection_config_name
+    obj = SolrCloud::SolrCollection.new(:num_shards     => new_resource.num_shards,
+                                        :shards         => new_resource.shards,
+                                        :name           => new_resource.name,
+                                        :router_field   => new_resource.router_field,
+                                        :async          => new_resource.async,
+                                        :router_name    => new_resource.router_name,
+                                        :router_field   => new_resource.router_field,
+                                        :host           => new_resource.host,
+                                        :port           => new_resource.port,
+                                        :ssl            => new_resource.ssl,
+                                        :action         => 'create',
+                                        :create_node_set        => new_resource.create_node_set,
+                                        :replication_factor     => new_resource.replication_factor,
+                                        :max_shards_per_node    => new_resource.max_shards_per_node,
+                                        :collection_config_name => new_resource.collection_config_name
+                                       )
+    if not obj.host_up?
+      # For why-run mode
+      Chef::Log.error("solr host down")
+    elsif obj.collection? new_resource.name
+      Chef::Log.info("solr collection #{new_resource.name} already exists")
+    else
+      new_resource.updated_by_last_action(true) if obj.create_collection
+    end
   end
 end
 
 action :delete do
 
-  obj = SolrCloud::SolrCollection.new(:name           => new_resource.name,
-                                      :host           => new_resource.host,
-                                      :port           => new_resource.port,
-                                      :ssl            => new_resource.ssl,
-                                      :action         => 'delete'
-                                     )
-  if obj.collection? new_resource.name
-    new_resource.updated_by_last_action(true) if obj.delete_collection
-  else
-    Chef::Log.info("solr collection #{new_resource.name} does not exists")
+  if node.solrcloud.manage_collections
+    obj = SolrCloud::SolrCollection.new(:name           => new_resource.name,
+                                        :host           => new_resource.host,
+                                        :port           => new_resource.port,
+                                        :ssl            => new_resource.ssl,
+                                        :action         => 'delete'
+                                       )
+    if not obj.host_up?
+      # For why-run mode
+      Chef::Log.error("solr host down")
+    elsif obj.collection? new_resource.name
+      new_resource.updated_by_last_action(true) if obj.delete_collection
+    else
+      Chef::Log.info("solr collection #{new_resource.name} does not exists")
+    end
   end
 end
 
