@@ -24,12 +24,9 @@ default_action :create
 attribute :configset_name,  :kind_of => String, :regex => /.*/, :default => :name
 attribute :user,            :kind_of => String, :regex => /.*/, :default => node.solrcloud.user
 attribute :group,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.group
-# attribute :skip_zk,         :kind_of => [TrueClass, FalseClass], :default => false
-# attribute :force,           :kind_of => [TrueClass, FalseClass], :default => false
 attribute :solr_zkcli,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.solr_zkcli
 attribute :zkcli,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.zkcli
 attribute :zkhost,          :kind_of => String, :regex => /.*/, :default => node.solrcloud.config.solrcloud.zkHost.first # Need only one node
 attribute :zkconfigsets_home,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.zkconfigsets_home
 attribute :zkconfigsets_cookbook,  :kind_of => String, :regex => /.*/, :default => node.solrcloud.zkconfigsets_cookbook
-
 

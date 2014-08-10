@@ -11,23 +11,73 @@ default[:solrcloud] = {
 
   :notify_restart   => false, # notify service restart on config change 
   :service_name     => 'solr', 
+  :service_start_wait   => 15,
 
   :dir_mode     => '0755', # default directory permissions used by solrcloud cookbook
   :pid_dir      => '/var/run/solr', # solr service user pid dir
   :log_dir      => '/var/log/solr',
 
-  :template_cookbook        => "solrcloud", # template source cookbook
+  :port         => 8983,
+  :ssl_port     => 8984,
 
+  :jmx          => {
+    :enable     => true,
+    :port       => 1099,
+    :ssl        => false, # Currently not managed
+    :authenticate   => false,
+    :users      => {
+      :solrmonitor  => {
+        :access     => 'readonly',
+        :password   => 'solrmonitor',
+        :action     => 'create'
+      },
+      :solrcontrol  => {
+        :access     => 'readwrite',
+        :password   => 'solrcontrol'
+      }
+    },
+  },
+
+  :jetty_config => {
+    :server     => {
+      :min_threads    => 10,
+      :max_threads    => 10000,
+      :detailed_dump  => 'false'
+    },
+    :connector  => { # Default Parameters for org.eclipse.jetty.server.bio.SocketConnector
+      :stats_on       => 'true',
+      :max_idle_time  =>  50000,
+      :low_resource_max_idle_time   => 1500
+    },
+    :ssl_connector    => {
+      :enable   => false,
+      :key_store_password   => 'secret',
+      :need_client_auth     => 'false',
+      :max_idle_time        =>  30000
+    }
+  },
+
+  :request_log  => {
+    :enable       => true,
+    :retain_days  => 10,
+    :log_cookies  => 'false',
+    :time_zone    => 'UTC'
+  },
+
+  :template_cookbook        => "solrcloud", # template source cookbook
   :zkconfigsets_cookbook    => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
-  :manager                  => true, # manage zookeeper configs and solrcloud collections
+
+  # :manager                    => true, # manage zookeeper configs and solrcloud collections
+  :manage_zkconfigsets          => true, # manage zookeeper configSet upconfig
+  :manage_zkconfigsets_source   => true, # manage zookeeper source configSet
+  :manage_collections           => true, # manage solr collections
+
   :zk_run       => false, # start solr with zookeeper, useful for testing purpose
   :zk_run_port  => 2181, # start solr with zookeeper, useful for testing purpose
 
   :collections  => {}, # solr collections 
 
   :zkconfigsets => {}, # solr zookeeper configSets
-
-  :port         => '8983',
 
   :hdfs         => {
     :enable             => false,
@@ -103,9 +153,6 @@ default[:solrcloud][:config][:solrcloud][:zkHost]     = ["#{node.ipaddress}:#{no
 
 # Solr Zookeeper configSets directory (collection.configName)
 default[:solrcloud][:zkconfigsets_home] = File.join(node.solrcloud.install_dir,'zkconfigs')
-
-# default[:solrcloud][:contrib]     = File.join(node.solrcloud.install_dir,'contrib')
-# default[:solrcloud][:dist]        = File.join(node.solrcloud.install_dir,'dist')
 
 default[:solrcloud][:config][:coreRootDirectory]      = node.solrcloud.cores_home
 default[:solrcloud][:config][:sharedLib]              = node.solrcloud.shared_lib

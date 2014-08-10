@@ -157,7 +157,7 @@ end
 # Waiting for Service 
 ruby_block "wait_start_up" do
   block  do
-    sleep 10
+    sleep node.solrcloud.service_start_wait
   end
   action :nothing
 end
@@ -166,9 +166,9 @@ remote_file tarball_file do
   action :delete
 end
 
-# Setup configsets - node.solrcloud.zkconfigsets and collections - node.solrcloud.collections
-if node.solrcloud.manager
-  include_recipe "solrcloud::zkconfigsets" 
-  include_recipe "solrcloud::collections"
-end
+# Setup configsets - node.solrcloud.zkconfigsets 
+include_recipe "solrcloud::zkconfigsets"
+
+# Setup collections - node.solrcloud.collections
+include_recipe "solrcloud::collections"
 

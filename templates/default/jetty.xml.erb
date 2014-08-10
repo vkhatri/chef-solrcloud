@@ -31,9 +31,9 @@
     <Set name="ThreadPool">
       <!-- Default queued blocking threadpool -->
       <New class="org.eclipse.jetty.util.thread.QueuedThreadPool">
-        <Set name="minThreads">10</Set>
-        <Set name="maxThreads">10000</Set>
-        <Set name="detailedDump">false</Set>
+        <Set name="minThreads"><%=node.solrcloud.jetty_config.server.min_threads-%></Set>
+        <Set name="maxThreads"><%=node.solrcloud.jetty_config.server.max_threads-%></Set>
+        <Set name="detailedDump"><%=node.solrcloud.jetty_config.server.detailed_dump-%></Set>
       </New>
     </Set>
 
@@ -92,23 +92,23 @@
          java -Djavax.net.ssl.keyStorePassword=secret -Djavax.net.ssl.keyStore=../etc/solrtest.keystore -Djavax.net.ssl.trustStore=../etc/solrtest.keystore -Durl=https://localhost:8984/solr/update -jar post.jar *.xml
 
     -->
-    <!--
+    <%= '<!--' unless node.solrcloud.jetty_config.ssl_connector.enable-%>
     <Call name="addConnector">
       <Arg>
         <New class="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
           <Arg>
             <New class="org.eclipse.jetty.http.ssl.SslContextFactory">
               <Set name="keyStore"><SystemProperty name="jetty.home" default="."/>/etc/solrtest.keystore</Set>
-              <Set name="keyStorePassword">secret</Set>
-              <Set name="needClientAuth"><SystemProperty name="jetty.ssl.clientAuth" default="false"/></Set>
+              <Set name="keyStorePassword"><%=node.solrcloud.jetty_config.ssl_connector.key_store_password-%></Set>
+              <Set name="needClientAuth"><SystemProperty name="jetty.ssl.clientAuth" default="false"/><%=node.solrcloud.jetty_config.ssl_connector.need_client_auth-%></Set>
             </New>
           </Arg>
-          <Set name="port"><SystemProperty name="jetty.ssl.port" default="8984"/></Set>
-          <Set name="maxIdleTime">30000</Set>
+          <Set name="port"><SystemProperty name="jetty.ssl.port" default="8984"/><%=node.solrcloud.ssl_port-%></Set>
+          <Set name="maxIdleTime"><%=node.solrcloud.jetty_config.ssl_connector.max_idle_time-%></Set>
         </New>
       </Arg>
     </Call>
-    -->
+    <%= '-->' unless node.solrcloud.jetty_config.ssl_connector.enable-%>
 
     <!-- =========================================================== -->
     <!-- Set handler Collection Structure                            --> 
@@ -134,6 +134,7 @@
     <!-- =========================================================== -->
     <!-- Configure Request Log                                       -->
     <!-- =========================================================== -->
+    <%= '<!--' unless node.solrcloud.request_log.enable-%>
     <Ref id="Handlers">
       <Call name="addHandler">
         <Arg>
@@ -144,17 +145,18 @@
                   <Property name="jetty.logs" default="./logs"/>/request.yyyy_mm_dd.log
                 </Set>
                 <Set name="filenameDateFormat">yyyy_MM_dd</Set>
-                <Set name="retainDays">90</Set>
+                <Set name="retainDays"><%=node.solrcloud.request_log.retain_days-%></Set>
                 <Set name="append">true</Set>
                 <Set name="extended">false</Set>
-                <Set name="logCookies">false</Set>
-                <Set name="LogTimeZone">UTC</Set>
+                <Set name="logCookies"><%=node.solrcloud.request_log.log_cookies-%></Set>
+                <Set name="LogTimeZone"><%=node.solrcloud.request_log.time_zone-%></Set>
               </New>
             </Set>
           </New>
         </Arg>
       </Call>
     </Ref>
+    <%= '-->' unless node.solrcloud.request_log.enable-%>
 
     <!-- =========================================================== -->
     <!-- extra options                                               -->
