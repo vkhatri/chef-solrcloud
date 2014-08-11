@@ -19,9 +19,11 @@ default[:solrcloud] = {
 
   :port         => 8983,
   :ssl_port     => 8984,
+  :enable_ssl   => true,
+  :enable_request_log   => true,
+  :enable_jmx   => true,
 
   :jmx          => {
-    :enable     => true,
     :port       => 1099,
     :ssl        => false, # Currently not managed
     :authenticate   => false,
@@ -50,7 +52,6 @@ default[:solrcloud] = {
       :low_resource_max_idle_time   => 1500
     },
     :ssl_connector        => {
-      :enable             => true,
       :need_client_auth   => 'false',
       :max_idle_time      =>  30000
     }
@@ -72,7 +73,6 @@ default[:solrcloud] = {
   },
 
   :request_log  => {
-    :enable       => true,
     :retain_days  => 10,
     :log_cookies  => 'false',
     :time_zone    => 'UTC'
@@ -120,31 +120,31 @@ default[:solrcloud] = {
     :MaxBackupIndex   => '10'
   },
 
-  :config       => {
-    :adminHandler       => 'org.apache.solr.handler.admin.CoreAdminHandler',
-    :adminPath          => '/solr/admin',
-    :coreLoadThreads    => 3,
-    :managementPath     => nil,
-    :shareSchema        => 'false',
-    :transientCacheSize => 1000000,
+  :solr_config       => {
+    :admin_handler        => 'org.apache.solr.handler.admin.CoreAdminHandler',
+    :admin_path           => '/solr/admin',
+    :core_load_threads    => 3,
+    :management_path      => nil,
+    :share_schema         => 'false',
+    :transient_cache_size => 1000000,
     :solrcloud  => {
-      :hostContext      => 'solr',
-      :distribUpdateConnTimeout   => 1000000,
-      :distribUpdateSoTimeout     => 1000000,
-      :leaderVoteWait     => 1000000,
-      :zkClientTimeout    => 15000,
-      :zkHost             => [], # Syntax: ["zkHost:zkPort"]
-      :genericCoreNodeNames       => 'true'
+      :host_context       => 'solr',
+      :distrib_update_conn_timeout    => 1000000,
+      :distrib_update_so_timeout      => 1000000,
+      :leader_vote_wait   => 1000000,
+      :zk_client_timeout  => 15000,
+      :zk_host            => [], # Syntax: ["zkHost:zkPort"]
+      :generic_core_node_names        => 'true'
     },
-    :shardHandlerFactory  => {
-      :socketTimeout      => 0,
-      :connTimeout        => 0
+    :shard_handler_factory  => {
+      :socket_timeout       => 0,
+      :conn_timeout         => 0
     },
     :logging          => {
       :enabled        => 'true',
-      :loggingClass   => nil,
+      :logging_class  => nil,
       :watcher        => {
-        :loggingSize  => 1000,
+        :logging_size => 1000,
         :threshold    => 'INFO'
       }
     }
@@ -163,14 +163,14 @@ default[:solrcloud][:config_sets] = File.join(node.solrcloud.solr_home,'configse
 default[:solrcloud][:zk_run_data_dir]  = File.join(node.solrcloud.install_dir,'zookeeperdata') 
 
 # Set zkHost for zookeeper configSet management
-default[:solrcloud][:config][:solrcloud][:zkHost]     = ["#{node.ipaddress}:#{node.solrcloud.zk_run_port}"] if node.solrcloud.zk_run
+default[:solrcloud][:config][:solrcloud][:zk_host]     = ["#{node.ipaddress}:#{node.solrcloud.zk_run_port}"] if node.solrcloud.zk_run
 
 # Solr Zookeeper configSets directory (collection.configName)
 default[:solrcloud][:zkconfigsets_home] = File.join(node.solrcloud.install_dir,'zkconfigs')
 
-default[:solrcloud][:config][:coreRootDirectory]      = node.solrcloud.cores_home
-default[:solrcloud][:config][:sharedLib]              = node.solrcloud.shared_lib
-default[:solrcloud][:config][:solrcloud][:hostPort]   = node.solrcloud.port
+default[:solrcloud][:solr_config][:core_root_directory]     = node.solrcloud.cores_home
+default[:solrcloud][:solr_config][:shared_lib]              = node.solrcloud.shared_lib
+default[:solrcloud][:solr_config][:solrcloud][:host_port]   = node.solrcloud.port
 
 
 default[:solrcloud][:source_dir]      = "/usr/local/solr-#{node.solrcloud.version}"

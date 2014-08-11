@@ -10,7 +10,7 @@ JAVA_OPTIONS=" <%= '-DzkRun' if node.solrcloud.zk_run-%> -Dsolr.solr.home=<%=nod
 JAVA_OPTIONS=" -Dsolr.directoryFactory=<%=node.solrcloud.hdfs.directory_factory-%> -Dsolr.lock.type=<%=node.solrcloud.hdfs.lock_type-%> -Dsolr.hdfs.home=<%=node.solrcloud.hdfs.hdfs_home-%> $JAVA_OPTIONS "
 <%end-%>
 
-<%if node.solrcloud.jmx.enable-%>
+<%if node.solrcloud.enable_jmx-%>
 # JMX Options
 JAVA_OPTIONS=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=<%=node.solrcloud.jmx.port-%> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=<%=node.solrcloud.jmx.authenticate-%> -Dcom.sun.management.jmxremote.password.file=<%=node.solrcloud.install_dir-%>/resources/jmxremote.password -Dcom.sun.management.jmxremote.access.file=<%=node.solrcloud.install_dir-%>/resources/jmxremote.access -Djava.rmi.server.hostname=<%=node.ipaddress-%> $JAVA_OPTIONS"
 <%end-%>

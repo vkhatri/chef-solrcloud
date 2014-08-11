@@ -19,6 +19,6 @@
 
 <% node.solrcloud.jmx.users.each do |user_name, user_options|-%>
 <%if not user_options[:action] or user_options[:action] == 'create' -%>
-<%=user_name-%>=<%=user_options[:access]%>
+<%=user_name-%> <%=user_options[:access]%>
 <% end -%>
 <% end -%>

@@ -34,48 +34,48 @@
 -->
 
 <solr>
-  <str name="adminHandler"><%=node.solrcloud.config.adminHandler-%></str>
-  <str name="adminPath"><%=node.solrcloud.config.adminPath-%></str>
-  <int name="coreLoadThreads"><%=node.solrcloud.config.coreLoadThreads-%></int>
+  <str name="adminHandler"><%=node.solrcloud.solr_config.admin_handler-%></str>
+  <str name="adminPath"><%=node.solrcloud.solr_config.admin_path-%></str>
+  <int name="coreLoadThreads"><%=node.solrcloud.solr_config.core_load_threads-%></int>
   <%if node.solrcloud.cores_home and node.solrcloud.cores_home != node.solrcloud.solr_home-%>
-  <str name="coreRootDirectory"><%=node.solrcloud.config.coreRootDirectory-%></str> <!-- usually solrHome  -->
+  <str name="coreRootDirectory"><%=node.solrcloud.solr_config.core_root_directory-%></str> <!-- usually solrHome  -->
   <%else-%>
-  <!-- <str name="coreRootDirectory"><%=node.solrcloud.config.coreRootDirectory-%></str> --> <!-- usually solrHome  -->
+  <!-- <str name="coreRootDirectory"><%=node.solrcloud.solr_config.core_root_directory-%></str> --> <!-- usually solrHome  -->
   <%end-%>
-  <!-- <str name="managementPath">${managementPath:<%=node.solrcloud.config.managementPath-%>}</str> --> 
-  <str name="sharedLib"><%=node.solrcloud.config.sharedLib-%></str>
-  <str name="shareSchema"><%=node.solrcloud.config.shareSchema-%></str>
-  <int name="transientCacheSize">${transientCacheSize:<%=node.solrcloud.config.transientCacheSize-%>}</int> <!-- ignored unless cores are defined with transient=true --> 
+  <!-- <str name="managementPath">${managementPath:<%=node.solrcloud.solr_config.management_path-%>}</str> --> 
+  <str name="sharedLib"><%=node.solrcloud.solr_config.shared_lib-%></str>
+  <str name="shareSchema"><%=node.solrcloud.solr_config.share_schema-%></str>
+  <int name="transientCacheSize">${transientCacheSize:<%=node.solrcloud.solr_config.transient_cache_size-%>}</int> <!-- ignored unless cores are defined with transient=true --> 
 
   <solrcloud>
-    <int name="distribUpdateConnTimeout">${distribUpdTimeout:<%=node.solrcloud.config.solrcloud.distribUpdateConnTimeout-%>}</int>
-    <int name="distribUpdateSoTimeout">${distribUpdateTimeout:<%=node.solrcloud.config.solrcloud.distribUpdateSoTimeout-%>}</int>
-    <int name="leaderVoteWait">${leaderVoteWait:<%=node.solrcloud.config.solrcloud.leaderVoteWait-%>}</int>
-    <str name="host">${host:}</str>
-    <int name="hostPort">${jetty.port:<%=node.solrcloud.config.solrcloud.hostPort-%>}</int>
-    <str name="hostContext">${hostContext:<%=node.solrcloud.config.solrcloud.hostContext-%>}</str>
-    <int name="zkClientTimeout">${zkClientTimeout:<%=node.solrcloud.config.solrcloud.zkClientTimeout-%>}</int>
+    <int name="distribUpdateConnTimeout">${distribUpdTimeout:<%=node.solrcloud.solr_config.solrcloud.distrib_update_conn_timeout-%>}</int>
+    <int name="distribUpdateSoTimeout">${distribUpdateTimeout:<%=node.solrcloud.solr_config.solrcloud.distrib_update_so_timeout-%>}</int>
+    <int name="leaderVoteWait">${leaderVoteWait:<%=node.solrcloud.solr_config.solrcloud.leader_vote_wait-%>}</int>
+    <str name="host">${host:<%=node.ipaddress-%>}</str>
+    <int name="hostPort">${jetty.port:<%=node.solrcloud.solr_config.solrcloud.host_port-%>}</int>
+    <str name="hostContext">${hostContext:<%=node.solrcloud.solr_config.solrcloud.host_context-%>}</str>
+    <int name="zkClientTimeout">${zkClientTimeout:<%=node.solrcloud.solr_config.solrcloud.zk_client_timeout-%>}</int>
     <%if node.solrcloud.zk_run-%>
-    <!-- <str name="zkHost">${zkHost:<%=node.solrcloud.config.solrcloud.zkHost.sort.uniq.join(',')-%>}</str> -->
+    <!-- <str name="zkHost">${zkHost:<%=node.solrcloud.solr_config.solrcloud.zk_host.sort.uniq.join(',')-%>}</str> -->
     <%else-%>
-    <str name="zkHost">${zkHost:<%=node.solrcloud.config.solrcloud.zkHost.sort.uniq.join(',')-%>}</str>
+    <str name="zkHost">${zkHost:<%=node.solrcloud.solr_config.solrcloud.zk_host.sort.uniq.join(',')-%>}</str>
     <%end-%>
-    <bool name="genericCoreNodeNames">${genericCoreNodeNames:<%=node.solrcloud.config.solrcloud.genericCoreNodeNames-%>}</bool>
+    <bool name="genericCoreNodeNames">${genericCoreNodeNames:<%=node.solrcloud.solr_config.solrcloud.generic_core_node_names-%>}</bool>
   </solrcloud>
 
   <shardHandlerFactory name="shardHandlerFactory"
     class="HttpShardHandlerFactory">
-    <int name="socketTimeout">${socketTimeout:<%=node.solrcloud.config.shardHandlerFactory.socketTimeout-%>}</int>
-    <int name="connTimeout">${connTimeout:<%=node.solrcloud.config.shardHandlerFactory.connTimeout-%>}</int>
+    <int name="socketTimeout">${socketTimeout:<%=node.solrcloud.solr_config.shard_handler_factory.socket_timeout-%>}</int>
+    <int name="connTimeout">${connTimeout:<%=node.solrcloud.solr_config.shard_handler_factory.conn_timeout-%>}</int>
   </shardHandlerFactory>
 
   <!--
   <logging>
-    <str name="class">${loggingClass:<%=node.solrcloud.config.logging.loggingClass-%>}</str>
-    <str name="enabled">${loggingEnabled:<%=node.solrcloud.config.logging.enabled-%>}</str>
+    <str name="class">${loggingClass:<%=node.solrcloud.solr_config.logging.logging_class-%>}</str>
+    <str name="enabled">${loggingEnabled:<%=node.solrcloud.solr_config.logging.enabled-%>}</str>
     <watcher>
-      <int name="size">${loggingSize:<%=node.solrcloud.config.logging.watcher.loggingSize-%>}</int>
-      <int name="threshold">${loggingThreshold:<%=node.solrcloud.config.logging.watcher.threshold-%>}</int>
+      <int name="size">${loggingSize:<%=node.solrcloud.solr_config.logging.watcher.logging_size-%>}</int>
+      <int name="threshold">${loggingThreshold:<%=node.solrcloud.solr_config.logging.watcher.threshold-%>}</int>
     </watcher>
   </logging>
   -->

@@ -92,7 +92,7 @@
          java -Djavax.net.ssl.keyStorePassword=secret -Djavax.net.ssl.keyStore=../etc/solrtest.keystore -Djavax.net.ssl.trustStore=../etc/solrtest.keystore -Durl=https://localhost:8984/solr/update -jar post.jar *.xml
 
     -->
-    <%= '<!--' unless node.solrcloud.jetty_config.ssl_connector.enable%>
+    <%= '<!--' unless node.solrcloud.enable_ssl%>
     <Call name="addConnector">
       <Arg>
         <New class="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
@@ -108,7 +108,7 @@
         </New>
       </Arg>
     </Call>
-    <%= '-->' unless node.solrcloud.jetty_config.ssl_connector.enable-%>
+    <%= '-->' unless node.solrcloud.enable_ssl-%>
 
     <!-- =========================================================== -->
     <!-- Set handler Collection Structure                            --> 
@@ -134,7 +134,7 @@
     <!-- =========================================================== -->
     <!-- Configure Request Log                                       -->
     <!-- =========================================================== -->
-    <%= '<!--' unless node.solrcloud.request_log.enable-%>
+    <%= '<!--' unless node.solrcloud.enable_request_log-%>
     <Ref id="Handlers">
       <Call name="addHandler">
         <Arg>
@@ -156,7 +156,7 @@
         </Arg>
       </Call>
     </Ref>
-    <%= '-->' unless node.solrcloud.request_log.enable-%>
+    <%= '-->' unless node.solrcloud.enable_request_log-%>
 
     <!-- =========================================================== -->
     <!-- extra options                                               -->
