@@ -12,7 +12,7 @@ JAVA_OPTIONS=" -Dsolr.directoryFactory=<%=node.solrcloud.hdfs.directory_factory-
 
 <%if node.solrcloud.enable_jmx-%>
 # JMX Options
-JAVA_OPTIONS=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=<%=node.solrcloud.jmx.port-%> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=<%=node.solrcloud.jmx.authenticate-%> -Dcom.sun.management.jmxremote.password.file=<%=node.solrcloud.install_dir-%>/resources/jmxremote.password -Dcom.sun.management.jmxremote.access.file=<%=node.solrcloud.install_dir-%>/resources/jmxremote.access -Djava.rmi.server.hostname=<%=node.ipaddress-%> $JAVA_OPTIONS"
+JAVA_OPTIONS=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=<%=node.solrcloud.jmx.port-%> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=<%=node.solrcloud.jmx.authenticate-%> -Dcom.sun.management.jmxremote.password.file=<%=node.solrcloud.jmx.password_file-%> -Dcom.sun.management.jmxremote.access.file=<%=node.solrcloud.jmx.access_file-%> -Djava.rmi.server.hostname=<%=node.ipaddress-%> $JAVA_OPTIONS"
 <%end-%>
 
 JETTY_HOME=<%=node.solrcloud.install_dir%>

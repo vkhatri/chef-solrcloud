@@ -111,7 +111,7 @@ template "/etc/init.d/solr" do
   mode    0744
 end
 
-template File.join(node.solrcloud.install_dir, 'resources', 'jmxremote.access') do
+template node.solrcloud.jmx.access_file do
   source    "jmxremote.access.erb"
   owner     node.solrcloud.user
   group     node.solrcloud.group
@@ -119,7 +119,7 @@ template File.join(node.solrcloud.install_dir, 'resources', 'jmxremote.access') 
   notifies  :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
 end
 
-template File.join(node.solrcloud.install_dir, 'resources', 'jmxremote.password') do
+template node.solrcloud.jmx.password_file do
   source    "jmxremote.password.erb"
   owner     node.solrcloud.user
   group     node.solrcloud.group

@@ -187,3 +187,6 @@ default[:solrcloud][:zookeeper][:solr_zkcli]      = "#{node.solrcloud.install_di
 
 default[:solrcloud][:key_store][:key_store_file_path]      = File.join(node.solrcloud.install_dir, 'etc', node.solrcloud.key_store.key_store_file)
 
+default[:solrcloud][:jmx][:password_file]         = File.join(node.solrcloud.install_dir, 'resources', 'jmxremote.password')
+default[:solrcloud][:jmx][:access_file]           = File.join(node.solrcloud.install_dir, 'resources', 'jmxremote.access')
+
