@@ -434,7 +434,7 @@ will work just fine for a single node solrcloud cluster.
 	"default_attributes": {
       "solrcloud": {
 		"zk_run": true,
-        "port": "80",
+        "port": "8080",
         "setup_user": true,
         "manager": true,
         "zkconfigsets": {
@@ -458,14 +458,14 @@ will work just fine for a single node solrcloud cluster.
 
 	"default_attributes": {
       "solrcloud": {
-        "config": {
+        "solr_config": {
           "solrcloud": {
             "zk_host": [
               "zookeeper_ip:zookeeper_port"
             ]
           }
 		},		  
-        "port": "80",
+        "port": "8080",
         "setup_user": true,
         "manager": true,
         "zkconfigsets": {
@@ -494,14 +494,14 @@ On `any one` of the cluster node, enable attribute `node[:solrcloud][:zk_run]` a
 
 	"default_attributes": {
       "solrcloud": {
-        "config": {
+        "solr_config": {
           "solrcloud": {
             "zk_host": [
               "instance_with_zk_run_ip:zookeeper_port_default_2181"
             ]
           }
 		},		  
-        "port": "80",
+        "port": "8080",
         "setup_user": true,
         "manager": true,
         "zkconfigsets": {
