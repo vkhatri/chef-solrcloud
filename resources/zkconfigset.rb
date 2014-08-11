@@ -26,7 +26,7 @@ attribute :user,            :kind_of => String, :regex => /.*/, :default => node
 attribute :group,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.group
 attribute :solr_zkcli,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.solr_zkcli
 attribute :zkcli,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.zkcli
-attribute :zkhost,          :kind_of => String, :regex => /.*/, :default => node.solrcloud.config.solrcloud.zk_host.first # Need only one node
+attribute :zkhost,          :kind_of => String, :regex => /.*/, :default => node.solrcloud.solr_config.solrcloud.zk_host.first # Need only one node
 attribute :zkconfigsets_home,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.zkconfigsets_home
 attribute :zkconfigsets_cookbook,  :kind_of => String, :regex => /.*/, :default => node.solrcloud.zkconfigsets_cookbook
 
