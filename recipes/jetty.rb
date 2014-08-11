@@ -25,41 +25,70 @@ link File.join(node.solrcloud.install_dir, 'webapps', 'solr.war') do
 end
 
 template File.join(node.solrcloud.install_dir, 'resources', 'log4j.properties') do
-  source "log4j.properties.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0644
-  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+  source    "log4j.properties.erb"
+  owner     node.solrcloud.user
+  group     node.solrcloud.group
+  mode      0644
+  notifies  :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
 end
 
 template File.join(node.solrcloud.install_dir, 'contexts', 'solr-jetty-context.xml') do
-  source "solr-jetty-context.xml.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0644
-  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+  source    "solr-jetty-context.xml.erb"
+  owner     node.solrcloud.user
+  group     node.solrcloud.group
+  mode      0644
+  notifies  :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
 end
 
 template File.join(node.solrcloud.install_dir, 'etc', 'webdefault.xml') do
-  source "webdefault.xml.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0644
-  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+  source    "webdefault.xml.erb"
+  owner     node.solrcloud.user
+  group     node.solrcloud.group
+  mode      0644
+  notifies  :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
 end
 
 template File.join(node.solrcloud.install_dir, 'etc', 'jetty.xml') do
-  source "jetty.xml.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0644
+  source  "jetty.xml.erb"
+  owner   node.solrcloud.user
+  group   node.solrcloud.group
+  mode    0644
 end
 
-template File.join(node.solrcloud.install_dir, 'etc', 'create-solrtest.keystore.sh') do
-  source "create-solrtest.keystore.sh.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0644
+template File.join(node.solrcloud.install_dir, 'etc', 'create-solr.keystore.sh') do
+  source    "create-solr.keystore.sh.erb"
+  owner     node.solrcloud.user
+  group     node.solrcloud.group
+  mode      0744
+  notifies  :run, "execute[generate_key_store_file]", :immediately
+end
+
+execute "generate_key_store_file" do
+  cwd       File.join(node.solrcloud.install_dir, 'etc')
+  command   File.join(node.solrcloud.install_dir, 'etc', 'create-solr.keystore.sh')
+  action    :nothing
+  notifies  :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+  only_if   { node.solrcloud.key_store.manage }
+end
+
+cookbook_file  node.solrcloud.key_store.key_store_file_path do
+  cookbook  node.solrcloud.key_store.cookbook
+  source    node.solrcloud.key_store.key_store_file
+  owner     node.solrcloud.user
+  group     node.solrcloud.group
+  mode      0400
+  action    :create
+  not_if    { node.solrcloud.key_store.manage  }
+end
+
+# May be there is a better way of doing this
+if not File.exists? node.solrcloud.key_store.key_store_file_path and node.solrcloud.key_store.manage
+  execute "generate_key_store_file" do
+    cwd       File.join(node.solrcloud.install_dir, 'etc')
+    command   File.join(node.solrcloud.install_dir, 'etc', 'create-solr.keystore.sh')
+    notifies  :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+    only_if   { node.solrcloud.key_store.manage }
+  end
 end
 
 template "solr_config" do
@@ -76,25 +105,25 @@ template "solr_config" do
 end
 
 template "/etc/init.d/solr" do
-  source "#{node.platform_family}.solr.init.erb"
-  owner 'root'
-  group 'root'
-  mode  0744
+  source  "#{node.platform_family}.solr.init.erb"
+  owner   node.solrcloud.user
+  group   node.solrcloud.group
+  mode    0744
 end
 
 template File.join(node.solrcloud.install_dir, 'resources', 'jmxremote.access') do
-  source "jmxremote.access.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0400
-  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+  source    "jmxremote.access.erb"
+  owner     node.solrcloud.user
+  group     node.solrcloud.group
+  mode      0400
+  notifies  :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
 end
 
 template File.join(node.solrcloud.install_dir, 'resources', 'jmxremote.password') do
-  source "jmxremote.password.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
-  mode  0400
-  notifies :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
+  source    "jmxremote.password.erb"
+  owner     node.solrcloud.user
+  group     node.solrcloud.group
+  mode      0400
+  notifies  :restart, "service[solr]", :delayed if node.solrcloud.notify_restart
 end
 

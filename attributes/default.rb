@@ -44,17 +44,31 @@ default[:solrcloud] = {
       :max_threads    => 10000,
       :detailed_dump  => 'false'
     },
-    :connector  => { # Default Parameters for org.eclipse.jetty.server.bio.SocketConnector
+    :connector        => { # Default Parameters for org.eclipse.jetty.server.bio.SocketConnector
       :stats_on       => 'true',
       :max_idle_time  =>  50000,
       :low_resource_max_idle_time   => 1500
     },
-    :ssl_connector    => {
-      :enable   => false,
-      :key_store_password   => 'secret',
-      :need_client_auth     => 'false',
-      :max_idle_time        =>  30000
+    :ssl_connector        => {
+      :enable             => true,
+      :need_client_auth   => 'false',
+      :max_idle_time      =>  30000
     }
+  },
+
+  :key_store    => {
+    :cookbook           => 'solrcloud',
+    :key_store_file     => 'solr.keystore',
+    :key_store_password => 'secret',
+
+    :manage     => true, # if set false, cookbook will look for 'node.solrcloud.jetty_config.ssl_connector.key_store_file' file in cookbook/files/solr.keystore
+    :key_algo   => 'RSA',
+    :cn         => 'localhost',
+    :ou         => 'ApacheSolrCloudTest',
+    :o          => 'lucene.apache.org',
+    :c          => 'US',
+    :ext        => 'san=ip:127.0.0.1',
+    :validity   => 999999
   },
 
   :request_log  => {
@@ -170,4 +184,6 @@ default[:solrcloud][:zookeeper][:zkcli]           = File.join(node.solrcloud.zoo
 default[:solrcloud][:zookeeper][:tarball][:url]   = "https://archive.apache.org/dist/zookeeper/zookeeper-#{node.solrcloud.zookeeper.version}/zookeeper-#{node.solrcloud.zookeeper.version}.tar.gz"
 default[:solrcloud][:zookeeper][:tarball][:md5]   = '971c379ba65714fd25dc5fe8f14e9ad1'
 default[:solrcloud][:zookeeper][:solr_zkcli]      = "#{node.solrcloud.install_dir}/example/scripts/cloud-scripts/zkcli.sh"
+
+default[:solrcloud][:key_store][:key_store_file_path]      = File.join(node.solrcloud.install_dir, 'etc', node.solrcloud.key_store.key_store_file)
 

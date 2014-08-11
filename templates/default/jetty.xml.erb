@@ -92,18 +92,18 @@
          java -Djavax.net.ssl.keyStorePassword=secret -Djavax.net.ssl.keyStore=../etc/solrtest.keystore -Djavax.net.ssl.trustStore=../etc/solrtest.keystore -Durl=https://localhost:8984/solr/update -jar post.jar *.xml
 
     -->
-    <%= '<!--' unless node.solrcloud.jetty_config.ssl_connector.enable-%>
+    <%= '<!--' unless node.solrcloud.jetty_config.ssl_connector.enable%>
     <Call name="addConnector">
       <Arg>
         <New class="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
           <Arg>
             <New class="org.eclipse.jetty.http.ssl.SslContextFactory">
-              <Set name="keyStore"><SystemProperty name="jetty.home" default="."/>/etc/solrtest.keystore</Set>
-              <Set name="keyStorePassword"><%=node.solrcloud.jetty_config.ssl_connector.key_store_password-%></Set>
-              <Set name="needClientAuth"><SystemProperty name="jetty.ssl.clientAuth" default="false"/><%=node.solrcloud.jetty_config.ssl_connector.need_client_auth-%></Set>
+              <Set name="keyStore"><SystemProperty name="jetty.home" default="."/>/etc/<%=node.solrcloud.key_store.key_store_file-%></Set>
+              <Set name="keyStorePassword"><%=node.solrcloud.key_store.key_store_password-%></Set>
+              <Set name="needClientAuth"><SystemProperty name="jetty.ssl.clientAuth" default="false"/></Set>
             </New>
           </Arg>
-          <Set name="port"><SystemProperty name="jetty.ssl.port" default="8984"/><%=node.solrcloud.ssl_port-%></Set>
+          <Set name="port"><SystemProperty name="jetty.ssl.port" default="8984"/></Set>
           <Set name="maxIdleTime"><%=node.solrcloud.jetty_config.ssl_connector.max_idle_time-%></Set>
         </New>
       </Arg>

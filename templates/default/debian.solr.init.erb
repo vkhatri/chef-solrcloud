@@ -70,6 +70,17 @@
 #
 #    <Set name="Port">8080</Set>
 #
+# JETTY_SSL_PORT
+#   Override the default ssl port for Jetty servers. If not set then the
+#   default value in the xml configuration file will be used. The java
+#   system property "jetty.ssl.port" will be set to this value for use in
+#   configure.xml files. For example, the following idiom is widely
+#   used in the demo config files to respect this property in Listener
+#   configuration elements:
+#
+# JETTY_SSL_CLIENT_AUTH
+#   Override the default ssl handshake, by default disabled.
+#
 # JETTY_RUN
 #   Where the jetty.pid file should be stored. It defaults to the
 #   first available of /var/run, /usr/var/run, and /tmp if not set.
@@ -342,6 +353,22 @@ fi
 if [ "$JETTY_PORT" ] 
 then
   JAVA_OPTIONS+=("-Djetty.port=$JETTY_PORT")
+fi
+
+#####################################################
+# See if JETTY_SSL_PORT is defined
+#####################################################
+if [ "$JETTY_SSL_PORT" ]
+then
+  JAVA_OPTIONS+=("-Djetty.ssl.port=$JETTY_SSL_PORT")
+fi
+
+#####################################################
+# See if JETTY_SSL_CLIENT_AUTH is defined
+#####################################################
+if [ "$JETTY_SSL_CLIENT_AUTH" ]
+then
+  JAVA_OPTIONS+=("-Djetty.ssl.clientAuth=$JETTY_SSL_CLIENT_AUTH")
 fi
 
 #####################################################
