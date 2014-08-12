@@ -59,7 +59,7 @@ end
 action :delete do
 
   if node.solrcloud.manage_collections
-    if whyrun_mode
+    if whyrun_mode?
       converge_by("delete solr collection #{new_resource.name}") do
       end
     else
