@@ -275,6 +275,9 @@ Parameters:
 
  * `default[:solrcloud][:enable_request_log]` (default: `true`): enable request log
 
+ * `default[:solrcloud][:solr_config][:solrcloud][:zk_host]` (default: `[]`): zookeeper servers, e.g. `["server:port", "server:port"]`
+
+
 ## Cookbook Core Attributes
 
  * `default[:solrcloud][:user]` (default: `solr`): solr service user
@@ -386,7 +389,7 @@ solr.xml Reference: https://cwiki.apache.org/confluence/display/solr/Format+of+s
  * `default[:solrcloud][:solr_config][:solrcloud][:distrib_update_so_timeout]` (default: `1000000`): solr.xml param solrcloud distribUpdateSoTimeout
  * `default[:solrcloud][:solr_config][:solrcloud][:leader_vote_wait]` (default: `1000000`): solr.xml param solrcloud leaderVoteWait
  * `default[:solrcloud][:solr_config][:solrcloud][:zk_client_timeout]` (default: `15000`): solr.xml param solrcloud zkClientTimeout
- * `default[:solrcloud][:solr_config][:solrcloud][:zk_host]` (default: `[]`): zookeeper servers, ',' separated, e.g. `["server:port", "server:port"]` 
+ * `default[:solrcloud][:solr_config][:solrcloud][:zk_host]` (default: `[]`): zookeeper servers, e.g. `["server:port", "server:port"]` 
  * `default[:solrcloud][:solr_config][:solrcloud][:generic_core_node_names]` (default: `true`): solr.xml param solrcloud genericCoreNodeNames
  * `default[:solrcloud][:solr_config][:shard_handler_factory][:socket_timeout]` (default: `0`): solr.xml param shardHandlerFactory socketTimeout
  * `default[:solrcloud][:solr_config][:shard_handler_factory][:conn_timeout]` (default: `0`): solr.xml param shardHandlerFactory connTimeout
