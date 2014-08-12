@@ -67,7 +67,7 @@ Check [Apache Solr] Documentation for JDK Version requirement for current Solr v
 - `solrcloud::collections` 	- create/delete solrcloud collection on solrcloud node via LWRP
 
 
-> `solrcloud::tarball` is the main recipe which includes all other recipe. For `run_list` use only `solrcloud::tarball`.
+> `solrcloud::tarball` is the main recipe which includes all other recipe. For `run_list` use `solrcloud::tarball`.
 
 
 ## SolrCloud configSet (Zookeeper Configs) LWRP
@@ -81,8 +81,9 @@ SolrCloud Zookeeper configSets management is enabled by default for all nodes.
 It means all nodes will get the configSets and will try to manage it against 
 one of the configured zookeeper server via attribute `node[:solrcloud][:solr_config][:solrcloud][:zk_host]`.
  				
-    All the nodes communicate to a zookeeper cluster, hence attribute `node[:solrcloud][:manage_zkconfigsets]` & `node[:solrcloud][:manage_zkconfigsets_source]` does
-    not require to be enabled on all the nodes. 
+    All the nodes communicate to a zookeeper cluster, hence attribute 
+    `node[:solrcloud][:manage_zkconfigsets]` & `node[:solrcloud][:manage_zkconfigsets_source]` 
+    does not require to be enabled on all the nodes. 
 
 Check `Cookbook Advanced Attributes` section for atribute details.
 
@@ -158,8 +159,9 @@ configSets source cookbook is default set to `solrcloud` and can be changed via 
 
 SolrCloud collection is managed via LWRP - `solrcloud_collection`. 
 
-    Create/Delete Collection API does not require to run on all solrcloud cluster nodes, hence attribute `node[:solrcloud][:manage_collections]`
-	does not require to be enabled on all the nodes. 
+    Create/Delete Collection API does not require to run on all solrcloud cluster nodes, 
+    hence attribute `node[:solrcloud][:manage_collections]` does not require to be 
+    enabled on all the nodes. 
 
 Check `Cookbook Advanced Attributes` section for atribute details.
 
@@ -245,11 +247,6 @@ Parameters:
 
 ## Cookbook Advanced Attributes
 
- * <del>`default[:solrcloud][:manager]` (default: `true`): if set true, manages solrcloud collections and conigSets/configs in zookeeper</del>
- 
-    <del>This attribute should be enabled for limited nodes in solrcloud cluster if possible.</del>
-
-
  * `default[:solrcloud][:manage_zkconfigsets]` (default: `true`): manages solrcloud configSets in zookeeper
  
     This attribute should be enabled for limited nodes in solrcloud cluster if possible.
@@ -270,9 +267,9 @@ Parameters:
 	
  * `default[:solrcloud][:enable_jmx]` (default: `true`): enable jmx
 
- * `default[:solrcloud][:port]` (default: `8983`): solr service port
+ * `default[:solrcloud][:port]` (default: `8983`): solr service port, must be (>1024 for non root user)
 
- * `default[:solrcloud][:ssl_port]` (default: `8984`): solr ssl service port
+ * `default[:solrcloud][:ssl_port]` (default: `8984`): solr ssl service port (>1024 for non root user)
 
  * `default[:solrcloud][:enable_ssl]` (default: `true`): enable solr ssl connector
 
@@ -347,7 +344,7 @@ Parameters:
   
 ## Cookbook Jetty SSL Connector Attributes
 
- * `default[:solrcloud][:jetty_config][:ssl_connector][:need_client_auth]` (default: `false`): enable client ssl authentication
+ * `default[:solrcloud][:jetty_config][:ssl_connector][:need_client_auth]` (default: `false`): enable client ssl authentication, this feature is not tested yet
  * `default[:solrcloud][:jetty_config][:ssl_connector][:max_idle_time]` (default: `30000`): jetty ssl maximum idle time
 
        
