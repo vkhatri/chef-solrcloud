@@ -28,6 +28,7 @@ node.solrcloud.collections.each { |collection_name, options|
     async           options[:async]
     router_name     options[:router_name]
     router_field    options[:router_field]
+    ssl             options[:ssl]
     create_node_set         options[:create_node_set]
     replication_factor      options[:replication_factor]
     max_shards_per_node     options[:max_shards_per_node]

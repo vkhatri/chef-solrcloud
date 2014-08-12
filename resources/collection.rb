@@ -28,8 +28,9 @@ attribute :async,         :kind_of => String, :regex => /.*/, :default => nil
 attribute :router_name,   :kind_of => String, :regex => /.*/, :default => nil
 attribute :router_field,  :kind_of => String, :regex => /.*/, :default => nil
 attribute :host,          :kind_of => String, :regex => /.*/, :default => node.ipaddress
-attribute :port,          :kind_of => [String, Integer], :regex => /.*/, :default => node.solrcloud.port
 attribute :ssl,           :kind_of => [TrueClass, FalseClass], :default => false
+attribute :port,          :kind_of => [String, Integer], :regex   => /.*/, :default => node.solrcloud.port
+attribute :ssl_port,      :kind_of => [String, Integer], :default => node.solrcloud.ssl_port
 attribute :create_node_set,         :kind_of => String, :regex => /.*/, :default => nil
 attribute :replication_factor,      :kind_of => String, :regex => /.*/, :default => 1
 attribute :max_shards_per_node,     :kind_of => [String, Integer], :regex => /.*/, :default => nil

@@ -3,7 +3,7 @@
 # Do NOT modify this file directly.
 
 # Basic Options
-JAVA_OPTIONS=" <%= '-DzkRun' if node.solrcloud.zk_run-%> -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> -Dsolr.data.dir=<%=node.solrcloud.data_dir-%> $JAVA_OPTIONS "
+JAVA_OPTIONS=" <%= '-DzkRun' if node.solrcloud.zk_run-%> -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> -Dsolr.data.dir=<%=node.solrcloud.data_dir-%> <%=node.solrcloud.java_options-%> $JAVA_OPTIONS "
 
 <%if node.solrcloud.hdfs.enable and node.solrcloud.hdfs.hdfs_home-%>
 # Solr on HDFS Options
@@ -12,7 +12,7 @@ JAVA_OPTIONS=" -Dsolr.directoryFactory=<%=node.solrcloud.hdfs.directory_factory-
 
 <%if node.solrcloud.enable_jmx-%>
 # JMX Options
-JAVA_OPTIONS=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=<%=node.solrcloud.jmx.port-%> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=<%=node.solrcloud.jmx.authenticate-%> -Dcom.sun.management.jmxremote.password.file=<%=node.solrcloud.jmx.password_file-%> -Dcom.sun.management.jmxremote.access.file=<%=node.solrcloud.jmx.access_file-%> -Djava.rmi.server.hostname=<%=node.ipaddress-%> $JAVA_OPTIONS"
+JAVA_OPTIONS=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.port=<%=node.solrcloud.jmx.port-%> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=<%=node.solrcloud.jmx.authenticate-%> -Dcom.sun.management.jmxremote.password.file=<%=node.solrcloud.jmx.password_file-%> -Dcom.sun.management.jmxremote.access.file=<%=node.solrcloud.jmx.access_file-%> -Djava.rmi.server.hostname=<%=node.ipaddress-%> $JAVA_OPTIONS"
 <%end-%>
 
 JETTY_HOME=<%=node.solrcloud.install_dir%>

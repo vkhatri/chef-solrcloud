@@ -31,22 +31,20 @@ module SolrCloud
     end
 
     def connect
-      Chef::Log.info("connecting to solr host=#{@options[:host]} on port=#{@options[:port]}")
-      if @options[:ssl]
-        @conn = Net::HTTP.new @options[:host], @options[:port]
-        @conn.use_ssl = true
-        @conn.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      else
-        @conn = Net::HTTP.new @options[:host], @options[:port]
-      end
-    end
-
-    def host_up?
       begin
-        TCPSocket.new(@options[:host], @options[:port])
-        return true
+        if options[:ssl]
+          TCPSocket.new(options[:host], options[:ssl_port])
+          Chef::Log.info("connecting to solr host=#{options[:host]} on ssl port=#{options[:ssl_port]}")
+          @conn = Net::HTTP.new options[:host], options[:ssl_port]
+          @conn.use_ssl = true
+          @conn.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        else
+          TCPSocket.new(options[:host], options[:port])
+          Chef::Log.info("connecting to solr host=#{options[:host]} on port=#{options[:port]}")
+          @conn = Net::HTTP.new options[:host], options[:port]
+        end
       rescue => error
-        return false
+        Chef::Application.fatal!("solr service port is down or inaccessible #{options[:ssl] ? options[:ssl_port] : options[:port]}, #{error.class} - #{error.message}")
       end
     end
 
@@ -65,35 +63,38 @@ module SolrCloud
     end
 
     def create_collection
-      Chef::Log.info("collection #{@options[:name]} creating ..")
-      url = "/solr/admin/collections?wt=json&action=CREATE&name=#{@options[:name]}&replicationFactor=#{@options[:replication_factor]}"
-      url << "&numShards=#{@options[:num_shards]}" if @options[:num_shards]
-      url << "&shards=#{@options[:shards]}" if @options[:shards]
-      url << "&maxShardsPerNode=#{@options[:max_shards_per_node]}" if @options[:max_shards_per_node]
-      url << "&createNodeSet=#{@options[:create_node_set]}" if @options[:create_node_set]
-      url << "&collection.configName=#{@options[:collection_config_name]}" if @options[:collection_config_name]
-      url << "&router.name=#{@options[:router_name]}" if @options[:router_name]
-      url << "&router.field=#{@options[:router_field]}" if @options[:router_field]
-      url << "&async=#{@options[:async]}" if @options[:async]
+      Chef::Log.info("collection #{options[:name]} creating ..")
+      url = "/solr/admin/collections?wt=json&action=CREATE&name=#{options[:name]}&replicationFactor=#{options[:replication_factor]}"
+      url << "&numShards=#{options[:num_shards]}" if options[:num_shards]
+      url << "&shards=#{options[:shards]}" if options[:shards]
+      url << "&maxShardsPerNode=#{options[:max_shards_per_node]}" if options[:max_shards_per_node]
+      url << "&createNodeSet=#{options[:create_node_set]}" if options[:create_node_set]
+      url << "&collection.configName=#{options[:collection_config_name]}" if options[:collection_config_name]
+      url << "&router.name=#{options[:router_name]}" if options[:router_name]
+      url << "&router.field=#{options[:router_field]}" if options[:router_field]
+      url << "&async=#{options[:async]}" if options[:async]
       reply = conn.request Net::HTTP::Post.new url, headers
+      data  = JSON.pretty_generate(JSON.parse(reply.body)) 
+
       if reply.code.to_i == 200
-        Chef::Log.info("collection #{@options[:name]} created. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        Chef::Log.info("collection #{options[:name]} created. => #{data}")
         return true
       else
-        Chef::Application.fatal!("#{url}, collection #{@options[:name]} failed to create. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        Chef::Application.fatal!("#{url}, collection #{options[:name]} failed to create. => #{data}")
         return false
       end
     end
 
     def delete_collection
-      Chef::Log.info("collection #{@options[:name]} deleting ..")
-      url = "/solr/admin/collections?wt=json&action=DELETE&name=#{@options[:name]}"
+      Chef::Log.info("collection #{options[:name]} deleting ..")
+      url = "/solr/admin/collections?wt=json&action=DELETE&name=#{options[:name]}"
       reply = conn.request Net::HTTP::Post.new url, headers
+      data = JSON.pretty_generate(JSON.parse(reply.body))
       if reply.code.to_i == 200
-        Chef::Log.info("collection #{@options[:name]} deleted. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        Chef::Log.info("collection #{options[:name]} deleted. => #{data}")
         return true
       else
-        Chef::Application.fatal!("#{url}, collection #{@options[:name]} failed to delete. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
+        Chef::Application.fatal!("#{url}, collection #{options[:name]} failed to delete. => #{data}")
         return false
       end
     end

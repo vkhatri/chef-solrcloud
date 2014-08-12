@@ -19,9 +19,15 @@ default[:solrcloud] = {
 
   :port         => 8983,
   :ssl_port     => 8984,
+
   :enable_ssl   => true,
   :enable_request_log   => true,
   :enable_jmx   => true,
+  :manage_zkconfigsets          => true, # manage zookeeper configSet upconfig
+  :manage_zkconfigsets_source   => true, # manage zookeeper source configSet
+  :manage_collections           => true, # manage solr collections
+
+  :java_options => nil,
 
   :jmx          => {
     :port       => 1099,
@@ -80,11 +86,6 @@ default[:solrcloud] = {
 
   :template_cookbook        => "solrcloud", # template source cookbook
   :zkconfigsets_cookbook    => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
-
-  # :manager                    => true, # manage zookeeper configs and solrcloud collections
-  :manage_zkconfigsets          => true, # manage zookeeper configSet upconfig
-  :manage_zkconfigsets_source   => true, # manage zookeeper source configSet
-  :manage_collections           => true, # manage solr collections
 
   :zk_run       => false, # start solr with zookeeper, useful for testing purpose
   :zk_run_port  => 2181, # start solr with zookeeper, useful for testing purpose

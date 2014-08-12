@@ -17,9 +17,11 @@ by this cookbook.
 
 https://github.com/vkhatri/solrcloud
 
+
 ## Supported Apache Solr Version
 
 This cookbook was tested for Apache Solr 4.9.0.
+
 
 ## Supported Apache Solr Runtime 
 
@@ -78,10 +80,17 @@ SolrCloud Zookeeper configSet is managed via LWRP - `solrcloud_zkconfigset`.
 SolrCloud Zookeeper configSets management is enabled by default for all nodes.
 It means all nodes will get the configSets and will try to manage it against 
 one of the configured zookeeper server via attribute `node[:solrcloud][:solr_config][:solrcloud][:zk_host]`.
- 		
-    Modify attribute node[:solrcloud][:manager] to limit zookeeper 
-	configSet management to certain nodes in solrcloud cluster.
-		
+ 				
+    All the nodes communicate to a zookeeper cluster, hence attribute `node[:solrcloud][:manage_zkconfigsets]` & `node[:solrcloud][:manage_zkconfigsets_source]` does
+    not require to be enabled on all the nodes. 
+
+Check `Cookbook Advanced Attributes` section for atribute details.
+
+
+**zookeeper configSet config changes**
+
+LWRP handles config changes by itself. When any change is made to configSet content, configSet will re-upload configSet to zookeeper.
+
 
 **LWRP example**
 
@@ -129,9 +138,9 @@ Parameters:
 - *action (optional)*					- default :create
 - *user (optional)*						- configSet directory user permission, default value `node[:solrcloud][:user]`
 - *group (optional)*					- configSet directory group permission, default value `node[:solrcloud][:group]`
-- *solr_zkcli (optional)*				- solr in built zkcli.sh for configSet upconfig, default value `node[:solrcloud][:solrzkcli]`
-- *zkcli (optional)*					- zookeeper client zkCli.sh, default value `node[:solrcloud][:zkcli]`
-- *zkhost (optional)*					- zookeeper server, default value `node[:solrcloud][:zk_host].first`
+- *solr_zkcli (optional)*				- solr in built zkcli.sh for configSet upconfig, default value `node[:solrcloud][:zookeeper][:solr_zkcli]`
+- *zkcli (optional)*					- zookeeper client zkCli.sh, default value `node[:solrcloud][:zookeeper][:zkcli]`
+- *zkhost (optional)*					- zookeeper server, default value `node[:solrcloud][:solr_config][:solrcloud][:zk_host].first`
 - *zkconfigsets_home (optional)*		- configSet directory to sore on solrcloud node, default value `node[:solrcloud][:zkconfigsets_home]`
 - *zkconfigsets_cookbook (optional)*	- configSet cookbook name, default value `node[:solrcloud][:zkconfigsets_cookbook]`
 
@@ -149,11 +158,29 @@ configSets source cookbook is default set to `solrcloud` and can be changed via 
 
 SolrCloud collection is managed via LWRP - `solrcloud_collection`. 
 
+    Create/Delete Collection API does not require to run on all solrcloud cluster nodes, hence attribute `node[:solrcloud][:manage_collections]`
+	does not require to be enabled on all the nodes. 
+
+Check `Cookbook Advanced Attributes` section for atribute details.
+
+
+**collection Update/Change**
+
+collection LWRP only perform collection action=CREATE|DELETE and does not manage any UPDATE/change in the collection. 
+
+To make a change to a collection, first make the change in the LWRP or node attribute `node[:solrcloud][:collections][:collection_nam][:attribute_name]` 
+for respective attribute. 
+
+Once changes are made in Chef cookbook, perform collection UPDATE or respective action call to one of the solrcloud node.
+
+UPDATE call could be tricky and is not managed by Chef to avoid any unexpected behavior. 
+
+Re-issuing same command could hinder solrcloud cluster setup and must be re-issued carefully. 
+
 
 **LWRP example**
 
 *Create a collection using LWRP:*
-
 
     solrcloud_collection collection_name
       option option_name
@@ -161,7 +188,6 @@ SolrCloud collection is managed via LWRP - `solrcloud_collection`.
 
 
 *Delete a collection using LWRP:*
-
 
     solrcloud_collection collection_name do
       action :delete
@@ -209,8 +235,9 @@ Parameters:
 - *router_name* (optional)						- collection API parameter router.name, default value nil
 - *router_field* (optional)						- collection API parameter router.field, default value nil
 - *host* (optional)								- collection API host, solrcloud node (self), default value `node[:ipaddress]`
+- *ssl* (optional)								- collection API, use https, default value false
 - *port* (optional)								- collection API host port, solrcloud port, default value `node[:solrcloud][:port]`
-- *ssl* (optional)								- collection API host ssl, default value false
+- *ssl_port_* (optional)						- collection API host ssl port, default value `node[:solrcloud][:ssl_port]`
 - *create_node_set* (optional)					- collection API parameter createNodeSet, default value nil
 - *replication_factor* (optional)				- collection API parameter replicationFactor, default value 1
 - *max_shards_per_node* (optional)				- collection API parameter maxShardsPerNode, default value nil
@@ -341,7 +368,7 @@ Parameters:
 ## Cookbook Jetty JMX Attributes
 
  * `default[:solrcloud][:jmx][:port]` (default: `1099`): jmx port
- * <del>`default[:solrcloud][:jmx][:ssl]` (default: `false`): this feature is not available yet</del>
+ * <del>`default[:solrcloud][:jmx][:ssl]` (default: `false`): this feature is not available yet and disabled</del>
  * <del>`default[:solrcloud][:jmx][:authenticate]` (default: `false`): enable jmx authentication and authorization, this feature is not tested yet</del>
  * `default[:solrcloud][:jmx][:users]` (default: `users - solrmonitor solrconfig`): jmx defaults users and roles, this feature is not tested yet
         
@@ -349,27 +376,27 @@ Parameters:
 
 solr.xml Reference: https://cwiki.apache.org/confluence/display/solr/Format+of+solr.xml
 
- * `default[:solrcloud][:solr_config][:admin_handler]` (default: `org.apache.solr.handler.admin.CoreAdminHandler`):
- * `default[:solrcloud][:solr_config][:admin_path]` (default: `/solr/admin`):
- * `default[:solrcloud][:solr_config][:core_load_threads]` (default: `3`):
- * `default[:solrcloud][:solr_config][:core_root_directory]` (default: `node[:solrcloud][:cores_home]`):
- * `default[:solrcloud][:solr_config][:shared_lib]` (default: `node[:solrcloud][:shared_lib]`):
- * `default[:solrcloud][:solr_config][:management_path]` (default: `nil`):
- * `default[:solrcloud][:solr_config][:share_schema]` (default: `false`):
- * `default[:solrcloud][:solr_config][:transient_cache_size]` (default: `1000000`):
- * `default[:solrcloud][:solr_config][:solrcloud][:host_context]` (default: `solr`):
- * `default[:solrcloud][:solr_config][:solrcloud][:distrib_update_conn_timeout]` (default: `1000000`):
- * `default[:solrcloud][:solr_config][:solrcloud][:distrib_update_so_timeout]` (default: `1000000`):
- * `default[:solrcloud][:solr_config][:solrcloud][:leader_vote_wait]` (default: `1000000`):
- * `default[:solrcloud][:solr_config][:solrcloud][:zk_client_timeout]` (default: `15000`):
- * `default[:solrcloud][:solr_config][:solrcloud][:zk_host]` (default: `[]`): zookeeper servers, ',' separated, e.g. `["server:port", "server:port"]`
- * `default[:solrcloud][:solr_config][:solrcloud][:generic_core_node_names]` (default: `true`):
- * `default[:solrcloud][:solr_config][:shard_handler_factory][:socket_timeout]` (default: `0`):
- * `default[:solrcloud][:solr_config][:shard_handler_factory][:conn_timeout]` (default: `0`):
- * `default[:solrcloud][:solr_config][:logging][:enabled]` (default: `true`):
- * `default[:solrcloud][:solr_config][:logging][:logging_class]` (default: `nil`):
- * `default[:solrcloud][:solr_config][:logging][:watcher][:logging_size]` (default: `1000`):
- * `default[:solrcloud][:solr_config][:logging][:watcher][:threshold]` (default: `INFO`):
+ * `default[:solrcloud][:solr_config][:admin_handler]` (default: `org.apache.solr.handler.admin.CoreAdminHandler`): solr.xml solr param adminHandler
+ * `default[:solrcloud][:solr_config][:admin_path]` (default: `/solr/admin`): solr.xml param adminPath
+ * `default[:solrcloud][:solr_config][:core_load_threads]` (default: `3`): solr.xml solr param coreLoadThreads
+ * `default[:solrcloud][:solr_config][:core_root_directory]` (default: `node[:solrcloud][:cores_home]`): solr.xml solr param coreRootDirectory
+ * `default[:solrcloud][:solr_config][:shared_lib]` (default: `node[:solrcloud][:shared_lib]`): solr.xml solr param sharedLib
+ * `default[:solrcloud][:solr_config][:management_path]` (default: `nil`): solr.xml solr param managementPath
+ * `default[:solrcloud][:solr_config][:share_schema]` (default: `false`): solr.xml solr param shareSchema
+ * `default[:solrcloud][:solr_config][:transient_cache_size]` (default: `1000000`): solr.xml solr param transientCacheSize
+ * `default[:solrcloud][:solr_config][:solrcloud][:host_context]` (default: `solr`): solr.xml param solrcloud hostContext
+ * `default[:solrcloud][:solr_config][:solrcloud][:distrib_update_conn_timeout]` (default: `1000000`): solr.xml param solrcloud distribUpdateConnTimeout
+ * `default[:solrcloud][:solr_config][:solrcloud][:distrib_update_so_timeout]` (default: `1000000`): solr.xml param solrcloud distribUpdateSoTimeout
+ * `default[:solrcloud][:solr_config][:solrcloud][:leader_vote_wait]` (default: `1000000`): solr.xml param solrcloud leaderVoteWait
+ * `default[:solrcloud][:solr_config][:solrcloud][:zk_client_timeout]` (default: `15000`): solr.xml param solrcloud zkClientTimeout
+ * `default[:solrcloud][:solr_config][:solrcloud][:zk_host]` (default: `[]`): zookeeper servers, ',' separated, e.g. `["server:port", "server:port"]` 
+ * `default[:solrcloud][:solr_config][:solrcloud][:generic_core_node_names]` (default: `true`): solr.xml param solrcloud genericCoreNodeNames
+ * `default[:solrcloud][:solr_config][:shard_handler_factory][:socket_timeout]` (default: `0`): solr.xml param shardHandlerFactory socketTimeout
+ * `default[:solrcloud][:solr_config][:shard_handler_factory][:conn_timeout]` (default: `0`): solr.xml param shardHandlerFactory connTimeout
+ * </del>`default[:solrcloud][:solr_config][:logging][:enabled]` (default: `false`): solr.xml param logging enabled, not required</del>
+ * </del>`default[:solrcloud][:solr_config][:logging][:logging_class]` (default: `nil`): solr.xml param logging class, not required </del>
+ * </del>`default[:solrcloud][:solr_config][:logging][:watcher][:logging_size]` (default: `1000`): solr.xml param logging size, not required</del>
+ * </del>`default[:solrcloud][:solr_config][:logging][:watcher][:threshold]` (default: `INFO`): solr.xml param logging threshold, no required</del>
 
  
 ## Cookbook SolrCloud on HDFS Config Attributes
