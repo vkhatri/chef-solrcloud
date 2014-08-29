@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+Chef::Application.fatal!("node attribute node[:solrcloud][:solr_config][:solrcloud][:zk_host] must have atleast one zookeeper server") if node.solrcloud.solr_config.solrcloud.zk_host.empty? and not node.solrcloud.zk_run
+
 template File.join(node.solrcloud.solr_home, 'solr.xml') do
   source "solr.xml.erb"
   owner node.solrcloud.user

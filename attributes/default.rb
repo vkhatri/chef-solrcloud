@@ -9,8 +9,8 @@ default[:solrcloud] = {
   :install_dir  => '/usr/local/solr',
   :data_dir     => '/opt/solr',
 
-  :notify_restart   => false, # notify service restart on config change 
-  :service_name     => 'solr', 
+  :notify_restart   => false, # notify service restart on config change
+  :service_name     => 'solr',
   :service_start_wait   => 15,
 
   :dir_mode     => '0755', # default directory permissions used by solrcloud cookbook
@@ -23,11 +23,16 @@ default[:solrcloud] = {
   :enable_ssl   => true,
   :enable_request_log   => true,
   :enable_jmx   => true,
-  :manage_zkconfigsets          => true, # manage zookeeper configSet upconfig
-  :manage_zkconfigsets_source   => true, # manage zookeeper source configSet
-  :manage_collections           => true, # manage solr collections
+  :manage_zkconfigsets          => false, # manage zookeeper configSet, it is recommended to enable this attribute only on one node,
+                                          # Otherwise, each new node or configSet update will reupload config to zookeeper
+  :manage_zkconfigsets_source   => true,  # manage solr configSet source
+  :zkconfigsets_source          => 'cookbook' # options: cookbook, link.
+  :manage_collections           => false, # manage solr collections, it is recommended to enable this attribute only on one node if possible.
+                                          # Setting this attribute to all the nodes could lead to cluster wide issue. Issues encountered
+                                          # after creating a collection could lead to multiple replica set for a collection on one node.
+                                          # Use it wisely.
 
-  :java_options => nil,
+  :java_options => [],
 
   :jmx          => {
     :port       => 1099,
@@ -90,7 +95,7 @@ default[:solrcloud] = {
   :zk_run       => false, # start solr with zookeeper, useful for testing purpose
   :zk_run_port  => 2181, # start solr with zookeeper, useful for testing purpose
 
-  :collections  => {}, # solr collections 
+  :collections  => {}, # solr collections
 
   :zkconfigsets => {}, # solr zookeeper configSets
 
@@ -99,14 +104,6 @@ default[:solrcloud] = {
     :directory_factory  => 'HdfsDirectoryFactory',
     :lock_type          => 'hdfs',
     :hdfs_home          => nil # syntax: 'hdfs://host:port/path'
-  },
-
-  # Note: This Cookbook does not manage Zookeeper Server/Cluster. 
-  # Use Zookeeper Cookbook instead for Zookeeper Cluster Management 
-  # Only Setup Zookeeper for Client zkCli.sh.
-  #
-  :zookeeper    => {
-    :version    => '3.4.6'
   },
 
   :limits => {
@@ -156,18 +153,18 @@ default[:solrcloud] = {
 # Solr Directories
 default[:solrcloud][:solr_home]   = File.join(node.solrcloud.install_dir,'solr')
 default[:solrcloud][:cores_home]  = File.join(node.solrcloud.solr_home, 'cores/')
-default[:solrcloud][:shared_lib]  = File.join(node.solrcloud.install_dir,'lib') 
+default[:solrcloud][:shared_lib]  = File.join(node.solrcloud.install_dir,'lib')
 
 # Solr default configSets directory
 default[:solrcloud][:config_sets] = File.join(node.solrcloud.solr_home,'configsets')
 
-default[:solrcloud][:zk_run_data_dir]  = File.join(node.solrcloud.install_dir,'zookeeperdata') 
+default[:solrcloud][:zk_run_data_dir]  = File.join(node.solrcloud.install_dir,'zookeeperdata')
 
 # Set zkHost for zookeeper configSet management
 default[:solrcloud][:config][:solrcloud][:zk_host]     = ["#{node.ipaddress}:#{node.solrcloud.zk_run_port}"] if node.solrcloud.zk_run
 
 # Solr Zookeeper configSets directory (collection.configName)
-default[:solrcloud][:zkconfigsets_home] = File.join(node.solrcloud.install_dir,'zkconfigs')
+default[:solrcloud][:zkconfigsets_home] = node.solrcloud.config_sets # File.join(node.solrcloud.install_dir,'zkconfigs')
 
 default[:solrcloud][:solr_config][:core_root_directory]     = node.solrcloud.cores_home
 default[:solrcloud][:solr_config][:shared_lib]              = node.solrcloud.shared_lib
@@ -177,14 +174,6 @@ default[:solrcloud][:solr_config][:solrcloud][:host_port]   = node.solrcloud.por
 default[:solrcloud][:source_dir]      = "/usr/local/solr-#{node.solrcloud.version}"
 default[:solrcloud][:tarball][:url]   = "https://archive.apache.org/dist/lucene/solr/#{node.solrcloud.version}/solr-#{node.solrcloud.version}.tgz"
 default[:solrcloud][:tarball][:md5]   = '316f11ed8e81cf07ebfa6ad9443add09'
-
-# Zookeeper Client Setup
-default[:solrcloud][:zookeeper][:source_dir]      = File.join(node.solrcloud.source_dir, "zookeeper-#{node.solrcloud.zookeeper.version}")
-default[:solrcloud][:zookeeper][:install_dir]     = File.join(node.solrcloud.install_dir, 'zookeeper')
-default[:solrcloud][:zookeeper][:zkcli]           = File.join(node.solrcloud.zookeeper.install_dir, 'bin', 'zkCli.sh')
-default[:solrcloud][:zookeeper][:tarball][:url]   = "https://archive.apache.org/dist/zookeeper/zookeeper-#{node.solrcloud.zookeeper.version}/zookeeper-#{node.solrcloud.zookeeper.version}.tar.gz"
-default[:solrcloud][:zookeeper][:tarball][:md5]   = '971c379ba65714fd25dc5fe8f14e9ad1'
-default[:solrcloud][:zookeeper][:solr_zkcli]      = "#{node.solrcloud.install_dir}/example/scripts/cloud-scripts/zkcli.sh"
 
 default[:solrcloud][:key_store][:key_store_file_path]      = File.join(node.solrcloud.install_dir, 'etc', node.solrcloud.key_store.key_store_file)
 

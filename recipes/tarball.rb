@@ -18,7 +18,7 @@
 #
 
 # Setup Solr Service User
-include_recipe "solrcloud::user" if node.solrcloud.setup_user
+include_recipe "solrcloud::user"
 
 require "tmpdir"
 
@@ -52,7 +52,7 @@ bash "extract_solr_tarball" do
   EOS
 
   not_if  { File.exists?(node.solrcloud.source_dir) }
-  creates "#{node.solrcloud.install_dir}/dist/solr-#{node.solrcloud.version}.war" 
+  creates "#{node.solrcloud.install_dir}/dist/solr-#{node.solrcloud.version}.war"
   action  :run
 end
 
@@ -99,7 +99,7 @@ end
     mode      0755
     recursive true
     action    :create
-  end 
+  end
 }
 
 # Likely to be removed or changed in future
@@ -138,7 +138,7 @@ ruby_block "require_pam_limits.so" do
   end
 end
 
-# Solr Config 
+# Solr Config
 include_recipe "solrcloud::config"
 
 # Jetty Config
@@ -154,7 +154,7 @@ service "solr" do
   notifies      :run, "ruby_block[wait_start_up]", :immediately
 end
 
-# Waiting for Service 
+# Waiting for Service
 ruby_block "wait_start_up" do
   block  do
     sleep node.solrcloud.service_start_wait
@@ -166,7 +166,7 @@ remote_file tarball_file do
   action :delete
 end
 
-# Setup configsets - node.solrcloud.zkconfigsets 
+# Setup configsets - node.solrcloud.zkconfigsets
 include_recipe "solrcloud::zkconfigsets"
 
 # Setup collections - node.solrcloud.collections

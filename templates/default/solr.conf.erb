@@ -3,7 +3,7 @@
 # Do NOT modify this file directly.
 
 # Basic Options
-JAVA_OPTIONS=" <%= '-DzkRun' if node.solrcloud.zk_run-%> -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> -Dsolr.data.dir=<%=node.solrcloud.data_dir-%> <%=node.solrcloud.java_options-%> $JAVA_OPTIONS "
+JAVA_OPTIONS=" <%= '-DzkRun' if node.solrcloud.zk_run-%> -Dsolr.solr.home=<%=node.solrcloud.solr_home-%> -Dsolr.data.dir=<%=node.solrcloud.data_dir-%> <%=node.solrcloud.java_options.join(' ')-%> $JAVA_OPTIONS "
 
 <%if node.solrcloud.hdfs.enable and node.solrcloud.hdfs.hdfs_home-%>
 # Solr on HDFS Options

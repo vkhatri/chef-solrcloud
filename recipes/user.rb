@@ -18,17 +18,18 @@
 #
 
 # WARNING:
-# User setup by this recipe may not provide a unique 
-# user/group id across nodes and could create problem 
-# of non-unique next available user id for User 
+# User setup by this recipe may not provide a unique
+# user/group id across nodes and could create problem
+# of non-unique next available user id for User
 # management cookbook.
 #
-# It is advised to use a User management recipe instead 
+# It is advised to use a User management recipe instead
 # for Production systems.
 #
 
 group node.solrcloud.group do
   action :create
+  only_if { node.solrcloud.setup_user }
 end
 
 user node.solrcloud.user do
@@ -36,5 +37,6 @@ user node.solrcloud.user do
   shell   "/bin/bash"
   gid     node.solrcloud.group
   action  :create
+  only_if { node.solrcloud.setup_user }
 end
 

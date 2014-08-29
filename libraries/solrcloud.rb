@@ -21,16 +21,27 @@ require 'net/http'
 require 'json'
 
 module SolrCloud
+  # Solr Collection Management Class. Available Class methods:
   class SolrCollection
     attr_accessor :options, :conn, :headers
 
-    def initialize(opts={})
+    def initialize(opts = {})
+      # opts = {
+      #   :host [String] => 'solr host',
+      #   :port [String] => 'solr host port',
+      #   :ssl [Boolean]=> 'use https instead',
+      # }
       @options    = opts
-      @headers    = { 'Accept' => "application/json", 'Keep-Alive' => "120", 'Content-Type' => 'application/json' }
+      @headers    = {
+        'Accept' => 'application/json',
+        'Keep-Alive' => '120',
+        'Content-Type' => 'application/json'
+      }
       connect
     end
 
     def connect
+      # Check Port Connectivity and Set  HTTP connection
       begin
         if options[:ssl]
           TCPSocket.new(options[:host], options[:ssl_port])
@@ -44,11 +55,11 @@ module SolrCloud
           @conn = Net::HTTP.new options[:host], options[:port]
         end
       rescue => error
-        Chef::Application.fatal!("solr service port is down or inaccessible #{options[:ssl] ? options[:ssl_port] : options[:port]}, #{error.class} - #{error.message}")
+        raise "solr service port is down or inaccessible #{options[:ssl] ? options[:ssl_port] : options[:port]}, #{error.class} - #{error.message}"
       end
     end
 
-    def collection? collection
+    def collection?(collection)
       collections.include? collection
     end
 
@@ -57,8 +68,7 @@ module SolrCloud
       if reply.code.to_i == 200
         return (JSON.parse(reply.body))['collections']
       else
-        Chef::Application.fatal!("/solr/admin/collections?wt=json&action=LIST api call failed. => #{JSON.pretty_generate(JSON.parse(reply.body))}")
-        return []
+        raise "/solr/admin/collections?wt=json&action=LIST api call failed. => #{JSON.pretty_generate(JSON.parse(reply.body))}"
       end
     end
 
@@ -74,13 +84,13 @@ module SolrCloud
       url << "&router.field=#{options[:router_field]}" if options[:router_field]
       url << "&async=#{options[:async]}" if options[:async]
       reply = conn.request Net::HTTP::Post.new url, headers
-      data  = JSON.pretty_generate(JSON.parse(reply.body)) 
+      data  = JSON.pretty_generate(JSON.parse(reply.body))
 
       if reply.code.to_i == 200
         Chef::Log.info("collection #{options[:name]} created. => #{data}")
         return true
       else
-        Chef::Application.fatal!("#{url}, collection #{options[:name]} failed to create. => #{data}")
+        raise "#{url}, collection #{options[:name]} failed to create. => #{data}"
         return false
       end
     end
@@ -94,7 +104,7 @@ module SolrCloud
         Chef::Log.info("collection #{options[:name]} deleted. => #{data}")
         return true
       else
-        Chef::Application.fatal!("#{url}, collection #{options[:name]} failed to delete. => #{data}")
+        raise "#{url}, collection #{options[:name]} failed to delete. => #{data}"
         return false
       end
     end
