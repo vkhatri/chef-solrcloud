@@ -1,6 +1,6 @@
 
 # Enable Auto Memory -Xmx java option
-default[:solrcloud][:auto_java_memory] = false
+default[:solrcloud][:auto_java_memory] = true
 
 # Minimum Memory to preserve for system
 default[:solrcloud][:auto_system_memory] = 768
@@ -22,8 +22,5 @@ if node.solrcloud.auto_java_memory and node.memory and node.memory.has_key?('tot
   java_memory     = total_memory - system_memory
   # Making Java -Xmx even
   java_memory     += 1 if not java_memory.even?
-  default[:solrcloud][:java_options] << " -Xmx#{java_memory}m "
-else
-  default[:solrcloud][:java_options] << " -Xmx1024m "
-  Chef::Log.error("failed to calculate Java -Xmx value, node missing attribute node[:memory][:total]")
+  node[:solrcloud][:java_options] << " -Xmx#{java_memory}m "
 end

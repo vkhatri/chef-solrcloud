@@ -26,7 +26,7 @@ default[:solrcloud] = {
   :manage_zkconfigsets          => false, # manage zookeeper configSet, it is recommended to enable this attribute only on one node,
                                           # Otherwise, each new node or configSet update will reupload config to zookeeper
   :manage_zkconfigsets_source   => true,  # manage solr configSet source
-  :zkconfigsets_source          => 'cookbook', # options: cookbook, link.
+  :notify_zkconfigsets_upload   => true,  # notify triggers configSet upload to zookeeper, must be enabled only on one or limited set of nodes
   :manage_collections           => false, # manage solr collections, it is recommended to enable this attribute only on one node if possible.
                                           # Setting this attribute to all the nodes could lead to cluster wide issue. Issues encountered
                                           # after creating a collection could lead to multiple replica set for a collection on one node.
