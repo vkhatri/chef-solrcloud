@@ -21,12 +21,12 @@ actions :create, :delete
 
 default_action :create
 
-attribute :configset_name,  :kind_of => String, :regex => /.*/, :default => :name
-attribute :user,            :kind_of => String, :regex => /.*/, :default => node.solrcloud.user
-attribute :group,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.group
-attribute :solr_zkcli,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.solr_zkcli
-attribute :zkcli,           :kind_of => String, :regex => /.*/, :default => node.solrcloud.zookeeper.zkcli
-attribute :zkhost,          :kind_of => String, :regex => /.*/, :default => node.solrcloud.solr_config.solrcloud.zk_host.first # Need only one node
-attribute :zkconfigsets_home,      :kind_of => String, :regex => /.*/, :default => node.solrcloud.zkconfigsets_home
-attribute :zkconfigsets_cookbook,  :kind_of => String, :regex => /.*/, :default => node.solrcloud.zkconfigsets_cookbook
+attribute :configset_name,  :kind_of => String, :default => :name
+attribute :user,            :kind_of => String, :default => node.solrcloud.user
+attribute :group,           :kind_of => String, :default => node.solrcloud.group
+attribute :solr_zkcli,      :kind_of => String, :default => node.solrcloud.zookeeper.solr_zkcli
+attribute :zkcli,           :kind_of => String, :default => node.solrcloud.zookeeper.zkcli
+attribute :zkhost,          :kind_of => String, :default => node.solrcloud.solr_config.solrcloud.zk_host.first
+attribute :zkconfigsets_home,      :kind_of => String, :default => node.solrcloud.zkconfigsets_home
+attribute :zkconfigsets_cookbook,  :kind_of => String, :default => node.solrcloud.zkconfigsets_cookbook
 

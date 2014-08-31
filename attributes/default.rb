@@ -26,7 +26,7 @@ default[:solrcloud] = {
   :manage_zkconfigsets          => false, # manage zookeeper configSet, it is recommended to enable this attribute only on one node,
                                           # Otherwise, each new node or configSet update will reupload config to zookeeper
   :manage_zkconfigsets_source   => true,  # manage solr configSet source
-  :zkconfigsets_source          => 'cookbook' # options: cookbook, link.
+  :zkconfigsets_source          => 'cookbook', # options: cookbook, link.
   :manage_collections           => false, # manage solr collections, it is recommended to enable this attribute only on one node if possible.
                                           # Setting this attribute to all the nodes could lead to cluster wide issue. Issues encountered
                                           # after creating a collection could lead to multiple replica set for a collection on one node.
@@ -161,10 +161,10 @@ default[:solrcloud][:config_sets] = File.join(node.solrcloud.solr_home,'configse
 default[:solrcloud][:zk_run_data_dir]  = File.join(node.solrcloud.install_dir,'zookeeperdata')
 
 # Set zkHost for zookeeper configSet management
-default[:solrcloud][:config][:solrcloud][:zk_host]     = ["#{node.ipaddress}:#{node.solrcloud.zk_run_port}"] if node.solrcloud.zk_run
+default[:solrcloud][:solr_config][:solrcloud][:zk_host] = ["#{node.ipaddress}:#{node.solrcloud.zk_run_port}"] if node.solrcloud.zk_run
 
 # Solr Zookeeper configSets directory (collection.configName)
-default[:solrcloud][:zkconfigsets_home] = node.solrcloud.config_sets # File.join(node.solrcloud.install_dir,'zkconfigs')
+default[:solrcloud][:zkconfigsets_home] = File.join(node.solrcloud.install_dir,'zkconfigs')
 
 default[:solrcloud][:solr_config][:core_root_directory]     = node.solrcloud.cores_home
 default[:solrcloud][:solr_config][:shared_lib]              = node.solrcloud.shared_lib

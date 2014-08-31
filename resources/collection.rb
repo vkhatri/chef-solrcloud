@@ -16,23 +16,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
- 
+
 actions :create, :delete
 
 default_action :create
 
-attribute :num_shards,    :kind_of => [String, Integer], :regex => /.*/, :default => '1'
-attribute :shards,        :kind_of => String, :regex => /.*/, :default => nil
-attribute :router_field,  :kind_of => String, :regex => /.*/, :default => nil
-attribute :async,         :kind_of => String, :regex => /.*/, :default => nil
-attribute :router_name,   :kind_of => String, :regex => /.*/, :default => nil
-attribute :router_field,  :kind_of => String, :regex => /.*/, :default => nil
-attribute :host,          :kind_of => String, :regex => /.*/, :default => node.ipaddress
-attribute :ssl,           :kind_of => [TrueClass, FalseClass], :default => false
-attribute :port,          :kind_of => [String, Integer], :regex   => /.*/, :default => node.solrcloud.port
+attribute :num_shards,    :kind_of => [String, Integer], :default => '1'
+attribute :shards,        :kind_of => String, :default => nil
+attribute :router_field,  :kind_of => String, :default => nil
+attribute :async,         :kind_of => String, :default => nil
+attribute :router_name,   :kind_of => String, :default => nil
+attribute :router_field,  :kind_of => String, :default => nil
+attribute :host,          :kind_of => String, :default => node.ipaddress
+attribute :use_ssl,       :kind_of => [TrueClass, FalseClass], :default => false
+attribute :port,          :kind_of => [String, Integer], :default => node.solrcloud.port
 attribute :ssl_port,      :kind_of => [String, Integer], :default => node.solrcloud.ssl_port
-attribute :create_node_set,         :kind_of => String, :regex => /.*/, :default => nil
-attribute :replication_factor,      :kind_of => String, :regex => /.*/, :default => 1
-attribute :max_shards_per_node,     :kind_of => [String, Integer], :regex => /.*/, :default => nil
-attribute :collection_config_name,  :kind_of => String, :regex => /.*/, :default => nil
-
+attribute :create_node_set,         :kind_of => String, :default => nil
+attribute :replication_factor,      :kind_of => String, :default => 1
+attribute :max_shards_per_node,     :kind_of => [String, Integer], :default => nil
+attribute :collection_config_name,  :kind_of => String, :default => nil
+attribute :zkcli,           :kind_of => String, :default => node.solrcloud.zookeeper.zkcli
+attribute :zkhost,          :kind_of => String, :default => node.solrcloud.solr_config.solrcloud.zk_host.first # Need only one node
