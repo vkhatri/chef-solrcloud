@@ -22,5 +22,5 @@ if node.solrcloud.auto_java_memory and node.memory and node.memory.has_key?('tot
   java_memory     = total_memory - system_memory
   # Making Java -Xmx even
   java_memory     += 1 if not java_memory.even?
-  node[:solrcloud][:java_options] << " -Xmx#{java_memory}m "
+  node.default[:solrcloud][:java_options] << " -Xmx#{java_memory}m "
 end
