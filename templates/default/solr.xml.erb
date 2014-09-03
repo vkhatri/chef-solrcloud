@@ -24,11 +24,11 @@
 -->
 
 <!--
-   This is an example of a simple "solr.xml" file for configuring one or 
-   more Solr Cores, as well as allowing Cores to be added, removed, and 
+   This is an example of a simple "solr.xml" file for configuring one or
+   more Solr Cores, as well as allowing Cores to be added, removed, and
    reloaded via HTTP requests.
 
-   More information about options available in this configuration file, 
+   More information about options available in this configuration file,
    and Solr Core administration can be found online:
    http://wiki.apache.org/solr/CoreAdmin
 -->
@@ -42,10 +42,10 @@
   <%else-%>
   <!-- <str name="coreRootDirectory"><%=node.solrcloud.solr_config.core_root_directory-%></str> --> <!-- usually solrHome  -->
   <%end-%>
-  <!-- <str name="managementPath">${managementPath:<%=node.solrcloud.solr_config.management_path-%>}</str> --> 
+  <!-- <str name="managementPath">${managementPath:<%=node.solrcloud.solr_config.management_path-%>}</str> -->
   <str name="sharedLib"><%=node.solrcloud.solr_config.shared_lib-%></str>
   <str name="shareSchema"><%=node.solrcloud.solr_config.share_schema-%></str>
-  <int name="transientCacheSize">${transientCacheSize:<%=node.solrcloud.solr_config.transient_cache_size-%>}</int> <!-- ignored unless cores are defined with transient=true --> 
+  <int name="transientCacheSize">${transientCacheSize:<%=node.solrcloud.solr_config.transient_cache_size-%>}</int> <!-- ignored unless cores are defined with transient=true -->
 
   <solrcloud>
     <int name="distribUpdateConnTimeout">${distribUpdTimeout:<%=node.solrcloud.solr_config.solrcloud.distrib_update_conn_timeout-%>}</int>

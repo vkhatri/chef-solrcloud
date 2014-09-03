@@ -74,20 +74,20 @@
     </Call>
 
     <!-- if the connector below is uncommented, then jetty will also accept SSL
-         connections on port 8984, using a self signed certificate and can 
-         optionally require the client to authenticate with a certificate. 
+         connections on port 8984, using a self signed certificate and can
+         optionally require the client to authenticate with a certificate.
          (which can be the same as the server certificate_
-         
+
          # Run solr example with SSL on port 8984
          java -jar start.jar
-         # 
+         #
          # Run post.jar so that it trusts the server cert...
          java -Djavax.net.ssl.trustStore=../etc/solrtest.keystore -Durl=https://localhost:8984/solr/update -jar post.jar *.xml
 
          # Run solr example with SSL requiring client certs on port 8984
          java -Djetty.ssl.clientAuth=true -jar start.jar
          #
-         # Run post.jar so that it trusts the server cert, 
+         # Run post.jar so that it trusts the server cert,
          # and authenticates with a client cert
          java -Djavax.net.ssl.keyStorePassword=secret -Djavax.net.ssl.keyStore=../etc/solrtest.keystore -Djavax.net.ssl.trustStore=../etc/solrtest.keystore -Durl=https://localhost:8984/solr/update -jar post.jar *.xml
 
@@ -111,7 +111,7 @@
     <%= '-->' unless node.solrcloud.enable_ssl-%>
 
     <!-- =========================================================== -->
-    <!-- Set handler Collection Structure                            --> 
+    <!-- Set handler Collection Structure                            -->
     <!-- =========================================================== -->
     <Set name="handler">
       <New id="Handlers" class="org.eclipse.jetty.server.handler.HandlerCollection">
@@ -130,7 +130,7 @@
         </Set>
       </New>
     </Set>
-    
+
     <!-- =========================================================== -->
     <!-- Configure Request Log                                       -->
     <!-- =========================================================== -->
@@ -181,10 +181,10 @@
             <Arg>org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern</Arg>
             <Arg>.*/servlet-api-[^/]*\.jar$</Arg>
           </Call>
-          
-          
+
+
           <!-- Add a customize step to the deployment lifecycle -->
-          <!-- uncomment and replace DebugBinding with your extended AppLifeCycle.Binding class 
+          <!-- uncomment and replace DebugBinding with your extended AppLifeCycle.Binding class
           <Call name="insertLifeCycleNode">
             <Arg>deployed</Arg>
             <Arg>starting</Arg>
@@ -198,11 +198,11 @@
             </Arg>
           </Call>
           -->
-          
+
         </New>
       </Arg>
     </Call>
-    
+
     <Ref id="DeploymentManager">
       <Call name="addAppProvider">
         <Arg>
