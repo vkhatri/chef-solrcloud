@@ -5,19 +5,21 @@ This file is used to list changes made in each version of the solrcloud cookbook
 
 0.3.0
 -----
-- vkhatri - made lwrp a bit better
+- vkhatri - made lwrp a bit better using ruby gem zk, fix #1
 
 - vkhatri - added another attribute for zookeeper configSet upload
 
 - vkhatri - changed failure to raise an Exception instead of Chef::Application.fatal!
 
-- vkhatri - Java Options attribute is now an Array
+- vkhatri - java Options attribute is now an Array
 
-- vkhatri - Added Auto Java Memory attribute file
+- vkhatri - added Auto Java Memory attribute file
 
-- vkhatri - Disabled default Node zkConfigSets and collections manage attribute
+- vkhatri - disabled default Node zkConfigSets and collections manage attribute
 
-- vkhatri - Added zkConfigSets source management attribute - zkconfigsets_source
+- vkhatri - added zkConfigSets source management attribute - zkconfigsets_source
+
+- vkhatri - disabled CONSOLE logging in log4j.properties and added more template attributes
 
 0.2.8
 -----
