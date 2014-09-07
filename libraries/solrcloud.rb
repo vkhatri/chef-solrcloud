@@ -17,13 +17,43 @@
 # limitations under the License.
 #
 
-require 'net/http'
-require 'json'
-
 module SolrCloud
-  # Solr Collection Management Class. Available Class methods:
-  class SolrCollection
-    attr_accessor :conn, :headers
+
+  class Zk
+
+    attr_accessor :zkconn
+
+    def initialize(server)
+      # server => 'zkhost:zkport'
+      @zkconn = ZK.new(server)
+    end
+
+    def collection?(collection)
+      clusterstate = zkconn.get('/clusterstate.json').first
+      if clusterstate
+        return JSON.parse(clusterstate).map {|k,v| k }.include?(collection)
+      else
+        return false
+      end
+    end
+
+    def collections
+      JSON.parse(zkconn.get('/clusterstate.json').first).map {|k,v| k }
+    end
+
+    def configset?(configset)
+      zkconn.exists?("/configs/#{configset}") # zkconn.exists?("/configs/#{configset}/solrconfig.xml") and zkconn.exists?("/configs/#{configset}/schema.xml")
+    end
+
+    def delete_configset(configset)
+      zkconn.delete("/configs/#{configset}") # if zkconn.exists?("/configs/#{configset}")
+    end
+  end
+
+  # Solr Collection Management Class
+  class Collection
+
+    attr_accessor :httpconn, :headers
 
     def initialize(opts = {})
       # opts = {
@@ -46,33 +76,20 @@ module SolrCloud
       begin
         TCPSocket.new(host, host_port)
       rescue => error
-        raise "solr service port is down or inaccessible #{host_port}, #{error.class} - #{error.message}"
+        raise "solr service port is down or inaccessible #{host}:#{host_port}, #{error.class} - #{error.message}"
       end
       Chef::Log.info("connecting to solr host=#{host} on ssl port=#{host_port}")
-      @conn = Net::HTTP.new host, host_port
+      @httpconn = Net::HTTP.new host, host_port
       if use_ssl
-        @conn.use_ssl = true
-        @conn.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        @httpconn.use_ssl = true
+        @httpconn.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
     end
 
-    def collection?(name)
-      collections.include? name
-    end
-
-    def collections
-      reply = conn.request(Net::HTTP::Get.new("/solr/admin/collections?wt=json&action=LIST", headers))
-      if reply.code.to_i == 200
-        return (JSON.parse(reply.body))['collections']
-      else
-        raise "/solr/admin/collections?wt=json&action=LIST api call failed. => #{JSON.pretty_generate(JSON.parse(reply.body))}"
-      end
-    end
-
-    def create_collection(opts)
-      Chef::Log.info("collection #{opts[:name]} creating ..")
+    def create(name, replication_factor, opts)
+      Chef::Log.info("collection #{name} creating ..")
       # Required Parameters
-      url = "/solr/admin/collections?wt=json&action=CREATE&name=#{opts[:name]}&replicationFactor=#{opts[:replication_factor]}"
+      url = "/solr/admin/collections?wt=json&action=CREATE&name=#{name}&replicationFactor=#{replication_factor}"
       # Optional Parameters
       url << "&numShards=#{opts[:num_shards]}" if opts[:num_shards]
       url << "&shards=#{opts[:shards]}" if opts[:shards]
@@ -82,29 +99,27 @@ module SolrCloud
       url << "&router.name=#{opts[:router_name]}" if opts[:router_name]
       url << "&router.field=#{otps[:router_field]}" if opts[:router_field]
       url << "&async=#{opts[:async]}" if opts[:async]
-      reply = conn.request Net::HTTP::Post.new url, headers
+      reply = httpconn.request(Net::HTTP::Post.new(url, headers))
       data  = JSON.pretty_generate(JSON.parse(reply.body))
 
       if reply.code.to_i == 200
-        Chef::Log.info("collection #{opts[:name]} created. => #{data}")
+        Chef::Log.info("collection #{name} created. => #{data}")
         return true
       else
-        raise "#{url}, collection #{opts[:name]} failed to create. => #{data}"
-        return false
+        raise "#{url}, collection #{name} failed to create. => #{data}"
       end
     end
 
-    def delete_collection(name)
+    def delete(name)
       Chef::Log.info("collection #{name} deleting ..")
       url = "/solr/admin/collections?wt=json&action=DELETE&name=#{name}"
-      reply = conn.request Net::HTTP::Post.new url, headers
+      reply = httpconn.request(Net::HTTP::Post.new(url, headers))
       data = JSON.pretty_generate(JSON.parse(reply.body))
       if reply.code.to_i == 200
         Chef::Log.info("collection #{name} deleted. => #{data}")
         return true
       else
         raise "#{url}, collection #{name} failed to delete. => #{data}"
-        return false
       end
     end
 
