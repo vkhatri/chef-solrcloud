@@ -85,7 +85,7 @@ one of the configured zookeeper server via attribute `node[:solrcloud][:solr_con
     `node[:solrcloud][:manage_zkconfigsets]` & `node[:solrcloud][:manage_zkconfigsets_source]`
     does not require to be enabled on all the nodes.
 
-Check `Cookbook Advanced Attributes` section for atribute details.
+Check `Cookbook Advanced Attributes` section for attribute details.
 
 
 **zookeeper configSet config changes**
@@ -144,7 +144,7 @@ Parameters:
 - *zkhost (optional)*					- zookeeper server, default value `node[:solrcloud][:solr_config][:solrcloud][:zk_host].first`
 - *zkconfigsets_home (optional)*		- configSet directory to sore on solrcloud node, default value `node[:solrcloud][:zkconfigsets_home]`
 - *zkconfigsets_cookbook (optional)*	- configSet cookbook name, default value `node[:solrcloud][:zkconfigsets_cookbook]`
-
+- *manage_zkconfigsets (optional)* - manage configset, default value `node[:solrcloud][:manage_zkconfigsets]`
 
 **LWRP configSet source cookbook/location**
 
@@ -159,11 +159,11 @@ configSets source cookbook is default set to `solrcloud` and can be changed via 
 
 SolrCloud collection is managed via LWRP - `solrcloud_collection`.
 
-    Create/Delete Collection API does not require to run on all solrcloud cluster nodes,
-    hence attribute `node[:solrcloud][:manage_collections]` does not require to be
-    enabled on all the nodes.
+> Create/Delete Collection API does not require to run on all solrcloud cluster nodes, hence attribute
 
-Check `Cookbook Advanced Attributes` section for atribute details.
+> `node[:solrcloud][:manage_collections]` does not require to be enabled on all the nodes.
+
+Check `Cookbook Advanced Attributes` section for attribute details.
 
 
 **collection Update/Change**
@@ -258,7 +258,7 @@ Parameters:
  * `default[:solrcloud][:notify_zkconfigsets_upload]` (default: `true`): notify/triggers configSet upload to zookeeper upon create/update
 
     This attribute should be enabled for limited nodes in solrcloud cluster if possible.
-		
+
  * `default[:solrcloud][:manage_collections]` (default: `true`): if set true, manages solrcloud cluster collections
 
     This attribute should be enabled for limited nodes in solrcloud cluster if possible.
@@ -284,11 +284,15 @@ Parameters:
     With attribute `default[:solrcloud][:zk_run]`, this attribute will get local zookeeper server.
 
  * `default[:solrcloud][:java_options]` (default: `[]`): java options
- 
+
  * `default[:solrcloud][:auto_java_memory]` (default: `true`): enable auto java memory allocation, sets java attribute `-Xmx` for `node[:solrcloud][:java_options]`
 
+		This option calculates maximum allowed memory (multiple of 1024) for java
+		process with minimum system memory reservation defined by attribute
+		`node[:solrcloud][:auto_system_memory]`
+
  * `default[:solrcloud][:auto_system_memory]` (default: `768`): memory to preserve for OS, required when attribute `default[:solrcloud][:auto_java_memory]` is set
-  
+
 ## Cookbook Core Attributes
 
  * `default[:solrcloud][:user]` (default: `solr`): solr service user
@@ -333,10 +337,14 @@ Parameters:
  * `default[:solrcloud][:limits][:nofile]` (default: `48000`): solr service user file limit
  * `default[:solrcloud][:limits][:nproc]` (default: `unlimited`): solr service user process limit
 
+
 ## Cookbook log4j.properties Config Attributes
 
- * `default[:solrcloud][:log4j][:MaxFileSize]` (default: `10MB`):  maximum log file size
- * `default[:solrcloud][:log4j][:MaxBackupIndex]` (default: `10`): log files retention
+ * `default[:solrcloud][:log4j][:level]` (default: `10MB`):  solr log threshold
+ * `default[:solrcloud][:log4j][:console]` (default: `false`): enable/disable CONSOLE log
+ * `default[:solrcloud][:log4j][:max_file_size]` (default: `10MB`):  maximum log file size
+ * `default[:solrcloud][:log4j][:max_backup_index]` (default: `10`): log files retention
+ * `default[:solrcloud][:log4j][:conversion_pattern]` (default: `'%d{ISO8601} [%t] %-5p %c{3} %x - %m%n'`): log conversion pattern
 
 ## Cookbook Request Log Config Attributes
 
@@ -487,6 +495,19 @@ will work just fine for a single node solrcloud cluster.
   	}
 
 
+## Multi Node Manager Attributes
+
+Below attributes are crucial for Multi Node Cluster. It is not advised to enable below solrcloud attributes on all
+the nodes in the cluster. Like, each new node will trigger a zookeeper configset re-upload. Creating new collection
+is better off maanged by one node to prevent a false collection state in the cluster.
+
+
+	"default_attributes": {
+      "solrcloud": {
+      	"manage_collections": true,
+      	"manage_zkconfigsets": true,
+
+
 ## Multi Node SolrCloud Test Cluster Deployment with zookeeper Cluster
 
 
@@ -505,7 +526,8 @@ will work just fine for a single node solrcloud cluster.
 		},
         "port": "8080",
         "setup_user": true,
-        "manager": true,
+      	"manage_collections": true,
+      	"manage_zkconfigsets": true,
         "zkconfigsets": {
           "samplecollection": {}
         },
@@ -541,7 +563,6 @@ On `any one` of the cluster node, enable attribute `node[:solrcloud][:zk_run]` a
 		},
         "port": "8080",
         "setup_user": true,
-        "manager": true,
         "zkconfigsets": {
           "samplecollection": {}
         },
