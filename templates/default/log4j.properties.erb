@@ -2,32 +2,30 @@
 # This file is managed by Chef.
 # Do NOT modify this file directly.
 
-#  Logging level
 solr.log=<%=node.solrcloud.log_dir%>
-log4j.rootLogger=INFO, file, CONSOLE
 
+<% if node.solrcloud.log4j.console -%>
+log4j.rootLogger=<%=node.solrcloud.log4j.level.upcase-%>, file, CONSOLE
+
+# Console Logging
 log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
 log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
 log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} [%t] %-5p %c{1} %x - %m%n
+<% else -%>
+log4j.rootLogger=<%=node.solrcloud.log4j.level.upcase-%>, file
+<% end -%>
 
-#- daily rotation with log cleanup.
+#- Size Based File rotation
 log4j.appender.file=org.apache.log4j.RollingFileAppender
-#log4j.appender.file.rollingPolicy=org.apache.log4j.rolling.TimeBasedRollingPolicy
-log4j.appender.file.MaxFileSize=<%=node.solrcloud.log4j.MaxFileSize%>
-log4j.appender.file.MaxBackupIndex=<%=node.solrcloud.log4j.MaxBackupIndex%>
-
-#- File to log to and log format
+log4j.appender.file.MaxFileSize=<%=node.solrcloud.log4j.max_file_size%>
+log4j.appender.file.MaxBackupIndex=<%=node.solrcloud.log4j.max_backup_index%>
 log4j.appender.file.File=${solr.log}/solr.log
 log4j.appender.file.layout=org.apache.log4j.PatternLayout
-log4j.appender.file.layout.ConversionPattern=%d{ISO8601} [%t] %-5p %c{3} %x - %m%n
+log4j.appender.file.layout.ConversionPattern=<%=node.solrcloud.log4j.conversion_pattern%>
 
-log4j.appender.file.rollingPolicy.ActiveFileName=${solr.log}/solr.log
-log4j.appender.file.rollingPolicy.FileNamePattern=${solr.log}/solr-.%d{yyyyMMdd}.log.gz
 
 log4j.logger.org.apache.zookeeper=WARN
 log4j.logger.org.apache.hadoop=WARN
-
-# set to INFO to enable infostream log messages
 log4j.logger.org.apache.solr.update.LoggingInfoStream=OFF
 log4j.logger.org.apache.solr.update.processor.LogUpdateProcessor=WARN
 

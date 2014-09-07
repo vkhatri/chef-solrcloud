@@ -20,6 +20,11 @@
 # Setup Solr Service User
 include_recipe "solrcloud::user"
 
+chef_gem "zk" do
+  action :install
+  only_if { node.solrcloud.manage_collections }
+end
+
 require "tmpdir"
 
 temp_d        = Dir.tmpdir

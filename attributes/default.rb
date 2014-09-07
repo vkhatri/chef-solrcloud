@@ -114,8 +114,11 @@ default[:solrcloud] = {
 
     # log4j.properties config
   :log4j        => {
-    :MaxFileSize      => '10MB',
-    :MaxBackupIndex   => '10'
+    :level              => 'INFO',
+    :console            => false,
+    :max_file_size      => '100MB',
+    :max_backup_index   => '10',
+    :conversion_pattern => '%d{ISO8601} [%t] %-5p %c{3} %x - %m%n'
   },
 
   :solr_config       => {
