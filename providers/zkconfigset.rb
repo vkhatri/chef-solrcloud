@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: solrcloud
-# Provider:: solrcloud_zkconfigset
+# Provider:: zkconfigset
 #
 # Copyright 2014, Virender Khatri
 #
@@ -22,43 +22,40 @@ def whyrun_supported?
 end
 
 action :delete do
-
-  if node.solrcloud.manage_zkconfigsets
+  converge_by("delete config set #{new_resource.name} if exists") do
     execute "zk_config_set_rmr_#{new_resource.name}" do
-      # TODO: Use Zookeeper gem to get the status instead using zkCli.sh
       command   "echo 'rmr /configs/#{new_resource.name}' | #{new_resource.zkcli} -server #{new_resource.zkhost} 2>&1"
-      only_if   "echo 'ls /configs/#{new_resource.name}' | #{new_resource.zkcli} -server #{new_resource.zkhost} 2>&1 | egrep -o 'solrconfig.xml|schema.xml' > /dev/null"
+      only_if { new_resource.manage_zkconfigsets and SolrCloud::Zk.new(new_resource.zkhost).configset?(new_resource.name) }
+    end
+
+    directory ::File.join(new_resource.zkconfigsets_home, new_resource.name) do
+      recursive   true
+      action      :delete
+      only_if     { node.solrcloud.manage_zkconfigsets_source }
     end
   end
-
-  directory ::File.join(new_resource.zkconfigsets_home, new_resource.name) do
-    recursive   true
-    action      :delete
-    only_if     { node.solrcloud.manage_zkconfigsets_source }
-  end
-
 end
 
 action :create do
+  converge_by("create config set #{new_resource.name} if missing") do
+    remote_directory ::File.join(new_resource.zkconfigsets_home, new_resource.name) do
+      cookbook    new_resource.zkconfigsets_cookbook
+      source      new_resource.name
+      owner       new_resource.user
+      group       new_resource.group
+      mode        0644
+      files_mode  0644
+      files_owner new_resource.user
+      files_group new_resource.group
+      notifies    :run, "execute[zk_config_set_upconfig_#{new_resource.name}]", :immediately if node.solrcloud.notify_zkconfigsets_upload
+      only_if     { node.solrcloud.manage_zkconfigsets_source }
+    end
 
-  remote_directory ::File.join(new_resource.zkconfigsets_home, new_resource.name) do
-    cookbook    new_resource.zkconfigsets_cookbook
-    source      new_resource.name
-    owner       new_resource.user
-    group       new_resource.group
-    mode        0644
-    files_mode  0644
-    files_owner new_resource.user
-    files_group new_resource.group
-    notifies    :run, "execute[zk_config_set_upconfig_#{new_resource.name}]", :immediately if node.solrcloud.notify_zkconfigsets_upload
-    only_if     { node.solrcloud.manage_zkconfigsets_source }
+    execute "zk_config_set_upconfig_#{new_resource.name}" do
+      command   "#{new_resource.solr_zkcli} -zkhost #{new_resource.zkhost} -cmd upconfig -confdir #{::File.join(new_resource.zkconfigsets_home, new_resource.name, 'conf')} -confname #{new_resource.name} 2>&1"
+      action      :nothing
+      only_if     { node.solrcloud.manage_zkconfigsets }
+    end
   end
-
-  execute "zk_config_set_upconfig_#{new_resource.name}" do
-    command     "#{new_resource.solr_zkcli} -zkhost #{new_resource.zkhost} -cmd upconfig -confdir #{::File.join(new_resource.zkconfigsets_home, new_resource.name, 'conf')} -confname #{new_resource.name} 2>&1"
-    action      :nothing
-    only_if     { node.solrcloud.manage_zkconfigsets }
-  end
-
 end
 
