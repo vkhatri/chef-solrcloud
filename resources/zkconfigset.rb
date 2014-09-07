@@ -29,4 +29,4 @@ attribute :zkcli,           :kind_of => String, :default => node.solrcloud.zooke
 attribute :zkhost,          :kind_of => String, :default => node.solrcloud.solr_config.solrcloud.zk_host.first
 attribute :zkconfigsets_home,       :kind_of => String, :default => node.solrcloud.zkconfigsets_home
 attribute :zkconfigsets_cookbook,   :kind_of => String, :default => node.solrcloud.zkconfigsets_cookbook
-attribute :manage_zkconfigsets      :kind_of => [FalseClass TrueClass], :default => node.solrcloud.manage_zkconfigsets
+attribute :manage_zkconfigsets,     :kind_of => [FalseClass, TrueClass], :default => node.solrcloud.manage_zkconfigsets
