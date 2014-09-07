@@ -21,11 +21,16 @@
 include_recipe "solrcloud::user"
 
 chef_gem "zk" do
-  action :install
-  only_if { node.solrcloud.manage_collections }
-end
+  action :nothing
+end.run_action(:install)
 
-require "tmpdir"
+Gem.clear_paths
+
+require 'zk'
+require 'net/http'
+require 'json'
+
+require 'tmpdir'
 
 temp_d        = Dir.tmpdir
 tarball_file  = File.join(temp_d, "solr-#{node.solrcloud.version}.tgz")
