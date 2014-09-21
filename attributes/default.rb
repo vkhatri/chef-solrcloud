@@ -4,7 +4,7 @@ default['solrcloud'] = {
   'user_home'    => nil,
   'setup_user'   => true, # ideally it must be set to false for Production environment and advised to manage solr user via different cookbook
 
-  'version'      => '4.9.0',
+  'version'      => '4.10.0',
 
   'install_dir'  => '/usr/local/solr',
   'data_dir'     => '/opt/solr',
