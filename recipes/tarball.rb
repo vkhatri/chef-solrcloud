@@ -113,24 +113,22 @@ end
 }
 
 # Likely to be removed or changed in future
-if node.solrcloud.cores_home and node.solrcloud.cores_home != node.solrcloud.solr_home
-  directory node.solrcloud.cores_home do
-    owner     node.solrcloud.user
-    group     node.solrcloud.group
-    mode      0755
-    recursive true
-    action    :create
-  end
+directory node.solrcloud.cores_home do
+  owner     node.solrcloud.user
+  group     node.solrcloud.group
+  mode      0755
+  recursive true
+  action    :create
+  only_if { node.solrcloud.cores_home and node.solrcloud.cores_home != node.solrcloud.solr_home }
 end
 
-if node.solrcloud.zk_run
-  directory node.solrcloud.zk_run_data_dir do
-    owner     node.solrcloud.user
-    group     node.solrcloud.group
-    mode      0755
-    recursive true
-    action    :create
-  end
+directory node.solrcloud.zk_run_data_dir do
+  owner     node.solrcloud.user
+  group     node.solrcloud.group
+  mode      0755
+  recursive true
+  action    :create
+  only_if { node.solrcloud.zk_run }
 end
 
 # Solr Service User limits
