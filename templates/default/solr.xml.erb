@@ -35,7 +35,9 @@
 
 <solr>
   <str name="adminHandler"><%=node.solrcloud.solr_config.admin_handler-%></str>
+  <% if node.solrcloud.version !~ /^4\.[1-9][0-9]\.\d/ -%>
   <str name="adminPath"><%=node.solrcloud.solr_config.admin_path-%></str>
+  <% end -%>
   <int name="coreLoadThreads"><%=node.solrcloud.solr_config.core_load_threads-%></int>
   <%if node.solrcloud.cores_home and node.solrcloud.cores_home != node.solrcloud.solr_home-%>
   <str name="coreRootDirectory"><%=node.solrcloud.solr_config.core_root_directory-%></str> <!-- usually solrHome  -->
