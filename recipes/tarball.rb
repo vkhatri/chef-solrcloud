@@ -19,6 +19,7 @@
 
 # Setup Solr Service User
 include_recipe "solrcloud::user"
+include_recipe "solrcloud::java"
 
 chef_gem "zk" do
   action :nothing

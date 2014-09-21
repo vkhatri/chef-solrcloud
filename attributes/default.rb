@@ -1,4 +1,5 @@
 default['solrcloud'] = {
+  'install_java' => true,
   'user'         => 'solr',
   'group'        => 'solr',
   'user_home'    => nil,
