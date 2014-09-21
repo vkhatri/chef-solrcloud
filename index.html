@@ -4,40 +4,28 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Chef SolrCloud by vkhatri</title>
+
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-
+    <div class="wrapper">
       <header>
         <h1>Chef SolrCloud</h1>
-        <p>Opscode Chef cookbook to Manage SolrCloud</p>
+        <p>Chef cookbook to Manage Apache SolrCloud</p>
+        <p class="view"><a href="https://github.com/vkhatri/chef-solrcloud">View the Project on GitHub <small>vkhatri/chef-solrcloud</small></a></p>
+        <ul>
+          <li><a href="https://github.com/vkhatri/chef-solrcloud/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/vkhatri/chef-solrcloud/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/vkhatri/chef-solrcloud">View On <strong>GitHub</strong></a></li>
+        </ul>
       </header>
-
-      <div id="banner">
-        <span id="logo"></span>
-
-        <a href="https://github.com/vkhatri/chef-solrcloud" class="button fork"><strong>View On GitHub</strong></a>
-        <div class="downloads">
-          <span>Downloads:</span>
-          <ul>
-            <li><a href="https://github.com/vkhatri/chef-solrcloud/zipball/master" class="button">ZIP</a></li>
-            <li><a href="https://github.com/vkhatri/chef-solrcloud/tarball/master" class="button">TAR</a></li>
-          </ul>
-        </div>
-      </div><!-- end banner -->
-
-    <div class="wrapper">
-      <nav>
-        <ul></ul>
-      </nav>
       <section>
         <h1>
 <a name="solrcloud-cookbook" class="anchor" href="#solrcloud-cookbook"><span class="octicon octicon-link"></span></a>solrcloud Cookbook</h1>
@@ -56,12 +44,12 @@ by this cookbook.</p>
 <h2>
 <a name="repository" class="anchor" href="#repository"><span class="octicon octicon-link"></span></a>Repository</h2>
 
-<p><a href="https://github.com/vkhatri/solrcloud">https://github.com/vkhatri/solrcloud</a></p>
+<p><a href="https://github.com/vkhatri/chef-solrcloud">https://github.com/vkhatri/chef-solrcloud</a></p>
 
 <h2>
 <a name="supported-apache-solr-version" class="anchor" href="#supported-apache-solr-version"><span class="octicon octicon-link"></span></a>Supported Apache Solr Version</h2>
 
-<p>This cookbook was tested for Apache Solr 4.9.0.</p>
+<p>This cookbook was tested for Apache Solr 4.9.0. Minimum 4.10.0 setup was tested.</p>
 
 <h2>
 <a name="supported-apache-solr-runtime" class="anchor" href="#supported-apache-solr-runtime"><span class="octicon octicon-link"></span></a>Supported Apache Solr Runtime</h2>
@@ -127,7 +115,7 @@ one of the configured zookeeper server via attribute <code>node[:solrcloud][:sol
 does not require to be enabled on all the nodes.
 </code></pre>
 
-<p>Check <code>Cookbook Advanced Attributes</code> section for atribute details.</p>
+<p>Check <code>Cookbook Advanced Attributes</code> section for attribute details.</p>
 
 <p><strong>zookeeper configSet config changes</strong></p>
 
@@ -203,6 +191,9 @@ end
 <li>
 <em>zkconfigsets_cookbook (optional)</em>    - configSet cookbook name, default value <code>node[:solrcloud][:zkconfigsets_cookbook]</code>
 </li>
+<li>
+<em>manage_zkconfigsets (optional)</em> - manage configset, default value <code>node[:solrcloud][:manage_zkconfigsets]</code>
+</li>
 </ul><p><strong>LWRP configSet source cookbook/location</strong></p>
 
 <p>All configSet content must be stored under <code>node[:solrcloud][:zkconfigsets_cookbook]</code>/files/default/config set name/conf/`.</p>
@@ -216,12 +207,13 @@ end
 
 <p>SolrCloud collection is managed via LWRP - <code>solrcloud_collection</code>.</p>
 
-<pre><code>Create/Delete Collection API does not require to run on all solrcloud cluster nodes,
-hence attribute `node[:solrcloud][:manage_collections]` does not require to be
-enabled on all the nodes.
-</code></pre>
+<blockquote>
+<p>Create/Delete Collection API does not require to run on all solrcloud cluster nodes, hence attribute</p>
 
-<p>Check <code>Cookbook Advanced Attributes</code> section for atribute details.</p>
+<p><code>node[:solrcloud][:manage_collections]</code> does not require to be enabled on all the nodes.</p>
+</blockquote>
+
+<p>Check <code>Cookbook Advanced Attributes</code> section for attribute details.</p>
 
 <p><strong>collection Update/Change</strong></p>
 
@@ -359,8 +351,16 @@ end
 <p>With attribute <code>default[:solrcloud][:zk_run]</code>, this attribute will get local zookeeper server.</p>
 </li>
 <li><p><code>default[:solrcloud][:java_options]</code> (default: <code>[]</code>): java options</p></li>
-<li><p><code>default[:solrcloud][:auto_java_memory]</code> (default: <code>true</code>): enable auto java memory allocation, sets java attribute <code>-Xmx</code> for <code>node[:solrcloud][:java_options]</code></p></li>
+<li>
+<p><code>default[:solrcloud][:auto_java_memory]</code> (default: <code>true</code>): enable auto java memory allocation, sets java attribute <code>-Xmx</code> for <code>node[:solrcloud][:java_options]</code></p>
+
+<pre><code>This option calculates maximum allowed memory (multiple of 1024) for java
+process with minimum system memory reservation defined by attribute
+`node[:solrcloud][:auto_system_memory]`
+</code></pre>
+</li>
 <li><p><code>default[:solrcloud][:auto_system_memory]</code> (default: <code>768</code>): memory to preserve for OS, required when attribute <code>default[:solrcloud][:auto_java_memory]</code> is set</p></li>
+<li><p><code>default[:solrcloud][:install_java]</code> (default: <code>true</code>): setup java, disable to manage java outside of this cookbook</p></li>
 </ul><h2>
 <a name="cookbook-core-attributes" class="anchor" href="#cookbook-core-attributes"><span class="octicon octicon-link"></span></a>Cookbook Core Attributes</h2>
 
@@ -413,9 +413,15 @@ ${solr.data.dir:}/collection name</p>
 
 <ul>
 <li>
-<code>default[:solrcloud][:log4j][:MaxFileSize]</code> (default: <code>10MB</code>):  maximum log file size</li>
+<code>default[:solrcloud][:log4j][:level]</code> (default: <code>10MB</code>):  solr log threshold</li>
 <li>
-<code>default[:solrcloud][:log4j][:MaxBackupIndex]</code> (default: <code>10</code>): log files retention</li>
+<code>default[:solrcloud][:log4j][:console]</code> (default: <code>false</code>): enable/disable CONSOLE log</li>
+<li>
+<code>default[:solrcloud][:log4j][:max_file_size]</code> (default: <code>10MB</code>):  maximum log file size</li>
+<li>
+<code>default[:solrcloud][:log4j][:max_backup_index]</code> (default: <code>10</code>): log files retention</li>
+<li>
+<code>default[:solrcloud][:log4j][:conversion_pattern]</code> (default: <code>'%d{ISO8601} [%t] %-5p %c{3} %x - %m%n'</code>): log conversion pattern</li>
 </ul><h2>
 <a name="cookbook-request-log-config-attributes" class="anchor" href="#cookbook-request-log-config-attributes"><span class="octicon octicon-link"></span></a>Cookbook Request Log Config Attributes</h2>
 
@@ -624,6 +630,19 @@ will work just fine for a single node solrcloud cluster.</p>
 </code></pre>
 
 <h2>
+<a name="multi-node-manager-attributes" class="anchor" href="#multi-node-manager-attributes"><span class="octicon octicon-link"></span></a>Multi Node Manager Attributes</h2>
+
+<p>Below attributes are crucial for Multi Node Cluster. It is not advised to enable below solrcloud attributes on all
+the nodes in the cluster. Like, each new node will trigger a zookeeper configset re-upload. Creating new collection
+is better off maanged by one node to prevent a false collection state in the cluster.</p>
+
+<pre><code>"default_attributes": {
+  "solrcloud": {
+    "manage_collections": true,
+    "manage_zkconfigsets": true,
+</code></pre>
+
+<h2>
 <a name="multi-node-solrcloud-test-cluster-deployment-with-zookeeper-cluster" class="anchor" href="#multi-node-solrcloud-test-cluster-deployment-with-zookeeper-cluster"><span class="octicon octicon-link"></span></a>Multi Node SolrCloud Test Cluster Deployment with zookeeper Cluster</h2>
 
 <p>Adjust the attributes according to your requirement. Below mentioned attributes
@@ -640,7 +659,8 @@ will work just fine for a single node solrcloud cluster.</p>
     },
     "port": "8080",
     "setup_user": true,
-    "manager": true,
+    "manage_collections": true,
+    "manage_zkconfigsets": true,
     "zkconfigsets": {
       "samplecollection": {}
     },
@@ -677,7 +697,6 @@ will work just fine for a single node solrcloud cluster.</p>
     },
     "port": "8080",
     "setup_user": true,
-    "manager": true,
     "zkconfigsets": {
       "samplecollection": {}
     },
@@ -718,7 +737,7 @@ added to the cookbook.</p>
 </ol><h2>
 <a name="copyright--license" class="anchor" href="#copyright--license"><span class="octicon octicon-link"></span></a>Copyright &amp; License</h2>
 
-<p>Authors:: Virender Khatri (<a href="mailto:vir.khatri@gmail.com">vir.khatri@gmail.com</a>)</p>
+<p>Authors:: Virender Khatri and <a href="https://github.com/vkhatri/chef-solrcloud/graphs/contributors">Contributors</a></p>
 
 <p>Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -733,11 +752,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.</p>
       </section>
-      <footer>
-        <p>Project maintained by <a href="https://github.com/vkhatri">vkhatri</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
-      </footer>
     </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/vkhatri">vkhatri</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
