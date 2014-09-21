@@ -3,6 +3,17 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.3.2
+-----
+
+- vkhatri - bumped solr version to 4.10.0
+
+- vkhatri - removed attribute adminPath for v4.10.0, caused startup failure
+
+- vkhatri - updated README.md
+
+- vkhatri - fix for foodcrtic
+
 0.3.0
 -----
 - vkhatri - made lwrp a bit better using ruby gem zk, fix #1
