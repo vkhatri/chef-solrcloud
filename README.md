@@ -20,7 +20,7 @@ https://github.com/vkhatri/chef-solrcloud
 
 ## Supported Apache Solr Version
 
-This cookbook was tested for Apache Solr 4.9.0.
+This cookbook was tested for Apache Solr 4.9.0. Minimum 4.10.0 setup was tested.
 
 
 ## Supported Apache Solr Runtime
@@ -292,6 +292,8 @@ Parameters:
 		`node[:solrcloud][:auto_system_memory]`
 
  * `default[:solrcloud][:auto_system_memory]` (default: `768`): memory to preserve for OS, required when attribute `default[:solrcloud][:auto_java_memory]` is set
+
+ * `default[:solrcloud][:install_java]` (default: `true`): setup java, disable to manage java outside of this cookbook
 
 ## Cookbook Core Attributes
 
