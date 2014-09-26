@@ -1,7 +1,7 @@
 solrcloud Cookbook
 ==================
 
-This is an [OpsCode Chef] cookbook for [Apache Solr].
+This is a [Chef] cookbook for [Apache Solr].
 
 It was primarily developed for Testing SolrCloud against Solr Master/Slave setup and its features.
 
@@ -623,5 +623,5 @@ limitations under the License.
 [Jetty]: http://wiki.apache.org/solr/SolrJetty
 [Apache Solr]: http://lucene.apache.org/solr/
 [solr on hdfs]: https://cwiki.apache.org/confluence/display/solr/Running+Solr+on+HDFS
-[Opscode Chef]: https://wiki.opscode.com/display/chef/Home
+[Chef]: https://www.getchef.com/chef/
 [Contributors]: https://github.com/vkhatri/chef-solrcloud/graphs/contributors
