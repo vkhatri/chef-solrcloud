@@ -3,6 +3,11 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.3.4
+-----
+
+- vkhatri - fixed zk gem install patch package dependency error
+
 0.3.3
 -----
 
