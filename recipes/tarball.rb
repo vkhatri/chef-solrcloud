@@ -25,8 +25,6 @@ chef_gem "zk" do
   action :nothing
 end.run_action(:install)
 
-Gem.clear_paths
-
 require 'zk'
 require 'net/http'
 require 'json'
