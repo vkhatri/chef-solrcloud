@@ -22,9 +22,11 @@ include_recipe "solrcloud::user"
 include_recipe "solrcloud::java"
 
 # Require for zk gem
-package "patch" do
-  action :nothing
-end.run_action(:install)
+%w(patch gcc).each do |pkg|
+  package pkg do
+    action :nothing
+  end.run_action(:install)
+end
 
 chef_gem "zk" do
   action :nothing
