@@ -3,6 +3,19 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.3.8
+-----
+
+- vkhatri - fixed cookbook for foodcritic test passed ok
+
+- vkhatri - added all zkconfig lwrp options to recipe
+
+- vkhatri - added gcc dep for zk gem
+
+- vkhatri - fixed zkconfigset lwrp to upload missing zk configs
+
+- timoschmidt - removed Gem.clear_path
+
 0.3.4
 -----
 
