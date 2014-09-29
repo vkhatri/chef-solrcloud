@@ -20,6 +20,14 @@
 node.solrcloud.zkconfigsets.each { |configset_name, options|
 
   solrcloud_zkconfigset configset_name do
+    user      options[:user]
+    group     options[:group]
+    zkcli     options[:zkcli]
+    zkhost    options[:zkhost]
+    zkconfigsets_home       options[:zkconfigsets_home]
+    zkconfigsets_cookbook   options[:zkconfigsets_cookbook]
+    manage_zkconfigsets     options[:manage_zkconfigsets]
+    solr_zkcli              options[:solr_zkcli]
     action    options[:action]
   end
 
