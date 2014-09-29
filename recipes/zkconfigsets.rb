@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-node.solrcloud.zkconfigsets.each { |configset_name, options|
+node['solrcloud']['zkconfigsets'].each { |configset_name, options|
 
   solrcloud_zkconfigset configset_name do
     user      options[:user]

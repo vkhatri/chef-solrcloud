@@ -48,7 +48,7 @@ action :create do
       block do
         SolrCloud::Collection.new(solr_options).create(new_resource.name, new_resource.replication_factor, collection_options)
       end
-      only_if { node.solrcloud.manage_collections and not SolrCloud::Zk.new(new_resource.zkhost).collection?(new_resource.name) }
+      only_if { node['solrcloud']['manage_collections'] and not SolrCloud::Zk.new(new_resource.zkhost).collection?(new_resource.name) }
     end
   end
 end
@@ -66,7 +66,7 @@ action :delete do
       block do
         SolrCloud::Collection.new(solr_options).delete(new_resource.name)
       end
-      only_if { node.solrcloud.manage_collections and SolrCloud::Zk.new(new_resource.zkhost).collection?(new_resource.name) }
+      only_if { node['solrcloud']['manage_collections'] and SolrCloud::Zk.new(new_resource.zkhost).collection?(new_resource.name) }
     end
   end
 end

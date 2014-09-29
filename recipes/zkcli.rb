@@ -23,13 +23,13 @@
 require "tmpdir"
 
 temp_d        = Dir.tmpdir
-tarball_file  = File.join(temp_d, "zookeeper-#{node.solrcloud.zookeeper.version}.tar.gz")
-tarball_dir   = File.join(temp_d, "zookeeper-#{node.solrcloud.zookeeper.version}")
+tarball_file  = File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['version']}.tar.gz")
+tarball_dir   = File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['version']}")
 
 # Zookeeper Version Package File
 remote_file tarball_file do
-  source node.solrcloud.zookeeper.tarball.url
-  not_if { File.exists?("#{node.solrcloud.zookeeper.source_dir}/zookeeper-#{node.solrcloud.zookeeper.version}.jar") }
+  source node['solrcloud']['zookeeper']['tarball']['url']
+  not_if { File.exists?("#{node['solrcloud']['zookeeper']['source_dir']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.jar") }
 end
 
 # Extract and Setup Zookeeper Source directories
@@ -39,35 +39,35 @@ bash "extract_zookeeper_tarball" do
 
   code <<-EOS
     tar xzf #{tarball_file}
-    mv --force #{tarball_dir} #{node.solrcloud.zookeeper.source_dir}
-    chown -R #{node.solrcloud.user}:#{node.solrcloud.group} #{node.solrcloud.zookeeper.source_dir}
-    chmod #{node.solrcloud.dir_mode} #{node.solrcloud.zookeeper.source_dir}
+    mv --force #{tarball_dir} #{node['solrcloud']['zookeeper']['source_dir']}
+    chown -R #{node['solrcloud']['user']}:#{node['solrcloud']['group']} #{node['solrcloud']['zookeeper']['source_dir']}
+    chmod #{node['solrcloud']['dir_mode']} #{node['solrcloud']['zookeeper']['source_dir']}
   EOS
 
-  not_if  { File.exists?(node.solrcloud.zookeeper.source_dir) }
-  creates "#{node.solrcloud.zookeeper.install_dir}/zookeeper-#{node.solrcloud.zookeeper.version}.jar"
+  not_if  { File.exists?(node['solrcloud']['zookeeper']['source_dir']) }
+  creates "#{node['solrcloud']['zookeeper']['install_dir']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.jar"
   action  :run
 end
 
 # Link Solr install_dir to Current source_dir
-link node.solrcloud.zookeeper.install_dir do
-  to      node.solrcloud.zookeeper.source_dir
-  owner   node.solrcloud.user
-  group   node.solrcloud.group
+link node['solrcloud']['zookeeper']['install_dir'] do
+  to      node['solrcloud']['zookeeper']['source_dir']
+  owner   node['solrcloud']['user']
+  group   node['solrcloud']['group']
   action  :create
 end
 
-template File.join(node.solrcloud.zookeeper.install_dir, 'conf', 'zoo.cfg') do
+template File.join(node['solrcloud']['zookeeper']['install_dir'], 'conf', 'zoo.cfg') do
   source "zoo.cfg.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
+  owner node['solrcloud']['user']
+  group node['solrcloud']['group']
   mode  0644
 end
 
-template File.join(node.solrcloud.zookeeper.install_dir, 'bin', 'zkEnv.sh') do
+template File.join(node['solrcloud']['zookeeper']['install_dir'], 'bin', 'zkEnv.sh') do
   source "zkEnv.sh.erb"
-  owner node.solrcloud.user
-  group node.solrcloud.group
+  owner node['solrcloud']['user']
+  group node['solrcloud']['group']
   mode  0644
 end
 

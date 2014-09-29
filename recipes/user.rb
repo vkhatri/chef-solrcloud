@@ -27,16 +27,16 @@
 # for Production systems.
 #
 
-group node.solrcloud.group do
+group node['solrcloud']['group'] do
   action :create
-  only_if { node.solrcloud.setup_user }
+  only_if { node['solrcloud']['setup_user'] }
 end
 
-user node.solrcloud.user do
-  home    node.solrcloud.user_home if node.solrcloud.user_home
+user node['solrcloud']['user'] do
+  home    node['solrcloud']['user_home'] if node['solrcloud']['user_home']
   shell   "/bin/bash"
-  gid     node.solrcloud.group
+  gid     node['solrcloud']['group']
   action  :create
-  only_if { node.solrcloud.setup_user }
+  only_if { node['solrcloud']['setup_user'] }
 end
 

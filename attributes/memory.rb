@@ -1,9 +1,9 @@
 
 # Enable Auto Memory -Xmx java option
-default['solrcloud']['auto_java_memory'] = true
+default['solrcloud']['auto_java_memory']    = true
 
 # Minimum Memory to preserve for system
-default['solrcloud']['auto_system_memory'] = 768
+default['solrcloud']['auto_system_memory']  = 768
 
 # Calculate -Xmx (Multiple of 1024)
 if node['solrcloud']['auto_java_memory'] and node['memory'] and node['memory'].has_key?('total')

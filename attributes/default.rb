@@ -1,158 +1,157 @@
-default['solrcloud'] = {
-  'install_java' => true,
-  'user'         => 'solr',
-  'group'        => 'solr',
-  'user_home'    => nil,
-  'setup_user'   => true, # ideally it must be set to false for Production environment and advised to manage solr user via different cookbook
 
-  'version'      => '4.10.0',
+default['solrcloud']['install_java']  = true
+default['solrcloud']['user']          = 'solr'
+default['solrcloud']['group']         = 'solr'
+default['solrcloud']['user_home']     = nil
+default['solrcloud']['setup_user']    = true # ideally it must be set to false for Production environment and advised to manage solr user via different cookbook
 
-  'install_dir'  => '/usr/local/solr',
-  'data_dir'     => '/opt/solr',
+default['solrcloud']['version']       = '4.10.0'
 
-  'notify_restart'   => false, # notify service restart on config change
-  'service_name'     => 'solr',
-  'service_start_wait'   => 15,
+default['solrcloud']['install_dir']   = '/usr/local/solr'
+default['solrcloud']['data_dir']      = '/opt/solr'
 
-  'dir_mode'     => '0755', # default directory permissions used by solrcloud cookbook
-  'pid_dir'      => '/var/run/solr', # solr service user pid dir
-  'log_dir'      => '/var/log/solr',
+default['solrcloud']['notify_restart']      = false # notify service restart on config change
+default['solrcloud']['service_name']        = 'solr'
+default['solrcloud']['service_start_wait']  = 15
 
-  'port'         => 8983,
-  'ssl_port'     => 8984,
+default['solrcloud']['dir_mode']      = '0755' # default directory permissions used by solrcloud cookbook
+default['solrcloud']['pid_dir']       = '/var/run/solr' # solr service user pid dir
+default['solrcloud']['log_dir']       = '/var/log/solr'
 
-  'enable_ssl'   => true,
-  'enable_request_log'   => true,
-  'enable_jmx'   => true,
-  'manage_zkconfigsets'          => false, # manage zookeeper configSet, it is recommended to enable this attribute only on one node,
-                                          # Otherwise, each new node or configSet update will reupload config to zookeeper
-  'manage_zkconfigsets_source'   => true,  # manage solr configSet source
-  'notify_zkconfigsets_upload'   => true,  # notify triggers configSet upload to zookeeper, must be enabled only on one or limited set of nodes
-  'manage_collections'           => false, # manage solr collections, it is recommended to enable this attribute only on one node if possible.
-                                          # Setting this attribute to all the nodes could lead to cluster wide issue. Issues encountered
-                                          # after creating a collection could lead to multiple replica set for a collection on one node.
-                                          # Use it wisely.
+default['solrcloud']['port']          = 8983
+default['solrcloud']['ssl_port']      = 8984
 
-  'java_options' => [],
+default['solrcloud']['enable_ssl']    = true
+default['solrcloud']['enable_request_log']    = true
+default['solrcloud']['enable_jmx']    = true
 
-  'jmx'          => {
-    'port'       => 1099,
-    'ssl'        => false, # Currently not managed
-    'authenticate'   => false,
-    'users'      => {
-      'solrmonitor'  => {
-        'access'     => 'readonly',
-        'password'   => 'solrmonitor',
-        'action'     => 'create'
-      },
-      'solrcontrol'  => {
-        'access'     => 'readwrite',
-        'password'   => 'solrcontrol'
-      }
-    },
-  },
+# manage zookeeper configSet, it is recommended to enable this attribute only on one node
+# Otherwise, each new node or configSet update will reupload config to zookeeper
+default['solrcloud']['manage_zkconfigsets']   = false
 
-  'jetty_config' => {
-    'server'     => {
-      'min_threads'    => 10,
-      'max_threads'    => 10000,
-      'detailed_dump'  => 'false'
-    },
-    'connector'        => { # Default Parameters for org.eclipse.jetty.server.bio.SocketConnector
-      'stats_on'       => 'true',
-      'max_idle_time'  =>  50000,
-      'low_resource_max_idle_time'   => 1500
-    },
-    'ssl_connector'        => {
-      'need_client_auth'   => 'false',
-      'max_idle_time'      =>  30000
-    }
-  },
+# manage solr configSet source
+default['solrcloud']['manage_zkconfigsets_source']   = true
 
-  'key_store'    => {
-    'cookbook'           => 'solrcloud',
-    'key_store_file'     => 'solr.keystore',
-    'key_store_password' => 'secret',
+# notify triggers configSet upload to zookeeper, must be enabled only on one or limited set of nodes
+default['solrcloud']['notify_zkconfigsets_upload']   = true
 
-    'manage'     => true, # if set false, cookbook will look for 'node['solrcloud']['jetty_config.ssl_connector.key_store_file' file in cookbook/files/solr.keystore
-    'key_algo'   => 'RSA',
-    'cn'         => 'localhost',
-    'ou'         => 'ApacheSolrCloudTest',
-    'o'          => 'lucene.apache.org',
-    'c'          => 'US',
-    'ext'        => 'san=ip:127.0.0.1',
-    'validity'   => 999999
-  },
 
-  'request_log'  => {
-    'retain_days'  => 10,
-    'log_cookies'  => 'false',
-    'time_zone'    => 'UTC'
-  },
+# manage solr collections, it is recommended to enable this attribute only on one node if possible.
+# Setting this attribute to all the nodes could lead to cluster wide issue. Issues encountered
+# after creating a collection could lead to multiple replica set for a collection on one node.
+# Use it with caution.
+default['solrcloud']['manage_collections']  = false
 
-  'template_cookbook'        => "solrcloud", # template source cookbook
-  'zkconfigsets_cookbook'    => "solrcloud", # cores configuration source cookbook, it is better to have a separate cores cookbook
+# Java Options
+default['solrcloud']['java_options']  = []
 
-  'zk_run'       => false, # start solr with zookeeper, useful for testing purpose
-  'zk_run_port'  => 2181, # start solr with zookeeper, useful for testing purpose
+# JMX Options
+default['solrcloud']['jmx']['port']   = 1099
+# Currently not managed
+default['solrcloud']['jmx']['ssl']    = false
+default['solrcloud']['jmx']['authenticate'] = false
+# JMX Users
+default['solrcloud']['jmx']['users']['solrmonitor']['access']     = 'readonly'
+default['solrcloud']['jmx']['users']['solrmonitor']['password']   = 'solrmonitor'
+default['solrcloud']['jmx']['users']['solrmonitor']['action']     = 'create'
+default['solrcloud']['jmx']['users']['solrcontrol']['access']     = 'readwrite'
+default['solrcloud']['jmx']['users']['solrcontrol']['password']   = 'solrcontrol'
 
-  'collections'  => {}, # solr collections
+# Jetty Server Config
+default['solrcloud']['jetty_config']['server']['min_threads']     = 10
+default['solrcloud']['jetty_config']['server']['max_threads']     = 10000
+default['solrcloud']['jetty_config']['server']['detailed_dump']   = 'false'
 
-  'zkconfigsets' => {}, # solr zookeeper configSets
+# Jetty Connector Config
+# Default Parameters for org.eclipse.jetty.server.bio.SocketConnector
+default['solrcloud']['jetty_config']['connector']['stats_on']       = 'true'
+default['solrcloud']['jetty_config']['connector']['max_idle_time']  =  50000
+default['solrcloud']['jetty_config']['connector']['low_resource_max_idle_time']   = 1500
 
-  'hdfs'         => {
-    'enable'             => false,
-    'directory_factory'  => 'HdfsDirectoryFactory',
-    'lock_type'          => 'hdfs',
-    'hdfs_home'          => nil # syntax: 'hdfs://host:port/path'
-  },
+# Jetty SSL Connector Config
+default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'false'
+default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30000
 
-  'limits' => {
-    'memlock'    => 'unlimited',
-    'nofile'     => 48000,
-    'nproc'      => 'unlimited'
-  },
+# Jetty Key Store Config
+default['solrcloud']['key_store']['cookbook']           = 'solrcloud'
+# if set false, cookbook will look for 'node['solrcloud']['jetty_config.ssl_connector.key_store_file' file in cookbook/files/solr.keystore
+default['solrcloud']['key_store']['manage']     = true
 
-    # log4j.properties config
-  'log4j'        => {
-    'level'              => 'INFO',
-    'console'            => false,
-    'max_file_size'      => '100MB',
-    'max_backup_index'   => '10',
-    'conversion_pattern' => '%d{ISO8601} [%t] %-5p %c{3} %x - %m%n'
-  },
+default['solrcloud']['key_store']['key_store_file']     = 'solr.keystore'
+default['solrcloud']['key_store']['key_store_password'] = 'secret'
+default['solrcloud']['key_store']['key_algo']   = 'RSA'
+default['solrcloud']['key_store']['cn']         = 'localhost'
+default['solrcloud']['key_store']['ou']         = 'ApacheSolrCloudTest'
+default['solrcloud']['key_store']['o']          = 'lucene.apache.org'
+default['solrcloud']['key_store']['c']          = 'US'
+default['solrcloud']['key_store']['ext']        = 'san=ip:127.0.0.1'
+default['solrcloud']['key_store']['validity']   = 999999
 
-  'solr_config'       => {
-    'admin_handler'        => 'org.apache.solr.handler.admin.CoreAdminHandler',
-    'admin_path'           => '/solr/admin',
-    'core_load_threads'    => 3,
-    'management_path'      => nil,
-    'share_schema'         => 'false',
-    'transient_cache_size' => 1000000,
-    'solrcloud'  => {
-      'host_context'       => 'solr',
-      'distrib_update_conn_timeout'    => 1000000,
-      'distrib_update_so_timeout'      => 1000000,
-      'leader_vote_wait'   => 1000000,
-      'zk_client_timeout'  => 15000,
-      'zk_host'            => [], # Syntax: ["zkHost:zkPort"]
-      'generic_core_node_names'        => 'true'
-    },
-    'shard_handler_factory'  => {
-      'socket_timeout'       => 0,
-      'conn_timeout'         => 0
-    },
-    'logging'          => {
-      'enabled'        => 'true',
-      'logging_class'  => nil,
-      'watcher'        => {
-        'logging_size'  => 1000,
-        'threshold'     => 'INFO'
-      }
-    }
-  }
+# Jetty Request Log
+default['solrcloud']['request_log']['retain_days']  = 10
+default['solrcloud']['request_log']['log_cookies']  = 'false'
+default['solrcloud']['request_log']['time_zone']    = 'UTC'
 
-}
+# template source cookbook
+default['solrcloud']['template_cookbook']        = "solrcloud"
+
+# cores configuration source cookbook, it is better to have a separate cores cookbook
+default['solrcloud']['zkconfigsets_cookbook']    = "solrcloud"
+
+# start solr with zookeeper, useful for testing purpose
+default['solrcloud']['zk_run']       = false
+
+# start solr with zookeeper, useful for testing purpose
+default['solrcloud']['zk_run_port']  = 2181
+
+# solr collections
+default['solrcloud']['collections']  = {}
+
+# solr zookeeper configSets
+default['solrcloud']['zkconfigsets'] = {}
+
+# solr hdfs options
+default['solrcloud']['hdfs']['enable']             = false
+default['solrcloud']['hdfs']['directory_factory']  = 'HdfsDirectoryFactory'
+default['solrcloud']['hdfs']['lock_type']          = 'hdfs'
+default['solrcloud']['hdfs']['hdfs_home']          = nil # syntax: 'hdfs://host:port/path'
+
+# solr process limits
+default['solrcloud']['limits']['memlock']    = 'unlimited'
+default['solrcloud']['limits']['nofile']     = 48000
+default['solrcloud']['limits']['nproc']      = 'unlimited'
+
+
+# log4j.properties config
+default['solrcloud']['log4j']['level']              = 'INFO'
+default['solrcloud']['log4j']['console']            = false
+default['solrcloud']['log4j']['max_file_size']      = '100MB'
+default['solrcloud']['log4j']['max_backup_index']   = '10'
+default['solrcloud']['log4j']['conversion_pattern'] = '%d{ISO8601} [%t] %-5p %c{3} %x - %m%n'
+
+# solr.xml config
+default['solrcloud']['solr_config']['admin_handler']        = 'org.apache.solr.handler.admin.CoreAdminHandler'
+default['solrcloud']['solr_config']['admin_path']           = '/solr/admin'
+default['solrcloud']['solr_config']['core_load_threads']    = 3
+default['solrcloud']['solr_config']['management_path']      = nil
+default['solrcloud']['solr_config']['share_schema']         = 'false'
+default['solrcloud']['solr_config']['transient_cache_size'] = 1000000
+default['solrcloud']['solr_config']['solrcloud']['host_context']       = 'solr'
+default['solrcloud']['solr_config']['solrcloud']['distrib_update_conn_timeout']    = 1000000
+default['solrcloud']['solr_config']['solrcloud']['distrib_update_so_timeout']      = 1000000
+default['solrcloud']['solr_config']['solrcloud']['leader_vote_wait']   = 1000000
+default['solrcloud']['solr_config']['solrcloud']['zk_client_timeout']  = 15000
+default['solrcloud']['solr_config']['solrcloud']['zk_host']            = [] # Syntax: ["zkHost:zkPort"]
+default['solrcloud']['solr_config']['solrcloud']['generic_core_node_names']        = 'true'
+
+default['solrcloud']['solr_config']['shard_handler_factory']['socket_timeout']       = 0
+default['solrcloud']['solr_config']['shard_handler_factory']['conn_timeout']         = 0
+
+default['solrcloud']['solr_config']['logging']['enabled']        = 'true'
+default['solrcloud']['solr_config']['logging']['logging_class']  = nil
+
+default['solrcloud']['solr_config']['logging']['watcher']['logging_size']  = 1000
+default['solrcloud']['solr_config']['logging']['watcher']['threshold']     = 'INFO'
 
 # Solr Directories
 default['solrcloud']['solr_home']   = File.join(node['solrcloud']['install_dir'],'solr')
@@ -173,7 +172,6 @@ default['solrcloud']['zkconfigsets_home'] = File.join(node['solrcloud']['install
 default['solrcloud']['solr_config']['core_root_directory']     = node['solrcloud']['cores_home']
 default['solrcloud']['solr_config']['shared_lib']              = node['solrcloud']['shared_lib']
 default['solrcloud']['solr_config']['solrcloud']['host_port']   = node['solrcloud']['port']
-
 
 default['solrcloud']['source_dir']      = "/usr/local/solr-#{node['solrcloud']['version']}"
 default['solrcloud']['tarball']['url']   = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"

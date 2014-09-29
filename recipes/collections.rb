@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-node.solrcloud.collections.each { |collection_name, options|
+node['solrcloud']['collections'].each { |collection_name, options|
 
   collection_name = options[:name] if options[:name]
 

@@ -39,20 +39,20 @@ require 'json'
 require 'tmpdir'
 
 temp_d        = Dir.tmpdir
-tarball_file  = File.join(temp_d, "solr-#{node.solrcloud.version}.tgz")
-tarball_dir   = File.join(temp_d, "solr-#{node.solrcloud.version}")
+tarball_file  = File.join(temp_d, "solr-#{node['solrcloud']['version']}.tgz")
+tarball_dir   = File.join(temp_d, "solr-#{node['solrcloud']['version']}")
 
 # Stop Solr Service if running for Version Upgrade
 service "solr" do
-  service_name node.solrcloud.service_name
+  service_name node['solrcloud']['service_name']
   action :stop
-  only_if { File.exists? "/etc/init.d/#{node.solrcloud.service_name}" and not File.exists?(node.solrcloud.source_dir) }
+  only_if { File.exists? "/etc/init.d/#{node['solrcloud']['service_name']}" and not File.exists?(node['solrcloud']['source_dir']) }
 end
 
 # Solr Version Package File
 remote_file tarball_file do
-  source node.solrcloud.tarball.url
-  not_if { File.exists?("#{node.solrcloud.source_dir}/dist/solr-#{node.solrcloud.version}.war") }
+  source node['solrcloud']['tarball']['url']
+  not_if { File.exists?("#{node['solrcloud']['source_dir']}/dist/solr-#{node['solrcloud']['version']}.war") }
 end
 
 # Extract and Setup Solr Source directories
@@ -62,56 +62,56 @@ bash "extract_solr_tarball" do
 
   code <<-EOS
     tar xzf #{tarball_file}
-    mv --force #{tarball_dir} #{node.solrcloud.source_dir}
-    chown -R #{node.solrcloud.user}:#{node.solrcloud.group} #{node.solrcloud.source_dir}
-    chmod #{node.solrcloud.dir_mode} #{node.solrcloud.source_dir}
+    mv --force #{tarball_dir} #{node['solrcloud']['source_dir']}
+    chown -R #{node['solrcloud']['user']}:#{node['solrcloud']['group']} #{node['solrcloud']['source_dir']}
+    chmod #{node['solrcloud']['dir_mode']} #{node['solrcloud']['source_dir']}
   EOS
 
-  not_if  { File.exists?(node.solrcloud.source_dir) }
-  creates "#{node.solrcloud.install_dir}/dist/solr-#{node.solrcloud.version}.war"
+  not_if  { File.exists?(node['solrcloud']['source_dir']) }
+  creates "#{node['solrcloud']['install_dir']}/dist/solr-#{node['solrcloud']['version']}.war"
   action  :run
 end
 
 # Link Solr install_dir to Current source_dir
-link node.solrcloud.install_dir do
-  to      node.solrcloud.source_dir
-  owner   node.solrcloud.user
-  group   node.solrcloud.group
+link node['solrcloud']['install_dir'] do
+  to      node['solrcloud']['source_dir']
+  owner   node['solrcloud']['user']
+  group   node['solrcloud']['group']
   action  :create
 end
 
 # Link Jetty lib dir
-link File.join(node.solrcloud.install_dir, 'lib') do
-  to      File.join(node.solrcloud.install_dir,'example','lib')
-  owner   node.solrcloud.user
-  group   node.solrcloud.group
+link File.join(node['solrcloud']['install_dir'], 'lib') do
+  to      File.join(node['solrcloud']['install_dir'],'example','lib')
+  owner   node['solrcloud']['user']
+  group   node['solrcloud']['group']
   action :create
 end
 
 # Link Solr start.jar
-link File.join(node.solrcloud.install_dir, 'start.jar') do
-  to      File.join(node.solrcloud.install_dir,'example','start.jar')
-  owner   node.solrcloud.user
-  group   node.solrcloud.group
+link File.join(node['solrcloud']['install_dir'], 'start.jar') do
+  to      File.join(node['solrcloud']['install_dir'],'example','start.jar')
+  owner   node['solrcloud']['user']
+  group   node['solrcloud']['group']
   action :create
 end
 
 # Setup Directories for Solr
-[ node.solrcloud.log_dir,
-  node.solrcloud.pid_dir,
-  node.solrcloud.data_dir,
-  node.solrcloud.solr_home,
-  node.solrcloud.shared_lib,
-  node.solrcloud.config_sets,
-  node.solrcloud.zkconfigsets_home,
-  File.join(node.solrcloud.install_dir, 'etc'),
-  File.join(node.solrcloud.install_dir, 'resources'),
-  File.join(node.solrcloud.install_dir, 'webapps'),
-  File.join(node.solrcloud.install_dir, 'contexts')
+[ node['solrcloud']['log_dir'],
+  node['solrcloud']['pid_dir'],
+  node['solrcloud']['data_dir'],
+  node['solrcloud']['solr_home'],
+  node['solrcloud']['shared_lib'],
+  node['solrcloud']['config_sets'],
+  node['solrcloud']['zkconfigsets_home'],
+  File.join(node['solrcloud']['install_dir'], 'etc'),
+  File.join(node['solrcloud']['install_dir'], 'resources'),
+  File.join(node['solrcloud']['install_dir'], 'webapps'),
+  File.join(node['solrcloud']['install_dir'], 'contexts')
 ].each {|dir|
   directory dir do
-    owner     node.solrcloud.user
-    group     node.solrcloud.group
+    owner     node['solrcloud']['user']
+    group     node['solrcloud']['group']
     mode      0755
     recursive true
     action    :create
@@ -119,29 +119,29 @@ end
 }
 
 # Likely to be removed or changed in future
-directory node.solrcloud.cores_home do
-  owner     node.solrcloud.user
-  group     node.solrcloud.group
+directory node['solrcloud']['cores_home'] do
+  owner     node['solrcloud']['user']
+  group     node['solrcloud']['group']
   mode      0755
   recursive true
   action    :create
-  only_if { node.solrcloud.cores_home and node.solrcloud.cores_home != node.solrcloud.solr_home }
+  only_if { node['solrcloud']['cores_home'] and node['solrcloud']['cores_home'] != node['solrcloud']['solr_home'] }
 end
 
-directory node.solrcloud.zk_run_data_dir do
-  owner     node.solrcloud.user
-  group     node.solrcloud.group
+directory node['solrcloud']['zk_run_data_dir'] do
+  owner     node['solrcloud']['user']
+  group     node['solrcloud']['group']
   mode      0755
   recursive true
   action    :create
-  only_if { node.solrcloud.zk_run }
+  only_if { node['solrcloud']['zk_run'] }
 end
 
 # Solr Service User limits
-user_ulimit node.solrcloud.user do
-  filehandle_limit node.solrcloud.limits.nofile
-  process_limit node.solrcloud.limits.nproc
-  memory_limit node.solrcloud.limits.memlock
+user_ulimit node['solrcloud']['user'] do
+  filehandle_limit node['solrcloud']['limits']['nofile']
+  process_limit node['solrcloud']['limits']['nproc']
+  memory_limit node['solrcloud']['limits']['memlock']
 end
 
 ruby_block "require_pam_limits.so" do
@@ -163,7 +163,7 @@ include_recipe "solrcloud::zkcli"
 
 service "solr" do
   supports      :start => true, :stop => true, :restart => true, :status => true
-  service_name  node.solrcloud.service_name
+  service_name  node['solrcloud']['service_name']
   action        [:enable, :start]
   notifies      :run, "ruby_block[wait_start_up]", :immediately
 end
@@ -171,7 +171,7 @@ end
 # Waiting for Service
 ruby_block "wait_start_up" do
   block  do
-    sleep node.solrcloud.service_start_wait
+    sleep node['solrcloud']['service_start_wait']
   end
   action :nothing
 end
@@ -180,9 +180,8 @@ remote_file tarball_file do
   action :delete
 end
 
-# Setup configsets - node.solrcloud.zkconfigsets
+# Setup configsets - node['solrcloud']['zkconfigsets']
 include_recipe "solrcloud::zkconfigsets"
 
-# Setup collections - node.solrcloud.collections
+# Setup collections - node['solrcloud']['collections']
 include_recipe "solrcloud::collections"
-
