@@ -10,11 +10,11 @@ This file is used to list changes made in each version of the solrcloud cookbook
 
 - vkhatri - added all zkconfig lwrp options to recipe
 
-- vkhatri - added gcc dep for zk gem
+- vkhatri - added gcc dep for zk gem, issue #8
 
-- vkhatri - fixed zkconfigset lwrp to upload missing zk configs
+- vkhatri - fixed zkconfigset lwrp to upload missing zk configs, issue #7
 
-- timoschmidt - removed Gem.clear_path
+- timoschmidt - removed Gem.clear_path, fix for OpsWorks runtime error, issue #5
 
 0.3.4
 -----
