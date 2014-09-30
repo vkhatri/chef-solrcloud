@@ -591,6 +591,28 @@ SolrCloud on HDFS has not been tested yet, but configuration from Apache Solr do
 added to the cookbook.
 
 
+## Tune Java Parameters for better Performance
+
+Some of the common java options tuning by [Shawn Heisey].
+
+Node attributes:
+
+    "default_attributes": {
+      "solrcloud": {
+        "java_options": [
+          "-Xms1024m",
+          "-XX:+UseConcMarkSweepGC",
+          "-XX:CMSInitiatingOccupancyFraction=75",
+          "-XX:NewRatio=3",
+          "-XX:MaxTenuringThreshold=8",
+          "-XX:+CMSParallelRemarkEnabled",
+          "-XX:+ParallelRefProcEnabled",
+          "-XX:+AggressiveOpts"
+        ]
+      }
+    }
+
+
 ## Contributing
 
 1. Fork the repository on Github
@@ -625,3 +647,4 @@ limitations under the License.
 [solr on hdfs]: https://cwiki.apache.org/confluence/display/solr/Running+Solr+on+HDFS
 [Chef]: https://www.getchef.com/chef/
 [Contributors]: https://github.com/vkhatri/chef-solrcloud/graphs/contributors
+[Shawn Heisey]: https://wiki.apache.org/solr/ShawnHeisey
