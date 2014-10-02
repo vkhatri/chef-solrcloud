@@ -73,7 +73,7 @@ default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'f
 default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30000
 
 # Jetty Key Store Config
-default['solrcloud']['key_store']['cookbook']           = 'solrcloud'
+default['solrcloud']['key_store']['cookbook']   = 'solrcloud'
 # if set false, cookbook will look for 'node['solrcloud']['jetty_config.ssl_connector.key_store_file' file in cookbook/files/solr.keystore
 default['solrcloud']['key_store']['manage']     = true
 
@@ -169,16 +169,16 @@ default['solrcloud']['solr_config']['solrcloud']['zk_host'] = ["#{node['ipaddres
 # Solr Zookeeper configSets directory (collection.configName)
 default['solrcloud']['zkconfigsets_home'] = File.join(node['solrcloud']['install_dir'],'zkconfigs')
 
-default['solrcloud']['solr_config']['core_root_directory']     = node['solrcloud']['cores_home']
-default['solrcloud']['solr_config']['shared_lib']              = node['solrcloud']['shared_lib']
+default['solrcloud']['solr_config']['core_root_directory']      = node['solrcloud']['cores_home']
+default['solrcloud']['solr_config']['shared_lib']               = node['solrcloud']['shared_lib']
 default['solrcloud']['solr_config']['solrcloud']['host_port']   = node['solrcloud']['port']
 
 default['solrcloud']['source_dir']      = "/usr/local/solr-#{node['solrcloud']['version']}"
-default['solrcloud']['tarball']['url']   = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
-default['solrcloud']['tarball']['md5']   = '316f11ed8e81cf07ebfa6ad9443add09'
+default['solrcloud']['tarball']['url']  = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
+default['solrcloud']['tarball']['md5']  = '316f11ed8e81cf07ebfa6ad9443add09'
 
-default['solrcloud']['key_store']['key_store_file_path']      = File.join(node['solrcloud']['install_dir'], 'etc', node['solrcloud']['key_store']['key_store_file'])
+default['solrcloud']['key_store']['key_store_file_path']  = File.join(node['solrcloud']['install_dir'], 'etc', node['solrcloud']['key_store']['key_store_file'])
 
-default['solrcloud']['jmx']['password_file']         = File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.password')
-default['solrcloud']['jmx']['access_file']           = File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.access')
+default['solrcloud']['jmx']['password_file']  = File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.password')
+default['solrcloud']['jmx']['access_file']    = File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.access')
 
