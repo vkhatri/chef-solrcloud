@@ -68,7 +68,7 @@ execute "generate_key_store_file" do
   command   File.join(node['solrcloud']['install_dir'], 'etc', 'create-solr.keystore.sh')
   action    :nothing
   notifies  :restart, "service[solr]", :delayed if node['solrcloud']['notify_restart']
-  only_if   { node['solrcloud']['key_store.manage'] }
+  only_if   { node['solrcloud']['key_store']['manage'] }
 end
 
 cookbook_file  node['solrcloud']['key_store']['key_store_file_path'] do
@@ -87,7 +87,7 @@ if not File.exists? node['solrcloud']['key_store']['key_store_file_path'] and no
     cwd       File.join(node['solrcloud']['install_dir'], 'etc')
     command   File.join(node['solrcloud']['install_dir'], 'etc', 'create-solr.keystore.sh')
     notifies  :restart, "service[solr]", :delayed if node['solrcloud']['notify_restart']
-    only_if   { node['solrcloud']['key_store.manage'] }
+    only_if   { node['solrcloud']['key_store']['manage'] }
   end
 end
 
