@@ -4,7 +4,7 @@ maintainer_email 'vir.khatri@gmail.com'
 license          'Apache 2.0'
 description      'Installs/Configures Apache Solr'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.3.8'
+version          '0.3.9'
 
 depends "java"
 depends "ulimit"

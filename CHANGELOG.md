@@ -3,6 +3,11 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.3.9
+-----
+
+- vkhatri - Fixed solr key store file generation, issue #11
+
 0.3.8
 -----
 
