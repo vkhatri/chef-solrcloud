@@ -29,6 +29,10 @@ node['solrcloud']['collections'].each { |collection_name, options|
     router_name     options[:router_name]
     router_field    options[:router_field]
     use_ssl         options[:use_ssl]
+    zkhost          options[:zkhost]    || node['solrcloud']['solr_config']['solrcloud']['zk_host'].first
+    zkcli           options[:zkcli]     || node['solrcloud']['zookeeper']['zkcli']
+    port            options[:port]      || node['solrcloud']['port']
+    ssl_port        options[:ssl_port]  || node['solrcloud']['ssl_port']
     create_node_set         options[:create_node_set]
     replication_factor      options[:replication_factor]
     max_shards_per_node     options[:max_shards_per_node]
