@@ -20,14 +20,14 @@
 node['solrcloud']['zkconfigsets'].each { |configset_name, options|
 
   solrcloud_zkconfigset configset_name do
-    user      options[:user]
-    group     options[:group]
-    zkcli     options[:zkcli]
-    zkhost    options[:zkhost]
-    zkconfigsets_home       options[:zkconfigsets_home]
-    zkconfigsets_cookbook   options[:zkconfigsets_cookbook]
-    manage_zkconfigsets     options[:manage_zkconfigsets]
-    solr_zkcli              options[:solr_zkcli]
+    user      options[:user]  || node['solrcloud']['user']
+    group     options[:group] || node['solrcloud']['group']
+    zkcli     options[:zkcli] || node['solrcloud']['zookeeper']['zkcli']
+    zkhost    options[:zkhost]|| node['solrcloud']['solr_config']['solrcloud']['zk_host'].first
+    zkconfigsets_home       options[:zkconfigsets_home]     || node['solrcloud']['zkconfigsets_home']
+    zkconfigsets_cookbook   options[:zkconfigsets_cookbook] || node['solrcloud']['zkconfigsets_cookbook']
+    manage_zkconfigsets     options[:manage_zkconfigsets]   || node['solrcloud']['manage_zkconfigsets']
+    solr_zkcli              options[:solr_zkcli]            || node['solrcloud']['zookeeper']['solr_zkcli']
     action    options[:action]
   end
 
