@@ -318,11 +318,18 @@ then
 fi
 
 #####################################################
-# Find a location for the pid file
+# Find a location for the pid file when no location
+# passed, otherwise create it
 #####################################################
 if [ -z "$JETTY_RUN" ]
 then
   JETTY_RUN=$(findDirectory -w /var/run /usr/var/run /tmp)
+else
+  if [ ! -d "$JETTY_RUN" ]
+  then
+    echo "Creating preconfigured JETTY_RUN directory $JETTY_RUN"
+    mkdir -p "$JETTY_RUN"
+  fi
 fi
 
 #####################################################
