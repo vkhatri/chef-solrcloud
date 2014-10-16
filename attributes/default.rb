@@ -35,6 +35,10 @@ default['solrcloud']['manage_zkconfigsets_source']   = true
 # notify triggers configSet upload to zookeeper, must be enabled only on one or limited set of nodes
 default['solrcloud']['notify_zkconfigsets_upload']   = true
 
+# can be used to force the upload of the configsets (e.g. when it comes not from a cookbook),
+# should also only be forced an a limited set of nodes
+default['solrcloud']['force_zkconfigsets_upload']    = false
+
 
 # manage solr collections, it is recommended to enable this attribute only on one node if possible.
 # Setting this attribute to all the nodes could lead to cluster wide issue. Issues encountered
