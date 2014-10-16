@@ -76,6 +76,11 @@ default['solrcloud']['jetty_config']['connector']['low_resource_max_idle_time'] 
 default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'false'
 default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30000
 
+# Jetty webapp
+default['solrcloud']['jetty_config']['context']['path'] = '/solr'
+default['solrcloud']['jetty_config']['context']['temp_directory'] = '/solr-webapp'
+default['solrcloud']['jetty_config']['context']['war'] = '/webapps/solr.war'
+
 # Jetty Key Store Config
 default['solrcloud']['key_store']['cookbook']   = 'solrcloud'
 # if set false, cookbook will look for 'node['solrcloud']['jetty_config.ssl_connector.key_store_file' file in cookbook/files/solr.keystore

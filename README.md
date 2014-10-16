@@ -393,6 +393,11 @@ Parameters:
  * <del>`default[:solrcloud][:jmx][:authenticate]` (default: `false`): enable jmx authentication and authorization, this feature is not tested yet</del>
  * `default[:solrcloud][:jmx][:users]` (default: `users - solrmonitor solrconfig`): jmx defaults users and roles, this feature is not tested yet
 
+## Cookbook Jetty Context Attributes
+ * `default[:solrcloud][:jetty_config][:context][:path]` (default: `/solr`): solr default context path
+ * `default[:solrcloud][:jetty_config][:context][:temp_directory]` (default: `/solr-webapp`): solr webapp directory
+ * `default[:solrcloud][:jetty_config][:context][:war]` (default: `/webapps/solr.war`): jetty webapp solr war file location
+
 ## Cookbook solr.xml Config Attributes
 
 solr.xml Reference: https://cwiki.apache.org/confluence/display/solr/Format+of+solr.xml
