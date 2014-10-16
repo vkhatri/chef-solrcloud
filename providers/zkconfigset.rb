@@ -58,11 +58,12 @@ action :create do
       only_if     { node['solrcloud']['manage_zkconfigsets'] }
     end
 
-    # Update if config is not present in zk, like attribute node['solrcloud']['manage_zkconfigsets'] was not during the first chef run
+
+# Update if config is not present in zk, like attribute node['solrcloud']['manage_zkconfigsets'] was not during the first chef run
     execute "zk_config_set_upconfig_#{new_resource.name}_missing_upload" do
-      command   "#{new_resource.solr_zkcli} -zkhost #{new_resource.zkhost} -cmd upconfig -confdir #{::File.join(new_resource.zkconfigsets_home, new_resource.name, 'conf')} -confname #{new_resource.name} 2>&1"
-      action      :run
-      only_if     { node['solrcloud']['manage_zkconfigsets'] and not SolrCloud::Zk.new(new_resource.zkhost).configset?(new_resource.name) }
+      command "#{new_resource.solr_zkcli} -zkhost #{new_resource.zkhost} -cmd upconfig -confdir #{::File.join(new_resource.zkconfigsets_home, new_resource.name, 'conf')} -confname #{new_resource.name} 2>&1"
+      action :run
+      only_if { node['solrcloud']['manage_zkconfigsets'] and (new_resource.force_upload or not  SolrCloud::Zk.new(new_resource.zkhost).configset?(new_resource.name)) }
     end
   end
 end
