@@ -3,6 +3,12 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.4.3
+-----
+
+- vkhatri - bump apache solr version to 4.10.1 after a basic test run
+
+
 0.4.2
 -----
 
