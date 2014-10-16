@@ -3,6 +3,17 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.4.2
+-----
+
+- timoschmidt - added attribute force_upload to zkconfigset lwrp to always upload
+  zkconfigsets to zookeeper, useful when manage configset separately
+
+- timoschmidt - create directory for JETTY_RUN if missing for debian platform family
+
+- vkhatri - added attribute for jetty context configuration
+
+
 0.3.9
 -----
 
