@@ -171,11 +171,7 @@ If configSets are managed outside of the cookbook, configSet will only get uploa
 Any update to separately managed configSets are not propogated to zookeeper by default. However, one can use attribute
 `node[:solrcloud][:force_zkconfigsets_upload]` to always upload the configSet regardless of the state.
 
-> Setting attribute node[:solrcloud][:force_zkconfigsets_upload] or resource attribute :force_upload would
-
-> always trigger configSet upload to zookeeper. It is better not to enable rsource attribute :force_upload, but
-
-> instead better to use attribute node[:solrcloud][:force_zkconfigsets_upload] on limited set of nodes.
+> Setting attribute node[:solrcloud][:force_zkconfigsets_upload] or resource attribute :force_upload would always trigger configSet upload to zookeeper. It is better not to enable rsource attribute :force_upload, but instead better to use attribute node[:solrcloud][:force_zkconfigsets_upload] on limited set of nodes.
 
 > This may vary environment to environment.
 
