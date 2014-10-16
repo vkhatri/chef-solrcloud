@@ -102,6 +102,19 @@ LWRP handles config changes by itself. When any change is made to configSet cont
     end
 
 
+*Always re create/upload configSet even exists or no update to config files:*
+
+    solrcloud_zkconfigset configset_name
+      force_upload true
+      option option_name
+    end
+
+OR
+
+Set attribute `node[:solrcloud][:force_zkconfigsets_upload]` to true, which affects all the configSets as
+resource attribute :force_upload defualt value is set to `node[:solrcloud][:force_zkconfigsets_upload]`.
+
+
 *Delete a configSet using LWRP:*
 
     solrcloud_zkconfigset configset_name do
@@ -144,13 +157,27 @@ Parameters:
 - *zkhost (optional)*					- zookeeper server, default value `node[:solrcloud][:solr_config][:solrcloud][:zk_host].first`
 - *zkconfigsets_home (optional)*		- configSet directory to sore on solrcloud node, default value `node[:solrcloud][:zkconfigsets_home]`
 - *zkconfigsets_cookbook (optional)*	- configSet cookbook name, default value `node[:solrcloud][:zkconfigsets_cookbook]`
-- *manage_zkconfigsets (optional)* - manage configset, default value `node[:solrcloud][:manage_zkconfigsets]`
+- *manage_zkconfigsets (optional)* - manage configSet, default value `node[:solrcloud][:manage_zkconfigsets]`
+- *force_upload (optional)* - if set always upload configSet to zookeeper, default value `node[:solrcloud][:force_zkconfigsets_upload]`
 
-**LWRP configSet source cookbook/location**
+**LWRP configSet source cookbook/location management**
 
-All configSet content must be stored under `node[:solrcloud][:zkconfigsets_cookbook]`/files/default/config set name/conf/`.
+All configSet content must be stored under `node[:solrcloud][:zkconfigsets_cookbook]`/files/default/config set name/conf/` if
+not managed separately.
 
 configSets source cookbook is default set to `solrcloud` and can be changed via attribute `node[:solrcloud][:zkconfigsets_cookbook]`.
+
+If configSets are managed outside of the cookbook, configSet will only get uploaded in case it is missing in the zookeeper.
+Any update to separately managed configSets are not propogated to zookeeper by default. However, one can use attribute
+`node[:solrcloud][:force_zkconfigsets_upload]` to always upload the configSet regardless of the state.
+
+> Setting attribute node[:solrcloud][:force_zkconfigsets_upload] or resource attribute :force_upload would
+
+> always trigger configSet upload to zookeeper. It is better not to enable rsource attribute :force_upload, but
+
+> instead better to use attribute node[:solrcloud][:force_zkconfigsets_upload] on limited set of nodes.
+
+> This may vary environment to environment.
 
 
 ## SolrCloud Collection LWRP
@@ -294,6 +321,12 @@ Parameters:
  * `default[:solrcloud][:auto_system_memory]` (default: `768`): memory to preserve for OS, required when attribute `default[:solrcloud][:auto_java_memory]` is set
 
  * `default[:solrcloud][:install_java]` (default: `true`): setup java, disable to manage java outside of this cookbook
+
+ * `default[:solrcloud][:force_zkconfigsets_upload]` (default: `false`): if set, zkconfigset lwrp will always execute configSet upload
+    to zookeeper even configSet exists or there is no update. This option is useful when configSet source directory is managed
+    separately.
+
+    This attribute should be enabled for limited nodes in solrcloud cluster if possible.
 
 ## Cookbook Core Attributes
 
