@@ -50,9 +50,7 @@ module SolrCloud
     end
   end
 
-  # Solr Collection Management Class
-  class Collection
-
+  class SolrEntity
     attr_accessor :httpconn, :headers
 
     def initialize(opts = {})
@@ -64,9 +62,9 @@ module SolrCloud
       # }
       @options    = opts
       @headers    = {
-        'Accept' => 'application/json',
-        'Keep-Alive' => '120',
-        'Content-Type' => 'application/json'
+          'Accept' => 'application/json',
+          'Keep-Alive' => '120',
+          'Content-Type' => 'application/json'
       }
       connect(opts[:host], opts[:port], opts[:ssl_port], opts[:use_ssl])
     end
@@ -85,6 +83,10 @@ module SolrCloud
         @httpconn.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
     end
+  end
+
+  # Solr Collection Management Class
+  class Collection < SolrEntity
 
     def create(name, replication_factor, opts)
       Chef::Log.info("collection #{name} creating ..")
@@ -99,6 +101,7 @@ module SolrCloud
       url << "&router.name=#{opts[:router_name]}" if opts[:router_name]
       url << "&router.field=#{otps[:router_field]}" if opts[:router_field]
       url << "&async=#{opts[:async]}" if opts[:async]
+      url << "&autoAddReplicas=#{opts[:auto_add_replicas]}" if opts[:auto_add_replicas]
       reply = httpconn.request(Net::HTTP::Post.new(url, headers))
       data  = JSON.pretty_generate(JSON.parse(reply.body))
 
@@ -122,7 +125,6 @@ module SolrCloud
         raise "#{url}, collection #{name} failed to delete. => #{data}"
       end
     end
-
   end
 end
 
