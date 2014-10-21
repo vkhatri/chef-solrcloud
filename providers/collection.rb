@@ -38,10 +38,10 @@ action :create do
       :router_field   => new_resource.router_field,
       :async          => new_resource.async,
       :router_name    => new_resource.router_name,
-      :router_field   => new_resource.router_field,
       :create_node_set        => new_resource.create_node_set,
       :max_shards_per_node    => new_resource.max_shards_per_node,
-      :collection_config_name => new_resource.collection_config_name
+      :collection_config_name => new_resource.collection_config_name,
+      :auto_add_replicas      => new_resource.auto_add_replicas
     }
 
     ruby_block "create collection #{new_resource.name}" do
@@ -70,4 +70,3 @@ action :delete do
     end
   end
 end
-

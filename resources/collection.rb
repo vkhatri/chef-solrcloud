@@ -26,9 +26,9 @@ attribute :shards,        :kind_of => String, :default => nil
 attribute :router_field,  :kind_of => String, :default => nil
 attribute :async,         :kind_of => String, :default => nil
 attribute :router_name,   :kind_of => String, :default => nil
-attribute :router_field,  :kind_of => String, :default => nil
-attribute :host,          :kind_of => String, :default => node['ipaddress']
 attribute :use_ssl,       :kind_of => [TrueClass, FalseClass], :default => false
+attribute :host,          :kind_of => String, :default => node['ipaddress']
+attribute :auto_add_replicas,       :kind_of => [TrueClass, FalseClass], :default => false
 attribute :port,          :kind_of => [String, Integer], :default => node['solrcloud']['port']
 attribute :ssl_port,      :kind_of => [String, Integer], :default => node['solrcloud']['ssl_port']
 attribute :create_node_set,         :kind_of => String, :default => nil
