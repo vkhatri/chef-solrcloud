@@ -266,6 +266,7 @@ Parameters:
 - *create_node_set* (optional)					- collection API parameter createNodeSet, default value nil
 - *replication_factor* (optional)				- collection API parameter replicationFactor, default value 1
 - *max_shards_per_node* (optional)				- collection API parameter maxShardsPerNode, default value nil
+- *auto_add_replicas* (optional)				- collection API parameter autoAddReplicas, default value false
 
 
 ## Cookbook Advanced Attributes

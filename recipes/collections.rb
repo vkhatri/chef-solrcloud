@@ -33,6 +33,7 @@ node['solrcloud']['collections'].each { |collection_name, options|
     replication_factor      options[:replication_factor]
     max_shards_per_node     options[:max_shards_per_node]
     collection_config_name  options[:collection_config_name]
+    auto_add_replicas       options[:auto_add_replicas]
     action          options[:action]
   end
 
