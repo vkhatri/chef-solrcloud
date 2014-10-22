@@ -3,85 +3,92 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+New
+-----
+
+- Timo Schmidt - Added collection API parameter 'autoAddReplicas'
+
+- Virender Khatri - Rubocop ready
+
 0.4.3
 -----
 
-- vkhatri - bump apache solr version to 4.10.1 after a basic test run
+- Virender Khatri - bump apache solr version to 4.10.1 after a basic test run
 
 
 0.4.2
 -----
 
-- timoschmidt - added attribute force_upload to zkconfigset lwrp to always upload
+- Timo Schmidt - added attribute force_upload to zkconfigset lwrp to always upload
   zkconfigsets to zookeeper, useful when manage configset separately
 
-- timoschmidt - create directory for JETTY_RUN if missing for debian platform family
+- Timo Schmidt - create directory for JETTY_RUN if missing for debian platform family
 
-- vkhatri - added attribute for jetty context configuration
+- Virender Khatri - added attribute for jetty context configuration
 
 
 0.3.9
 -----
 
-- vkhatri - Fixed solr key store file generation, issue #11
+- Virender Khatri - Fixed solr key store file generation, issue #11
 
 0.3.8
 -----
 
-- vkhatri - fixed cookbook for foodcritic test passed ok
+- Virender Khatri - fixed cookbook for foodcritic test passed ok
 
-- vkhatri - added all zkconfig lwrp options to recipe
+- Virender Khatri - added all zkconfig lwrp options to recipe
 
-- vkhatri - added gcc dep for zk gem, issue #8
+- Virender Khatri - added gcc dep for zk gem, issue #8
 
-- vkhatri - fixed zkconfigset lwrp to upload missing zk configs, issue #7
+- Virender Khatri - fixed zkconfigset lwrp to upload missing zk configs, issue #7
 
-- timoschmidt - removed Gem.clear_path, fix for OpsWorks runtime error, issue #5
+- Timo Schmidt - removed Gem.clear_path, fix for OpsWorks runtime error, issue #5
 
 0.3.4
 -----
 
-- vkhatri - fixed zk gem install patch package dependency error
+- Virender Khatri - fixed zk gem install patch package dependency error
 
 0.3.3
 -----
 
-- vkhatri - added java dependency
+- Virender Khatri - added java dependency
 
 0.3.2
 -----
 
-- vkhatri - bumped solr version to 4.10.0
+- Virender Khatri - bumped solr version to 4.10.0
 
-- vkhatri - removed attribute adminPath for v4.10.0, caused startup failure
+- Virender Khatri - removed attribute adminPath for v4.10.0, caused startup failure
 
-- vkhatri - updated README.md
+- Virender Khatri - updated README.md
 
-- vkhatri - fix for foodcrtic
+- Virender Khatri - fix for foodcrtic
 
 0.3.0
 -----
-- vkhatri - made lwrp a bit better using ruby gem zk, fix #1
+- Virender Khatri - made lwrp a bit better using ruby gem zk, fix #1
 
-- vkhatri - added another attribute for zookeeper configSet upload
+- Virender Khatri - added another attribute for zookeeper configSet upload
 
-- vkhatri - changed failure to raise an Exception instead of Chef::Application.fatal!
+- Virender Khatri - changed failure to raise an Exception instead of Chef::Application.fatal!
 
-- vkhatri - java Options attribute is now an Array
+- Virender Khatri - java Options attribute is now an Array
 
-- vkhatri - added Auto Java Memory attribute file
+- Virender Khatri - added Auto Java Memory attribute file
 
-- vkhatri - disabled default Node zkConfigSets and collections manage attribute
+- Virender Khatri - disabled default Node zkConfigSets and collections manage attribute
 
-- vkhatri - added zkConfigSets source management attribute - zkconfigsets_source
+- Virender Khatri - added zkConfigSets source management attribute - zkconfigsets_source
 
-- vkhatri - disabled CONSOLE logging in log4j.properties and added more template attributes
+- Virender Khatri - disabled CONSOLE logging in log4j.properties and added more template attributes
 
 0.2.8
 -----
-- vkhatri - Added node java_options attribute
+- Virender Khatri - Added node java_options attribute
 
-- vkhatri - Fixed Collection LWRP for stopped solr service and in why run mode
+- Virender Khatri - Fixed Collection LWRP for stopped solr service and in why run mode
 
 - Updated README content with correct attributes
 
@@ -89,57 +96,57 @@ This file is used to list changes made in each version of the solrcloud cookbook
 
 0.2.6
 -----
-- vkhatri - Fixed Typo Changes in README examples
+- Virender Khatri - Fixed Typo Changes in README examples
 
 
 0.2.5
 -----
-- vkhatri - Renamed solr.xml node attributes convention to generic
+- Virender Khatri - Renamed solr.xml node attributes convention to generic
 
-- vkhatri - Added Request Log attributes
+- Virender Khatri - Added Request Log attributes
 
-- vkhatri - Added Jetty JMX
+- Virender Khatri - Added Jetty JMX
 
-- vkhatri - Added JMX Authentication & Authorization
+- Virender Khatri - Added JMX Authentication & Authorization
 
-- vkhatri - Added Jetty SSL
+- Virender Khatri - Added Jetty SSL
 
-- vkhatri - Added Solr Service Startup Wait Time attribute
+- Virender Khatri - Added Solr Service Startup Wait Time attribute
 
-- vkhatri - Updated configSet now will notify zookeeper upconfig
+- Virender Khatri - Updated configSet now will notify zookeeper upconfig
 
-- vkhatri - Added Jetty Server Core attributes
+- Virender Khatri - Added Jetty Server Core attributes
 
-- vkhatri - Added Jetty default connector attributes
+- Virender Khatri - Added Jetty default connector attributes
 
-- vkhatri - Added Jetty SSL connector attributes
+- Virender Khatri - Added Jetty SSL connector attributes
 
-- vkhatri - Added SSL key store file
+- Virender Khatri - Added SSL key store file
 
-- vkhatri - Added Default key store file generation and management
+- Virender Khatri - Added Default key store file generation and management
 
-- vkhatri - Added User defined key store file SSL
+- Virender Khatri - Added User defined key store file SSL
 
-- vkhatri - Separated manager attribute to  collection manager, zkconfigSet managet and zkconfigSet source manager
+- Virender Khatri - Separated manager attribute to  collection manager, zkconfigSet managet and zkconfigSet source manager
 
-- vkhatri - Fixed collection first time run failure due to solr service down, now logs a message when solr service is down
+- Virender Khatri - Fixed collection first time run failure due to solr service down, now logs a message when solr service is down
 
-- vkhatri - Updated collection LWRP, now if manage_collections is disabled, LWRP would not create collection resource
+- Virender Khatri - Updated collection LWRP, now if manage_collections is disabled, LWRP would not create collection resource
 
-- vkhatri - Updated zkconfigsets LWRP, now if manage_zkconfigsets is disabled, LWRP would not create zkconfigsets zookeeper upconfig resource
+- Virender Khatri - Updated zkconfigsets LWRP, now if manage_zkconfigsets is disabled, LWRP would not create zkconfigsets zookeeper upconfig resource
 
-- vkhatri - Updated zkconfigsets LWRP, now if manage_zkconfigsets_source is disabled, LWRP would not create zkconfigsets source resource
+- Virender Khatri - Updated zkconfigsets LWRP, now if manage_zkconfigsets_source is disabled, LWRP would not create zkconfigsets source resource
 
 0.2.1
 -----
-- vkhatri - Updated README and CHANGELOG
+- Virender Khatri - Updated README and CHANGELOG
 
 0.2.0
 -----
-- vkhatri - Initial release of solrcloud
+- Virender Khatri - Initial release of solrcloud
 
 - - -
-[Github Source](https://github.com/vkhatri/solrcloud)
+[Github Source](https://github.com/Virender Khatri/solrcloud)
 
 Check the [Markdown Syntax Guide](http://daringfireball.net/projects/markdown/syntax) for help with Markdown.
 
