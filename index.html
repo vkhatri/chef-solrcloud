@@ -30,7 +30,7 @@
         <h1>
 <a name="solrcloud-cookbook" class="anchor" href="#solrcloud-cookbook"><span class="octicon octicon-link"></span></a>solrcloud Cookbook</h1>
 
-<p>This is an <a href="https://wiki.opscode.com/display/chef/Home">OpsCode Chef</a> cookbook for <a href="http://lucene.apache.org/solr/">Apache Solr</a>.</p>
+<p>This is a <a href="https://www.getchef.com/chef/">Chef</a> cookbook for <a href="http://lucene.apache.org/solr/">Apache Solr</a>.</p>
 
 <p>It was primarily developed for Testing SolrCloud against Solr Master/Slave setup and its features.</p>
 
@@ -49,7 +49,7 @@ by this cookbook.</p>
 <h2>
 <a name="supported-apache-solr-version" class="anchor" href="#supported-apache-solr-version"><span class="octicon octicon-link"></span></a>Supported Apache Solr Version</h2>
 
-<p>This cookbook was tested for Apache Solr 4.9.0. Minimum 4.10.0 setup was tested.</p>
+<p>This cookbook was tested for Apache Solr 4.9.0. Minimal setup was tested for v4.10.x.</p>
 
 <h2>
 <a name="supported-apache-solr-runtime" class="anchor" href="#supported-apache-solr-runtime"><span class="octicon octicon-link"></span></a>Supported Apache Solr Runtime</h2>
@@ -95,7 +95,9 @@ instead of solrcloud for Production environment.
 </li>
 <li><p><code>solrcloud::zkconfigsets</code> - create/delete solrcloud configSet in zookeeper via LWRP</p></li>
 <li><p><code>solrcloud::collections</code>  - create/delete solrcloud collection on solrcloud node via LWRP</p></li>
-</ul><blockquote>
+</ul>
+
+<blockquote>
 <p><code>solrcloud::tarball</code> is the main recipe which includes all other recipe. For <code>run_list</code> use <code>solrcloud::tarball</code>.</p>
 </blockquote>
 
@@ -129,6 +131,19 @@ does not require to be enabled on all the nodes.
   option option_name
 end
 </code></pre>
+
+<p><em>Always re create/upload configSet even exists or no update to config files:</em></p>
+
+<pre><code>solrcloud_zkconfigset configset_name
+  force_upload true
+  option option_name
+end
+</code></pre>
+
+<p>OR</p>
+
+<p>Set attribute <code>node[:solrcloud][:force_zkconfigsets_upload]</code> to true, which affects all the configSets as
+resource attribute :force_upload defualt value is set to <code>node[:solrcloud][:force_zkconfigsets_upload]</code>.</p>
 
 <p><em>Delete a configSet using LWRP:</em></p>
 
@@ -192,13 +207,29 @@ end
 <em>zkconfigsets_cookbook (optional)</em>    - configSet cookbook name, default value <code>node[:solrcloud][:zkconfigsets_cookbook]</code>
 </li>
 <li>
-<em>manage_zkconfigsets (optional)</em> - manage configset, default value <code>node[:solrcloud][:manage_zkconfigsets]</code>
+<em>manage_zkconfigsets (optional)</em> - manage configSet, default value <code>node[:solrcloud][:manage_zkconfigsets]</code>
 </li>
-</ul><p><strong>LWRP configSet source cookbook/location</strong></p>
+<li>
+<em>force_upload (optional)</em> - if set always upload configSet to zookeeper, default value <code>node[:solrcloud][:force_zkconfigsets_upload]</code>
+</li>
+</ul>
 
-<p>All configSet content must be stored under <code>node[:solrcloud][:zkconfigsets_cookbook]</code>/files/default/config set name/conf/`.</p>
+<p><strong>LWRP configSet source cookbook/location management</strong></p>
+
+<p>All configSet content must be stored under <code>node[:solrcloud][:zkconfigsets_cookbook]</code>/files/default/config set name/conf/` if
+not managed separately.</p>
 
 <p>configSets source cookbook is default set to <code>solrcloud</code> and can be changed via attribute <code>node[:solrcloud][:zkconfigsets_cookbook]</code>.</p>
+
+<p>If configSets are managed outside of the cookbook, configSet will only get uploaded in case it is missing in the zookeeper.
+Any update to separately managed configSets are not propogated to zookeeper by default. However, one can use attribute
+<code>node[:solrcloud][:force_zkconfigsets_upload]</code> to always upload the configSet regardless of the state.</p>
+
+<blockquote>
+<p>Setting attribute node[:solrcloud][:force_zkconfigsets_upload] or resource attribute :force_upload would always trigger configSet upload to zookeeper. It is better not to enable rsource attribute :force_upload, but instead better to use attribute node[:solrcloud][:force_zkconfigsets_upload] on limited set of nodes.</p>
+
+<p>This may vary environment to environment.</p>
+</blockquote>
 
 <h2>
 <a name="solrcloud-collection-lwrp" class="anchor" href="#solrcloud-collection-lwrp"><span class="octicon octicon-link"></span></a>SolrCloud Collection LWRP</h2>
@@ -310,7 +341,11 @@ end
 <em>replication_factor</em> (optional)               - collection API parameter replicationFactor, default value 1</li>
 <li>
 <em>max_shards_per_node</em> (optional)              - collection API parameter maxShardsPerNode, default value nil</li>
-</ul><h2>
+<li>
+<em>auto_add_replicas</em> (optional)                - collection API parameter autoAddReplicas, default value false</li>
+</ul>
+
+<h2>
 <a name="cookbook-advanced-attributes" class="anchor" href="#cookbook-advanced-attributes"><span class="octicon octicon-link"></span></a>Cookbook Advanced Attributes</h2>
 
 <ul>
@@ -361,7 +396,16 @@ process with minimum system memory reservation defined by attribute
 </li>
 <li><p><code>default[:solrcloud][:auto_system_memory]</code> (default: <code>768</code>): memory to preserve for OS, required when attribute <code>default[:solrcloud][:auto_java_memory]</code> is set</p></li>
 <li><p><code>default[:solrcloud][:install_java]</code> (default: <code>true</code>): setup java, disable to manage java outside of this cookbook</p></li>
-</ul><h2>
+<li>
+<p><code>default[:solrcloud][:force_zkconfigsets_upload]</code> (default: <code>false</code>): if set, zkconfigset lwrp will always execute configSet upload
+to zookeeper even configSet exists or there is no update. This option is useful when configSet source directory is managed
+separately.</p>
+
+<p>This attribute should be enabled for limited nodes in solrcloud cluster if possible.</p>
+</li>
+</ul>
+
+<h2>
 <a name="cookbook-core-attributes" class="anchor" href="#cookbook-core-attributes"><span class="octicon octicon-link"></span></a>Cookbook Core Attributes</h2>
 
 <ul>
@@ -398,7 +442,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:zkconfigsets_cookbook]</code> (default: <code>solrcloud</code>): zookeeper configSet cookbook</li>
 <li><p><code>default[:solrcloud][:zkconfigsets_home]</code> (default: <code>node[:solrcloud][:install_dir]/zkconfigs</code>): configs location for zookeeper configSet upconfig</p></li>
 <li><p><code>default[:solrcloud][:zookeeper][:version]</code> (default: <code>3.4.6</code>): zookeeper package setup for zkCli.sh</p></li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="cookbook-ulimit-attributes" class="anchor" href="#cookbook-ulimit-attributes"><span class="octicon octicon-link"></span></a>Cookbook Ulimit Attributes</h2>
 
 <ul>
@@ -408,7 +454,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:limits][:nofile]</code> (default: <code>48000</code>): solr service user file limit</li>
 <li>
 <code>default[:solrcloud][:limits][:nproc]</code> (default: <code>unlimited</code>): solr service user process limit</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="cookbook-log4jproperties-config-attributes" class="anchor" href="#cookbook-log4jproperties-config-attributes"><span class="octicon octicon-link"></span></a>Cookbook log4j.properties Config Attributes</h2>
 
 <ul>
@@ -422,7 +470,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:log4j][:max_backup_index]</code> (default: <code>10</code>): log files retention</li>
 <li>
 <code>default[:solrcloud][:log4j][:conversion_pattern]</code> (default: <code>'%d{ISO8601} [%t] %-5p %c{3} %x - %m%n'</code>): log conversion pattern</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="cookbook-request-log-config-attributes" class="anchor" href="#cookbook-request-log-config-attributes"><span class="octicon octicon-link"></span></a>Cookbook Request Log Config Attributes</h2>
 
 <ul>
@@ -432,7 +482,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:request_log][:log_cookies]</code> (default: <code>false</code>):  enable log cookies</li>
 <li>
 <code>default[:solrcloud][:request_log][:time_zone]</code> (default: <code>UTC</code>): request log time zone</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="cookbook-jetty-core-server-attributes" class="anchor" href="#cookbook-jetty-core-server-attributes"><span class="octicon octicon-link"></span></a>Cookbook Jetty Core Server Attributes</h2>
 
 <ul>
@@ -442,7 +494,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:jetty_config][:server][:max_threads]</code> (default: <code>10000</code>): maximum jetty threads</li>
 <li>
 <code>default[:solrcloud][:jetty_config][:server][:detailed_dump]</code> (default: <code>false</code>): enable jetty detailed dump</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="cookbook-jetty-default-connector-attributes-orgeclipsejettyserverbiosocketconnector" class="anchor" href="#cookbook-jetty-default-connector-attributes-orgeclipsejettyserverbiosocketconnector"><span class="octicon octicon-link"></span></a>Cookbook Jetty Default Connector Attributes (org.eclipse.jetty.server.bio.SocketConnector)</h2>
 
 <ul>
@@ -452,7 +506,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:jetty_config][:connector][:max_idle_time]</code> (default: <code>50000</code>): max idle time for connector (http)</li>
 <li>
 <code>default[:solrcloud][:jetty_config][:connector][:low_resource_max_idle_time]</code> (default: <code>1500</code>):</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="cookbook-jetty-ssl-connector-attributes" class="anchor" href="#cookbook-jetty-ssl-connector-attributes"><span class="octicon octicon-link"></span></a>Cookbook Jetty SSL Connector Attributes</h2>
 
 <ul>
@@ -460,7 +516,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:jetty_config][:ssl_connector][:need_client_auth]</code> (default: <code>false</code>): enable client ssl authentication, this feature is not tested yet</li>
 <li>
 <code>default[:solrcloud][:jetty_config][:ssl_connector][:max_idle_time]</code> (default: <code>30000</code>): jetty ssl maximum idle time</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="cookbook-jetty-ssl-key-store-attributes" class="anchor" href="#cookbook-jetty-ssl-key-store-attributes"><span class="octicon octicon-link"></span></a>Cookbook Jetty SSL Key Store Attributes</h2>
 
 <ul>
@@ -486,7 +544,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:key_store][:ext]</code> (default: <code>san=ip:127.0.0.1</code>): key store ext params</li>
 <li>
 <code>default[:solrcloud][:key_store][:validity]</code> (default: <code>999999</code>): key store validity</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="cookbook-jetty-jmx-attributes" class="anchor" href="#cookbook-jetty-jmx-attributes"><span class="octicon octicon-link"></span></a>Cookbook Jetty JMX Attributes</h2>
 
 <ul>
@@ -496,7 +556,21 @@ ${solr.data.dir:}/collection name</p>
 <li><del><code>default[:solrcloud][:jmx][:authenticate]</code> (default: <code>false</code>): enable jmx authentication and authorization, this feature is not tested yet</del></li>
 <li>
 <code>default[:solrcloud][:jmx][:users]</code> (default: <code>users - solrmonitor solrconfig</code>): jmx defaults users and roles, this feature is not tested yet</li>
-</ul><h2>
+</ul>
+
+<h2>
+<a name="cookbook-jetty-context-attributes" class="anchor" href="#cookbook-jetty-context-attributes"><span class="octicon octicon-link"></span></a>Cookbook Jetty Context Attributes</h2>
+
+<ul>
+<li>
+<code>default[:solrcloud][:jetty_config][:context][:path]</code> (default: <code>/solr</code>): solr default context path</li>
+<li>
+<code>default[:solrcloud][:jetty_config][:context][:temp_directory]</code> (default: <code>/solr-webapp</code>): solr webapp directory</li>
+<li>
+<code>default[:solrcloud][:jetty_config][:context][:war]</code> (default: <code>/webapps/solr.war</code>): jetty webapp solr war file location</li>
+</ul>
+
+<h2>
 <a name="cookbook-solrxml-config-attributes" class="anchor" href="#cookbook-solrxml-config-attributes"><span class="octicon octicon-link"></span></a>Cookbook solr.xml Config Attributes</h2>
 
 <p>solr.xml Reference: <a href="https://cwiki.apache.org/confluence/display/solr/Format+of+solr.xml">https://cwiki.apache.org/confluence/display/solr/Format+of+solr.xml</a></p>
@@ -545,7 +619,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:solr_config][:logging][:watcher][:logging_size]</code> (default: <code>1000</code>): solr.xml param logging size, not required</li>
 <li>
 <code>default[:solrcloud][:solr_config][:logging][:watcher][:threshold]</code> (default: <code>INFO</code>): solr.xml param logging threshold, no required</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="cookbook-solrcloud-on-hdfs-config-attributes" class="anchor" href="#cookbook-solrcloud-on-hdfs-config-attributes"><span class="octicon octicon-link"></span></a>Cookbook SolrCloud on HDFS Config Attributes</h2>
 
 <ul>
@@ -558,7 +634,9 @@ ${solr.data.dir:}/collection name</p>
 <code>default[:solrcloud][:hdfs][:lock_type]</code> (default: <code>hdfs</code>):</li>
 <li>
 <code>default[:solrcloud][:hdfs][:hdfs_home]</code> (default: <code>nil</code>): syntax: 'hdfs://host:port/path'</li>
-</ul><blockquote>
+</ul>
+
+<blockquote>
 <p>Note: SolrCloud on HDFS Deployment using this cookbook is not yet tested, check online <a href="https://cwiki.apache.org/confluence/display/solr/Running+Solr+on+HDFS">solr on hdfs</a> for more info</p>
 </blockquote>
 
@@ -570,7 +648,9 @@ ${solr.data.dir:}/collection name</p>
 <code>ulimit</code> cookbook</li>
 <li>
 <code>java</code> cookbook</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="solrcloud-deployment-requirement" class="anchor" href="#solrcloud-deployment-requirement"><span class="octicon octicon-link"></span></a>SolrCloud Deployment Requirement</h2>
 
 <p>To deploy solrcloud using this cookbook, below items are required:</p>
@@ -579,7 +659,9 @@ ${solr.data.dir:}/collection name</p>
 <li>a zookeeper server or cluster</li>
 <li>configSet(s) to upload to zookeeper for collection/core</li>
 <li>collection(s) name to deploy in solrcloud</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="solrcloud-configset-cookbook--environments--versioning" class="anchor" href="#solrcloud-configset-cookbook--environments--versioning"><span class="octicon octicon-link"></span></a>SolrCloud configSet Cookbook / Environments / Versioning</h2>
 
 <p><em>Directory Structure</em></p>
@@ -600,7 +682,9 @@ ${solr.data.dir:}/collection name</p>
 <li>maintain different <code>node[:solrcloud][:zkconfigsets_cookbook]</code> per environment
 OR</li>
 <li>maintain a single cookbook with versioning</li>
-</ul><p>Simply, update <code>node[:solrcloud][:zkconfigsets_cookbook]</code> attribute with your configSet cookbook and update metadata.rb
+</ul>
+
+<p>Simply, update <code>node[:solrcloud][:zkconfigsets_cookbook]</code> attribute with your configSet cookbook and update metadata.rb
 file with line:</p>
 
 <p>'depends <code>node[:solrcloud][:zkconfigsets_cookbook]</code>'.</p>
@@ -724,6 +808,29 @@ node attribute with respective cluster zookeeper server(s).</p>
 added to the cookbook.</p>
 
 <h2>
+<a name="tune-java-parameters-for-better-performance" class="anchor" href="#tune-java-parameters-for-better-performance"><span class="octicon octicon-link"></span></a>Tune Java Parameters for better Performance</h2>
+
+<p>Some of the common java options tuning by <a href="https://wiki.apache.org/solr/ShawnHeisey">Shawn Heisey</a>.</p>
+
+<p>Node attributes:</p>
+
+<pre><code>"default_attributes": {
+  "solrcloud": {
+    "java_options": [
+      "-Xms1024m",
+      "-XX:+UseConcMarkSweepGC",
+      "-XX:CMSInitiatingOccupancyFraction=75",
+      "-XX:NewRatio=3",
+      "-XX:MaxTenuringThreshold=8",
+      "-XX:+CMSParallelRemarkEnabled",
+      "-XX:+ParallelRefProcEnabled",
+      "-XX:+AggressiveOpts"
+    ]
+  }
+}
+</code></pre>
+
+<h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <ol>
@@ -734,7 +841,9 @@ added to the cookbook.</p>
 <li>Run the tests, ensuring they all pass</li>
 <li>Write description about changes</li>
 <li>Submit a Pull Request using Github</li>
-</ol><h2>
+</ol>
+
+<h2>
 <a name="copyright--license" class="anchor" href="#copyright--license"><span class="octicon octicon-link"></span></a>Copyright &amp; License</h2>
 
 <p>Authors:: Virender Khatri and <a href="https://github.com/vkhatri/chef-solrcloud/graphs/contributors">Contributors</a></p>
