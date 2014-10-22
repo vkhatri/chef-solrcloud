@@ -39,7 +39,6 @@ default['solrcloud']['notify_zkconfigsets_upload']   = true
 # should also only be forced an a limited set of nodes
 default['solrcloud']['force_zkconfigsets_upload']    = false
 
-
 # manage solr collections, it is recommended to enable this attribute only on one node if possible.
 # Setting this attribute to all the nodes could lead to cluster wide issue. Issues encountered
 # after creating a collection could lead to multiple replica set for a collection on one node.
@@ -63,18 +62,18 @@ default['solrcloud']['jmx']['users']['solrcontrol']['password']   = 'solrcontrol
 
 # Jetty Server Config
 default['solrcloud']['jetty_config']['server']['min_threads']     = 10
-default['solrcloud']['jetty_config']['server']['max_threads']     = 10000
+default['solrcloud']['jetty_config']['server']['max_threads']     = 10_000
 default['solrcloud']['jetty_config']['server']['detailed_dump']   = 'false'
 
 # Jetty Connector Config
 # Default Parameters for org.eclipse.jetty.server.bio.SocketConnector
 default['solrcloud']['jetty_config']['connector']['stats_on']       = 'true'
-default['solrcloud']['jetty_config']['connector']['max_idle_time']  =  50000
+default['solrcloud']['jetty_config']['connector']['max_idle_time']  =  50_000
 default['solrcloud']['jetty_config']['connector']['low_resource_max_idle_time']   = 1500
 
 # Jetty SSL Connector Config
 default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'false'
-default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30000
+default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30_000
 
 # Jetty webapp
 default['solrcloud']['jetty_config']['context']['path'] = '/solr'
@@ -94,7 +93,7 @@ default['solrcloud']['key_store']['ou']         = 'ApacheSolrCloudTest'
 default['solrcloud']['key_store']['o']          = 'lucene.apache.org'
 default['solrcloud']['key_store']['c']          = 'US'
 default['solrcloud']['key_store']['ext']        = 'san=ip:127.0.0.1'
-default['solrcloud']['key_store']['validity']   = 999999
+default['solrcloud']['key_store']['validity']   = 999_999
 
 # Jetty Request Log
 default['solrcloud']['request_log']['retain_days']  = 10
@@ -102,10 +101,10 @@ default['solrcloud']['request_log']['log_cookies']  = 'false'
 default['solrcloud']['request_log']['time_zone']    = 'UTC'
 
 # template source cookbook
-default['solrcloud']['template_cookbook']        = "solrcloud"
+default['solrcloud']['template_cookbook']        = 'solrcloud'
 
 # cores configuration source cookbook, it is better to have a separate cores cookbook
-default['solrcloud']['zkconfigsets_cookbook']    = "solrcloud"
+default['solrcloud']['zkconfigsets_cookbook']    = 'solrcloud'
 
 # start solr with zookeeper, useful for testing purpose
 default['solrcloud']['zk_run']       = false
@@ -127,9 +126,8 @@ default['solrcloud']['hdfs']['hdfs_home']          = nil # syntax: 'hdfs://host:
 
 # solr process limits
 default['solrcloud']['limits']['memlock']    = 'unlimited'
-default['solrcloud']['limits']['nofile']     = 48000
+default['solrcloud']['limits']['nofile']     = 48_000
 default['solrcloud']['limits']['nproc']      = 'unlimited'
-
 
 # log4j.properties config
 default['solrcloud']['log4j']['level']              = 'INFO'
@@ -144,12 +142,12 @@ default['solrcloud']['solr_config']['admin_path']           = '/solr/admin'
 default['solrcloud']['solr_config']['core_load_threads']    = 3
 default['solrcloud']['solr_config']['management_path']      = nil
 default['solrcloud']['solr_config']['share_schema']         = 'false'
-default['solrcloud']['solr_config']['transient_cache_size'] = 1000000
+default['solrcloud']['solr_config']['transient_cache_size'] = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['host_context']       = 'solr'
-default['solrcloud']['solr_config']['solrcloud']['distrib_update_conn_timeout']    = 1000000
-default['solrcloud']['solr_config']['solrcloud']['distrib_update_so_timeout']      = 1000000
-default['solrcloud']['solr_config']['solrcloud']['leader_vote_wait']   = 1000000
-default['solrcloud']['solr_config']['solrcloud']['zk_client_timeout']  = 15000
+default['solrcloud']['solr_config']['solrcloud']['distrib_update_conn_timeout']    = 1_000_000
+default['solrcloud']['solr_config']['solrcloud']['distrib_update_so_timeout']      = 1_000_000
+default['solrcloud']['solr_config']['solrcloud']['leader_vote_wait']   = 1_000_000
+default['solrcloud']['solr_config']['solrcloud']['zk_client_timeout']  = 15_000
 default['solrcloud']['solr_config']['solrcloud']['zk_host']            = [] # Syntax: ["zkHost:zkPort"]
 default['solrcloud']['solr_config']['solrcloud']['generic_core_node_names']        = 'true'
 
@@ -163,20 +161,20 @@ default['solrcloud']['solr_config']['logging']['watcher']['logging_size']  = 100
 default['solrcloud']['solr_config']['logging']['watcher']['threshold']     = 'INFO'
 
 # Solr Directories
-default['solrcloud']['solr_home']   = File.join(node['solrcloud']['install_dir'],'solr')
+default['solrcloud']['solr_home']   = File.join(node['solrcloud']['install_dir'], 'solr')
 default['solrcloud']['cores_home']  = File.join(node['solrcloud']['solr_home'], 'cores/')
-default['solrcloud']['shared_lib']  = File.join(node['solrcloud']['install_dir'],'lib')
+default['solrcloud']['shared_lib']  = File.join(node['solrcloud']['install_dir'], 'lib')
 
 # Solr default configSets directory
-default['solrcloud']['config_sets'] = File.join(node['solrcloud']['solr_home'],'configsets')
+default['solrcloud']['config_sets'] = File.join(node['solrcloud']['solr_home'], 'configsets')
 
-default['solrcloud']['zk_run_data_dir']  = File.join(node['solrcloud']['install_dir'],'zookeeperdata')
+default['solrcloud']['zk_run_data_dir']  = File.join(node['solrcloud']['install_dir'], 'zookeeperdata')
 
 # Set zkHost for zookeeper configSet management
 default['solrcloud']['solr_config']['solrcloud']['zk_host'] = ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"] if node['solrcloud']['zk_run']
 
 # Solr Zookeeper configSets directory (collection.configName)
-default['solrcloud']['zkconfigsets_home'] = File.join(node['solrcloud']['install_dir'],'zkconfigs')
+default['solrcloud']['zkconfigsets_home'] = File.join(node['solrcloud']['install_dir'], 'zkconfigs')
 
 default['solrcloud']['solr_config']['core_root_directory']      = node['solrcloud']['cores_home']
 default['solrcloud']['solr_config']['shared_lib']               = node['solrcloud']['shared_lib']
@@ -190,4 +188,3 @@ default['solrcloud']['key_store']['key_store_file_path']  = File.join(node['solr
 
 default['solrcloud']['jmx']['password_file']  = File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.password')
 default['solrcloud']['jmx']['access_file']    = File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.access')
-

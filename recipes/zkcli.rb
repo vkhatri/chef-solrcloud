@@ -20,7 +20,7 @@
 # This recipe only setup zookeeper package for zkCli.sh.
 #
 
-require "tmpdir"
+require 'tmpdir'
 
 temp_d        = Dir.tmpdir
 tarball_file  = File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['version']}.tar.gz")
@@ -29,13 +29,13 @@ tarball_dir   = File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['v
 # Zookeeper Version Package File
 remote_file tarball_file do
   source node['solrcloud']['zookeeper']['tarball']['url']
-  not_if { File.exists?("#{node['solrcloud']['zookeeper']['source_dir']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.jar") }
+  not_if { File.exist?("#{node['solrcloud']['zookeeper']['source_dir']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.jar") }
 end
 
 # Extract and Setup Zookeeper Source directories
-bash "extract_zookeeper_tarball" do
-  user  "root"
-  cwd   "/tmp"
+bash 'extract_zookeeper_tarball' do
+  user 'root'
+  cwd '/tmp'
 
   code <<-EOS
     tar xzf #{tarball_file}
@@ -44,31 +44,31 @@ bash "extract_zookeeper_tarball" do
     chmod #{node['solrcloud']['dir_mode']} #{node['solrcloud']['zookeeper']['source_dir']}
   EOS
 
-  not_if  { File.exists?(node['solrcloud']['zookeeper']['source_dir']) }
+  not_if  { File.exist?(node['solrcloud']['zookeeper']['source_dir']) }
   creates "#{node['solrcloud']['zookeeper']['install_dir']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.jar"
-  action  :run
+  action :run
 end
 
 # Link Solr install_dir to Current source_dir
 link node['solrcloud']['zookeeper']['install_dir'] do
-  to      node['solrcloud']['zookeeper']['source_dir']
-  owner   node['solrcloud']['user']
-  group   node['solrcloud']['group']
-  action  :create
+  to node['solrcloud']['zookeeper']['source_dir']
+  owner node['solrcloud']['user']
+  group node['solrcloud']['group']
+  action :create
 end
 
 template File.join(node['solrcloud']['zookeeper']['install_dir'], 'conf', 'zoo.cfg') do
-  source "zoo.cfg.erb"
+  source 'zoo.cfg.erb'
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
-  mode  0644
+  mode 0644
 end
 
 template File.join(node['solrcloud']['zookeeper']['install_dir'], 'bin', 'zkEnv.sh') do
-  source "zkEnv.sh.erb"
+  source 'zkEnv.sh.erb'
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
-  mode  0644
+  mode 0644
 end
 
 remote_file tarball_file do

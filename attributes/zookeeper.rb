@@ -13,4 +13,3 @@ default['solrcloud']['zookeeper']['zkcli']            = File.join(node['solrclou
 default['solrcloud']['zookeeper']['tarball']['url']   = "https://archive.apache.org/dist/zookeeper/zookeeper-#{node['solrcloud']['zookeeper']['version']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.tar.gz"
 default['solrcloud']['zookeeper']['tarball']['md5']   = '971c379ba65714fd25dc5fe8f14e9ad1'
 default['solrcloud']['zookeeper']['solr_zkcli']       = "#{node['solrcloud']['install_dir']}/example/scripts/cloud-scripts/zkcli.sh"
-

@@ -26,6 +26,5 @@ if node['solrcloud']['install_java']
   node.default['java']['oracle']['accept_oracle_download_terms'] = true
   node.default['java']['arch'] = node['kernel']['machine']
 
-  include_recipe "java::default"
+  include_recipe 'java::default'
 end
-

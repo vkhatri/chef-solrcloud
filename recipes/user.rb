@@ -33,10 +33,9 @@ group node['solrcloud']['group'] do
 end
 
 user node['solrcloud']['user'] do
-  home    node['solrcloud']['user_home'] if node['solrcloud']['user_home']
-  shell   "/bin/bash"
-  gid     node['solrcloud']['group']
-  action  :create
+  home node['solrcloud']['user_home'] if node['solrcloud']['user_home']
+  shell '/bin/bash'
+  gid node['solrcloud']['group']
+  action :create
   only_if { node['solrcloud']['setup_user'] }
 end
-

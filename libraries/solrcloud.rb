@@ -17,10 +17,10 @@
 # limitations under the License.
 #
 
+# SolrCloud Helper Module
 module SolrCloud
-
+  # SolrCloud Zookeeper Helper
   class Zk
-
     attr_accessor :zkconn
 
     def initialize(server)
@@ -31,14 +31,14 @@ module SolrCloud
     def collection?(collection)
       clusterstate = zkconn.get('/clusterstate.json').first
       if clusterstate
-        return JSON.parse(clusterstate).map {|k,v| k }.include?(collection)
+        return JSON.parse(clusterstate).map { |k, _v| k }.include?(collection)
       else
         return false
       end
     end
 
     def collections
-      JSON.parse(zkconn.get('/clusterstate.json').first).map {|k,v| k }
+      JSON.parse(zkconn.get('/clusterstate.json').first).map { |k, _v| k }
     end
 
     def configset?(configset)
@@ -50,6 +50,7 @@ module SolrCloud
     end
   end
 
+  # Solrcloud API Helper
   class SolrEntity
     attr_accessor :httpconn, :headers
 
@@ -62,9 +63,9 @@ module SolrCloud
       # }
       @options    = opts
       @headers    = {
-          'Accept' => 'application/json',
-          'Keep-Alive' => '120',
-          'Content-Type' => 'application/json'
+        'Accept' => 'application/json',
+        'Keep-Alive' => '120',
+        'Content-Type' => 'application/json'
       }
       connect(opts[:host], opts[:port], opts[:ssl_port], opts[:use_ssl])
     end
@@ -87,7 +88,6 @@ module SolrCloud
 
   # Solr Collection Management Class
   class Collection < SolrEntity
-
     def create(name, replication_factor, opts)
       Chef::Log.info("collection #{name} creating ..")
       # Required Parameters
@@ -109,7 +109,7 @@ module SolrCloud
         Chef::Log.info("collection #{name} created. => #{data}")
         return true
       else
-        raise "#{url}, collection #{name} failed to create. => #{data}"
+        fail "#{url}, collection #{name} failed to create. => #{data}"
       end
     end
 
@@ -122,9 +122,8 @@ module SolrCloud
         Chef::Log.info("collection #{name} deleted. => #{data}")
         return true
       else
-        raise "#{url}, collection #{name} failed to delete. => #{data}"
+        fail "#{url}, collection #{name} failed to delete. => #{data}"
       end
     end
   end
 end
-
