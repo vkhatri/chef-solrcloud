@@ -1,0 +1,16 @@
+AlignParameters:
+  Enabled: true
+Encoding:
+  Enabled: true
+HashSyntax:
+  Enabled: false
+LineLength:
+  Enabled: false
+MethodLength:
+  Max: 30
+BracesAroundHashParameters:
+  Enabled: true
+CyclomaticComplexity:
+  Enabled: false
+GuardClause:
+  Enabled: false
