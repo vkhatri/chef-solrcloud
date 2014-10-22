@@ -20,7 +20,7 @@ https://github.com/vkhatri/chef-solrcloud
 
 ## Supported Apache Solr Version
 
-This cookbook was tested for Apache Solr 4.9.0. Minimal setup was tested for v4.10.x.
+This cookbook was tested for Apache Solr v4.9.0 and v4.10.x.
 
 
 ## Supported Apache Solr Runtime
