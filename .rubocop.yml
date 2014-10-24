@@ -1,7 +1,7 @@
 AlignParameters:
   Enabled: true
 Encoding:
-  Enabled: true
+  Enabled: false
 HashSyntax:
   Enabled: false
 LineLength:
@@ -14,3 +14,5 @@ CyclomaticComplexity:
   Enabled: false
 GuardClause:
   Enabled: false
+Metrics/PerceivedComplexity:
+  Max: 14
