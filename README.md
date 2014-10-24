@@ -288,7 +288,11 @@ Parameters:
 
     This attribute should be enabled for limited nodes in solrcloud cluster if possible.
 
- * `default[:solrcloud][:notify_restart]` (default: `false`): notify solr service on a solrcloud resource change like config file/template etc.
+ * `default[:solrcloud][:notify_restart]` (default: `false`): notify solr service restart on a solrcloud resource change like config file/template etc.
+
+ * `default[:solrcloud][:notify_restart_upgrade]` (default: `false`): notify solr service restart on version upgrade
+
+ * `default[:solrcloud][:restore_cores]` (default: `true`): restore older version solr cores configuration to newer version
 
  * `default[:solrcloud][:zk_run]` (default: `false`): if true solr will start up with embedded zookeeper
 

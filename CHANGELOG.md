@@ -3,12 +3,16 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
-New
+0.4.7
 -----
 
-- Timo Schmidt - Added collection API parameter 'autoAddReplicas'
+- Timo Schmidt - added collection API parameter 'autoAddReplicas'
 
-- Virender Khatri - Rubocop ready
+- Virender Khatri - rubocop ready
+
+- Virender Khatri - added solr context path to collection lwrp
+
+- Virender Khatri - added option to restore cores configuration during upgrade by default
 
 0.4.3
 -----
