@@ -294,6 +294,9 @@ Parameters:
 
  * `default[:solrcloud][:restore_cores]` (default: `true`): restore older version solr cores configuration to newer version
 
+    Note: Disable this option if reverting back to an old version. Before restoring the cores, new version cores directory content gets purged.
+          If there are changes in cores configuration between older and newer versions, only current(older) version cores configuration will presists.
+
  * `default[:solrcloud][:zk_run]` (default: `false`): if true solr will start up with embedded zookeeper
 
     Note: Setting option `node[:solrcloud][:zk_run]` will remove solrcloud config zk_host from solr.xml, mainly meant for testing purpose
