@@ -24,7 +24,7 @@ end
 use_inline_resources
 
 action :delete do
-  converge_by("delete config set #{new_resource.name} if exists") do
+  converge_by("delete config set #{new_resource.name} if exists \n") do
     execute "zk_config_set_rmr_#{new_resource.name}" do
       command "echo 'rmr /configs/#{new_resource.name}' | #{new_resource.zkcli} -server #{new_resource.zkhost} 2>&1"
       only_if { new_resource.manage_zkconfigsets && SolrCloud::Zk.new(new_resource.zkhost).configset?(new_resource.name) }
@@ -39,7 +39,7 @@ action :delete do
 end
 
 action :create do
-  converge_by("create config set #{new_resource.name} if missing") do
+  converge_by("create config set #{new_resource.name} if missing \n") do
     remote_directory ::File.join(new_resource.zkconfigsets_home, new_resource.name) do
       cookbook new_resource.zkconfigsets_cookbook
       source new_resource.name

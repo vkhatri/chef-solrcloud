@@ -10,7 +10,10 @@ default['solrcloud']['version']       = '4.10.1'
 default['solrcloud']['install_dir']   = '/usr/local/solr'
 default['solrcloud']['data_dir']      = '/opt/solr'
 
+default['solrcloud']['restore_cores'] = true
+
 default['solrcloud']['notify_restart']      = false # notify service restart on config change
+default['solrcloud']['notify_restart_upgrade']    = false # notify service restart on config change
 default['solrcloud']['service_name']        = 'solr'
 default['solrcloud']['service_start_wait']  = 15
 

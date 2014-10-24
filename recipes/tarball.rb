@@ -35,12 +35,19 @@ end.run_action(:install)
 require 'zk'
 require 'net/http'
 require 'json'
-
 require 'tmpdir'
 
 temp_d        = Dir.tmpdir
-tarball_file  = File.join(temp_d, "solr-#{node['solrcloud']['version']}.tgz")
-tarball_dir   = File.join(temp_d, "solr-#{node['solrcloud']['version']}")
+tarball_file  = ::File.join(temp_d, "solr-#{node['solrcloud']['version']}.tgz")
+tarball_dir   = ::File.join(temp_d, "solr-#{node['solrcloud']['version']}")
+
+# Old Source Location for cores backup
+if ::File.exist?(node['solrcloud']['install_dir'])
+  old_source = ::File.readlink(node['solrcloud']['install_dir'])
+  old_source_cores = ::File.join(old_source, 'solr', 'cores')
+else
+  old_source = nil
+end
 
 # Stop Solr Service if running for Version Upgrade
 service 'solr' do
@@ -77,6 +84,7 @@ link node['solrcloud']['install_dir'] do
   to node['solrcloud']['source_dir']
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
+  notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart_upgrade']
   action :create
 end
 
@@ -103,6 +111,7 @@ end
  node['solrcloud']['solr_home'],
  node['solrcloud']['shared_lib'],
  node['solrcloud']['config_sets'],
+ node['solrcloud']['cores_home'],
  node['solrcloud']['zkconfigsets_home'],
  File.join(node['solrcloud']['install_dir'], 'etc'),
  File.join(node['solrcloud']['install_dir'], 'resources'),
@@ -118,14 +127,18 @@ end
   end
 end
 
-# Likely to be removed or changed in future
-directory node['solrcloud']['cores_home'] do
-  owner node['solrcloud']['user']
-  group node['solrcloud']['group']
-  mode 0755
-  recursive true
-  action :create
-  only_if { node['solrcloud']['cores_home'] && node['solrcloud']['cores_home'] != node['solrcloud']['solr_home'] }
+# Restore Cores after upgrade
+ruby_block 'backup_solr_cores' do
+  block do
+    require 'fileutils'
+    Chef::Log.info("Removing Existing Cores under location - #{node['solrcloud']['cores_home']}")
+    # Remove existing cors if any
+    FileUtils.remove_dir(::File.join(node['solrcloud']['cores_home'], '.'), :verbose => true)
+    Chef::Log.info("Restoring Cores #{old_source} -> #{node['solrcloud']['cores_home']}")
+    # Copy old source cores to new source cores
+    FileUtils.cp_r(::File.join(old_source_cores, '.'), node['solrcloud']['cores_home'], :verbose => true)
+  end
+  only_if { node['solrcloud']['restore_cores'] && old_source && old_source != node['solrcloud']['source_dir'] }
 end
 
 directory node['solrcloud']['zk_run_data_dir'] do

@@ -26,7 +26,7 @@ use_inline_resources
 action :create do
   fail "collection #{new_resource.name} is missing option :collection_config_name (zookeeper configSet)" unless new_resource.collection_config_name
 
-  converge_by("create collection #{new_resource.name} if missing") do
+  converge_by("create collection #{new_resource.name} if missing \n") do
     solr_options = {
       :host => new_resource.host,
       :port => new_resource.port,
@@ -57,7 +57,7 @@ action :create do
 end
 
 action :delete do
-  converge_by("delete collection #{new_resource.name} if exists ") do
+  converge_by("delete collection #{new_resource.name} if exists \n") do
     solr_options = {
       :host => new_resource.host,
       :port => new_resource.port,
