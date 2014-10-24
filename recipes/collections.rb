@@ -34,6 +34,7 @@ node['solrcloud']['collections'].each do |collection_name, options|
     max_shards_per_node options['max_shards_per_node']
     collection_config_name options['collection_config_name']
     auto_add_replicas options['auto_add_replicas']
+    context_path options['context_path']
     action options['action']
   end
 
