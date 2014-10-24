@@ -21,6 +21,8 @@ def whyrun_supported?
   true
 end
 
+use_inline_resources
+
 action :delete do
   converge_by("delete config set #{new_resource.name} if exists") do
     execute "zk_config_set_rmr_#{new_resource.name}" do

@@ -253,6 +253,7 @@ Parameters:
 
 - *collection_config_name* (required)			- solrcloud zookeeper configSet name
 - *action* (optional)							- default :create
+- *context_path* (optional)						- solr context path, default value `node['solrcloud']['jetty_config']['context']['path']`
 - *num_shards* (optional)						- collection API parameter numShards, default value 1
 - *shards* (optional)							- collection API parameter shards, default value nil
 - *router_field* (optional)						- collection API parameter router.field, default value nil

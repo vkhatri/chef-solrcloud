@@ -89,9 +89,25 @@ module SolrCloud
   # Solr Collection Management Class
   class Collection < SolrEntity
     def create(name, replication_factor, opts)
+      # name [String] => 'collection name'
+      # replication_factor [String, Integer] => 'collection replication factor'
+      # opts = {
+      #   :context_path [String] => 'solr context path',
+      #   :num_shards [String, Integer] => 'number of shards',
+      #   :shards [String] => 'shards',
+      #   :max_shards_per_node [String, Integer] => 'maximum shards allowed per cluster node',
+      #   :create_node_set [Boolean] => 'whether create node set',
+      #   :collection_config_name [String] => 'collection zookeeper config set name to use',
+      #   :router_name [string] => 'router name',
+      #   :router_field [String] => 'router field id',
+      #   :async [Boolean] => 'set async',
+      #   :auto_add_replicas [Boolean] => 'auto add replica'
+      # }
       Chef::Log.info("collection #{name} creating ..")
       # Required Parameters
-      url = "/solr/admin/collections?wt=json&action=CREATE&name=#{name}&replicationFactor=#{replication_factor}"
+      # Not necessary, but keeping it clean
+      context_path = opts[:context_path] == '/' ? '' : opts[:context_path]
+      url = "#{context_path}/admin/collections?wt=json&action=CREATE&name=#{name}&replicationFactor=#{replication_factor}"
       # Optional Parameters
       url << "&numShards=#{opts[:num_shards]}" if opts[:num_shards]
       url << "&shards=#{opts[:shards]}" if opts[:shards]
@@ -113,9 +129,11 @@ module SolrCloud
       end
     end
 
-    def delete(name)
+    def delete(name, context_path)
       Chef::Log.info("collection #{name} deleting ..")
-      url = "/solr/admin/collections?wt=json&action=DELETE&name=#{name}"
+      # Not necessary, but keeping it clean
+      context_path = context_path == '/' ? '' : context_path
+      url = "#{context_path}/admin/collections?wt=json&action=DELETE&name=#{name}"
       reply = httpconn.request(Net::HTTP::Post.new(url, headers))
       data = JSON.pretty_generate(JSON.parse(reply.body))
       if reply.code.to_i == 200

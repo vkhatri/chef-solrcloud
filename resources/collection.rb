@@ -21,7 +21,8 @@ actions :create, :delete
 
 default_action :create
 
-attribute :num_shards,    :kind_of => [String, Integer], :default => '1'
+attribute :num_shards,    :kind_of => [String, Integer], :default => 1
+attribute :context_path,  :kind_of => String, :default => node['solrcloud']['jetty_config']['context']['path']
 attribute :shards,        :kind_of => String, :default => nil
 attribute :router_field,  :kind_of => String, :default => nil
 attribute :async,         :kind_of => String, :default => nil
@@ -32,7 +33,7 @@ attribute :auto_add_replicas,       :kind_of => [TrueClass, FalseClass], :defaul
 attribute :port,          :kind_of => [String, Integer], :default => node['solrcloud']['port']
 attribute :ssl_port,      :kind_of => [String, Integer], :default => node['solrcloud']['ssl_port']
 attribute :create_node_set,         :kind_of => String, :default => nil
-attribute :replication_factor,      :kind_of => String, :default => 1
+attribute :replication_factor,      :kind_of => [String, Integer], :default => 1
 attribute :max_shards_per_node,     :kind_of => [String, Integer], :default => nil
 attribute :collection_config_name,  :kind_of => String, :default => nil
 attribute :zkcli,           :kind_of => String, :default => node['solrcloud']['zookeeper']['zkcli']

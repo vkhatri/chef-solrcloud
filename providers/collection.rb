@@ -21,6 +21,8 @@ def whyrun_supported?
   true
 end
 
+use_inline_resources
+
 action :create do
   fail "collection #{new_resource.name} is missing option :collection_config_name (zookeeper configSet)" unless new_resource.collection_config_name
 
@@ -33,6 +35,7 @@ action :create do
     }
 
     collection_options = {
+      :context_path   => new_resource.context_path,
       :num_shards     => new_resource.num_shards,
       :shards         => new_resource.shards,
       :router_field   => new_resource.router_field,
@@ -64,7 +67,7 @@ action :delete do
 
     ruby_block "delete collection #{new_resource.name}" do
       block do
-        SolrCloud::Collection.new(solr_options).delete(new_resource.name)
+        SolrCloud::Collection.new(solr_options).delete(new_resource.name, new_resource.context_path)
       end
       only_if { node['solrcloud']['manage_collections'] && SolrCloud::Zk.new(new_resource.zkhost).collection?(new_resource.name) }
     end
