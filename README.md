@@ -278,15 +278,15 @@ Parameters:
 
  * `default[:solrcloud][:manage_zkconfigsets_source]` (default: `true`): manages solrcloud collections configSets source content directory
 
-    This attribute should be enabled for limited nodes in solrcloud cluster if possible.
+        This attribute should be enabled for limited nodes in solrcloud cluster if possible.
 
  * `default[:solrcloud][:notify_zkconfigsets_upload]` (default: `true`): notify/triggers configSet upload to zookeeper upon create/update
 
-    This attribute should be enabled for limited nodes in solrcloud cluster if possible.
+        This attribute should be enabled for limited nodes in solrcloud cluster if possible.
 
  * `default[:solrcloud][:manage_collections]` (default: `true`): if set true, manages solrcloud cluster collections
 
-    This attribute should be enabled for limited nodes in solrcloud cluster if possible.
+        This attribute should be enabled for limited nodes in solrcloud cluster if possible.
 
  * `default[:solrcloud][:notify_restart]` (default: `false`): notify solr service restart on a solrcloud resource change like config file/template etc.
 
@@ -294,12 +294,13 @@ Parameters:
 
  * `default[:solrcloud][:restore_cores]` (default: `true`): restore older version solr cores configuration to newer version
 
-    Note: Disable this option if reverting back to an old version. Before restoring the cores, new version cores directory content gets purged.
-          If there are changes in cores configuration between older and newer versions, only current(older) version cores configuration will presists.
+        Note: Disable this option if reverting back to an old version. Before restoring the cores, new version cores directory content gets purged.
+        
+        If there are changes in cores configuration between older and newer versions, only current(older) version cores configuration will presists.
 
  * `default[:solrcloud][:zk_run]` (default: `false`): if true solr will start up with embedded zookeeper
 
-    Note: Setting option `node[:solrcloud][:zk_run]` will remove solrcloud config zk_host from solr.xml, mainly meant for testing purpose
+        Note: Setting option `node[:solrcloud][:zk_run]` will remove solrcloud config zk_host from solr.xml, mainly meant for testing purpose
 
  * `default[:solrcloud][:enable_jmx]` (default: `true`): enable jmx
 
@@ -313,30 +314,28 @@ Parameters:
 
  * `default[:solrcloud][:solr_config][:solrcloud][:zk_host]` (default: `[]`): zookeeper servers, e.g. `["server:port", "server:port"]`
 
-    With attribute `default[:solrcloud][:zk_run]`, this attribute will get local zookeeper server.
+        With attribute `default[:solrcloud][:zk_run]`, this attribute will get local zookeeper server.
 
  * `default[:solrcloud][:java_options]` (default: `[]`): java options
 
  * `default[:solrcloud][:auto_java_memory]` (default: `true`): enable auto java memory allocation, sets java attribute `-Xmx` for `node[:solrcloud][:java_options]`
 
-		This option calculates maximum allowed memory (multiple of 1024) for java
-		process with minimum system memory reservation defined by attribute
-		`node[:solrcloud][:auto_system_memory]`
+		This option calculates maximum allowed memory (multiple of 1024) for java process with minimum system memory 		reservation defined by attribute `node[:solrcloud][:auto_system_memory]`
 
  * `default[:solrcloud][:auto_system_memory]` (default: `768`): memory to preserve for OS, required when attribute `default[:solrcloud][:auto_java_memory]` is set
 
  * `default[:solrcloud][:install_java]` (default: `true`): setup java, disable to manage java outside of this cookbook
 
- * `default[:solrcloud][:force_zkconfigsets_upload]` (default: `false`): if set, zkconfigset lwrp will always execute configSet upload
-    to zookeeper even configSet exists or there is no update. This option is useful when configSet source directory is managed
-    separately.
+ * `default[:solrcloud][:force_zkconfigsets_upload]` (default: `false`): if set, zkconfigset lwrp will always execute configSet upload to zookeeper even configSet exists or there is no update. This option is useful when configSet source directory is managed separately.
 
-    This attribute should be enabled for limited nodes in solrcloud cluster if possible.
+        This attribute should be enabled for limited nodes in solrcloud cluster if possible.
 
 ## Cookbook Core Attributes
 
  * `default[:solrcloud][:user]` (default: `solr`): solr service user
+ 
  * `default[:solrcloud][:group]` (default: `solr`): solr service group
+ 
  * `default[:solrcloud][:user_home]` (default: `nil`): solr service user home
 
  * `default[:solrcloud][:setup_user]` (default: `true`): manage solr user for solr service using `solrcloud::user` cookbook
@@ -344,28 +343,38 @@ Parameters:
  * `default[:solrcloud][:version]` (default: `4.9.0`): solr package version
 
  * `default[:solrcloud][:zk_run_data_dir]` (default: `node[:solrcloud][:install_dir]/zookeeperdata`): embedded zookeeper data directory
+ 
  * `default[:solrcloud][:zk_run_port]` (default: `2181`): embedded zookeeper port
 
  * `default[:solrcloud][:install_dir]` (default: `/usr/local/solr`): jetty home directory - jetty.home
+ 
  * `default[:solrcloud][:data_dir]` (default: `/opt/solr`): solr collection data directory - solr.data.dir
 
-    solrconfig.xml for each configSet needs to set dataDir for this location usage, like:
-    <dataDir>${solr.data.dir:}/collection name</dataDir>
+        solrconfig.xml for each configSet needs to set dataDir for this location usage, like:
+          <dataDir>${solr.data.dir:}/collection name</dataDir>
 
  * `default[:solrcloud][:solr_home]` (default: `node[:solrcloud][:install_dir]/solr`): solr home
+ 
  * `default[:solrcloud][:cores_home]` (default: `node[:solrcloud][:solr_home]/cores`): solr collection/core home
+ 
  * `default[:solrcloud][:shared_lib]` (default: `node[:solrcloud][:install_dir]`/lib): solr default lib directory
+ 
  * `default[:solrcloud][:config_sets]` (default: `node[:solrcloud][:solr_home]/configsets`): solr cores configSets directory
 
  * `default[:solrcloud][:service_name]` (default: `solr`): solr service name
+ 
  * `default[:solrcloud][:service_start_wait]` (default: `15`): solr server after start up wait time
+ 
  * `default[:solrcloud][:dir_mode]` (default: `0755`): solr resource default directory
 
  * `default[:solrcloud][:pid_dir]` (default: `/var/run/solr`): solr pid directory
+ 
  * `default[:solrcloud][:log_dir]` (default: `/var/log/solr`): solr log directory
 
  * `default[:solrcloud][:template_cookbook]` (default: `solrcloud`): solr template resources cookbook
+ 
  * `default[:solrcloud][:zkconfigsets_cookbook]` (default: `solrcloud`): zookeeper configSet cookbook
+ 
  * `default[:solrcloud][:zkconfigsets_home]` (default: `node[:solrcloud][:install_dir]/zkconfigs`): configs location for zookeeper configSet upconfig
 
  * `default[:solrcloud][:zookeeper][:version]` (default: `3.4.6`): zookeeper package setup for zkCli.sh
@@ -374,66 +383,94 @@ Parameters:
 ## Cookbook Ulimit Attributes
 
  * `default[:solrcloud][:limits][:memlock]` (default: `unlimited`): solr service user memory limit
+ 
  * `default[:solrcloud][:limits][:nofile]` (default: `48000`): solr service user file limit
+ 
  * `default[:solrcloud][:limits][:nproc]` (default: `unlimited`): solr service user process limit
 
 
 ## Cookbook log4j.properties Config Attributes
 
  * `default[:solrcloud][:log4j][:level]` (default: `10MB`):  solr log threshold
+ 
  * `default[:solrcloud][:log4j][:console]` (default: `false`): enable/disable CONSOLE log
+ 
  * `default[:solrcloud][:log4j][:max_file_size]` (default: `10MB`):  maximum log file size
+ 
  * `default[:solrcloud][:log4j][:max_backup_index]` (default: `10`): log files retention
+ 
  * `default[:solrcloud][:log4j][:conversion_pattern]` (default: `'%d{ISO8601} [%t] %-5p %c{3} %x - %m%n'`): log conversion pattern
 
 ## Cookbook Request Log Config Attributes
 
  * `default[:solrcloud][:request_log][:retain_days]` (default: `10`): request log files retention
+ 
  * `default[:solrcloud][:request_log][:log_cookies]` (default: `false`):  enable log cookies
+ 
  * `default[:solrcloud][:request_log][:time_zone]` (default: `UTC`): request log time zone
 
 ## Cookbook Jetty Core Server Attributes
 
  * `default[:solrcloud][:jetty_config][:server][:min_threads]` (default: `10`): minimum jetty threads
+ 
  * `default[:solrcloud][:jetty_config][:server][:max_threads]` (default: `10000`): maximum jetty threads
+ 
  * `default[:solrcloud][:jetty_config][:server][:detailed_dump]` (default: `false`): enable jetty detailed dump
 
 ## Cookbook Jetty Default Connector Attributes (org.eclipse.jetty.server.bio.SocketConnector)
 
  * `default[:solrcloud][:jetty_config][:connector][:stats_on]` (default: `true`): enable statistics
+ 
  * `default[:solrcloud][:jetty_config][:connector][:max_idle_time]` (default: `50000`): max idle time for connector (http)
+ 
  * `default[:solrcloud][:jetty_config][:connector][:low_resource_max_idle_time]` (default: `1500`):
 
 ## Cookbook Jetty SSL Connector Attributes
 
  * `default[:solrcloud][:jetty_config][:ssl_connector][:need_client_auth]` (default: `false`): enable client ssl authentication, this feature is not tested yet
+ 
  * `default[:solrcloud][:jetty_config][:ssl_connector][:max_idle_time]` (default: `30000`): jetty ssl maximum idle time
 
 
 ## Cookbook Jetty SSL Key Store Attributes
 
  * `default[:solrcloud][:key_store][:manage]` (default: `true`): generate key store for node key store attribute (enabled for testing purpose)
+ 
  * `default[:solrcloud][:key_store][:key_store_file]` (default: `solr.keystore`): key store file name, file location - node.solrcloud.install_dir/resources/etc/
+ 
  * `default[:solrcloud][:key_store][:key_store_password]` (default: ``): key store password
+ 
  * `default[:solrcloud][:key_store][:cookbook]` (default: `solrcloud`): jetty ssl key store source cookbook, required is cookbook filekey store file management is disabled. Typical for Production environment.
+ 
  * `default[:solrcloud][:key_store][:key_algo]` (default: `RSA`): key store Algorithm
+ 
  * `default[:solrcloud][:key_store][:cn]` (default: `localhost`): key store CN
+ 
  * `default[:solrcloud][:key_store][:ou]` (default: `ApacheSolrCloudTest`): key store OU
+ 
  * `default[:solrcloud][:key_store][:o]` (default: `lucene.apache.org`): key store O
+ 
  * `default[:solrcloud][:key_store][:c]` (default: `US`): key store C
+ 
  * `default[:solrcloud][:key_store][:ext]` (default: `san=ip:127.0.0.1`): key store ext params
+ 
  * `default[:solrcloud][:key_store][:validity]` (default: `999999`): key store validity
 
 ## Cookbook Jetty JMX Attributes
 
  * `default[:solrcloud][:jmx][:port]` (default: `1099`): jmx port
+ 
  * <del>`default[:solrcloud][:jmx][:ssl]` (default: `false`): this feature is not available yet and disabled</del>
+ 
  * <del>`default[:solrcloud][:jmx][:authenticate]` (default: `false`): enable jmx authentication and authorization, this feature is not tested yet</del>
+ 
  * `default[:solrcloud][:jmx][:users]` (default: `users - solrmonitor solrconfig`): jmx defaults users and roles, this feature is not tested yet
 
 ## Cookbook Jetty Context Attributes
  * `default[:solrcloud][:jetty_config][:context][:path]` (default: `/solr`): solr default context path
+ 
  * `default[:solrcloud][:jetty_config][:context][:temp_directory]` (default: `/solr-webapp`): solr webapp directory
+ 
  * `default[:solrcloud][:jetty_config][:context][:war]` (default: `/webapps/solr.war`): jetty webapp solr war file location
 
 ## Cookbook solr.xml Config Attributes
@@ -441,33 +478,56 @@ Parameters:
 solr.xml Reference: https://cwiki.apache.org/confluence/display/solr/Format+of+solr.xml
 
  * `default[:solrcloud][:solr_config][:admin_handler]` (default: `org.apache.solr.handler.admin.CoreAdminHandler`): solr.xml solr param adminHandler
+ 
  * `default[:solrcloud][:solr_config][:admin_path]` (default: `/solr/admin`): solr.xml param adminPath
+ 
  * `default[:solrcloud][:solr_config][:core_load_threads]` (default: `3`): solr.xml solr param coreLoadThreads
+ 
  * `default[:solrcloud][:solr_config][:core_root_directory]` (default: `node[:solrcloud][:cores_home]`): solr.xml solr param coreRootDirectory
+ 
  * `default[:solrcloud][:solr_config][:shared_lib]` (default: `node[:solrcloud][:shared_lib]`): solr.xml solr param sharedLib
+ 
  * `default[:solrcloud][:solr_config][:management_path]` (default: `nil`): solr.xml solr param managementPath
+ 
  * `default[:solrcloud][:solr_config][:share_schema]` (default: `false`): solr.xml solr param shareSchema
+ 
  * `default[:solrcloud][:solr_config][:transient_cache_size]` (default: `1000000`): solr.xml solr param transientCacheSize
+ 
  * `default[:solrcloud][:solr_config][:solrcloud][:host_context]` (default: `solr`): solr.xml param solrcloud hostContext
+ 
  * `default[:solrcloud][:solr_config][:solrcloud][:distrib_update_conn_timeout]` (default: `1000000`): solr.xml param solrcloud distribUpdateConnTimeout
+ 
  * `default[:solrcloud][:solr_config][:solrcloud][:distrib_update_so_timeout]` (default: `1000000`): solr.xml param solrcloud distribUpdateSoTimeout
+ 
  * `default[:solrcloud][:solr_config][:solrcloud][:leader_vote_wait]` (default: `1000000`): solr.xml param solrcloud leaderVoteWait
+ 
  * `default[:solrcloud][:solr_config][:solrcloud][:zk_client_timeout]` (default: `15000`): solr.xml param solrcloud zkClientTimeout
+ 
  * `default[:solrcloud][:solr_config][:solrcloud][:zk_host]` (default: `[]`): zookeeper servers, e.g. `["server:port", "server:port"]`
+ 
  * `default[:solrcloud][:solr_config][:solrcloud][:generic_core_node_names]` (default: `true`): solr.xml param solrcloud genericCoreNodeNames
+ 
  * `default[:solrcloud][:solr_config][:shard_handler_factory][:socket_timeout]` (default: `0`): solr.xml param shardHandlerFactory socketTimeout
+ 
  * `default[:solrcloud][:solr_config][:shard_handler_factory][:conn_timeout]` (default: `0`): solr.xml param shardHandlerFactory connTimeout
+ 
  * </del>`default[:solrcloud][:solr_config][:logging][:enabled]` (default: `false`): solr.xml param logging enabled, not required</del>
+ 
  * </del>`default[:solrcloud][:solr_config][:logging][:logging_class]` (default: `nil`): solr.xml param logging class, not required </del>
+ 
  * </del>`default[:solrcloud][:solr_config][:logging][:watcher][:logging_size]` (default: `1000`): solr.xml param logging size, not required</del>
+ 
  * </del>`default[:solrcloud][:solr_config][:logging][:watcher][:threshold]` (default: `INFO`): solr.xml param logging threshold, no required</del>
 
 
 ## Cookbook SolrCloud on HDFS Config Attributes
 
  * `default[:solrcloud][:hdfs][:enable]` (default: `false`): to run solrcloud on hdfs, set it to `true`
- * `default[:solrcloud][:hdfs][:directory_factory]` (default: `HdfsDirectoryFactory`):
- * `default[:solrcloud][:hdfs][:lock_type]` (default: `hdfs`):
+ 
+ * `default[:solrcloud][:hdfs][:directory_factory]` (default: `HdfsDirectoryFactory`): solr hdfs directory factory
+ 
+ * `default[:solrcloud][:hdfs][:lock_type]` (default: `hdfs`): sold hdfs lock type
+ 
  * `default[:solrcloud][:hdfs][:hdfs_home]` (default: `nil`): syntax: 'hdfs://host:port/path'
 
 > Note: SolrCloud on HDFS Deployment using this cookbook is not yet tested, check online [solr on hdfs] for more info
