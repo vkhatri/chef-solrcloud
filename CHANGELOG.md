@@ -3,7 +3,7 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
-0.4.7
+0.4.8
 -----
 
 - Timo Schmidt - added collection API parameter 'autoAddReplicas'
