@@ -23,3 +23,6 @@ bin/*
 .bundle/*
 .DS_Store
 coverage/
+
+.kitchen/
+.kitchen.local.yml
