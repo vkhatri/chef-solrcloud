@@ -35,8 +35,8 @@ task :rubocop do
 end
 
 # Spec
-# desc 'Run ChefSpec Test'
-# task :spec do
-#  puts 'Running ChefSpec Test'
-#  RSpec::Core::RakeTask.new(:spec)
-# end
+desc 'Run ChefSpec Test'
+ task :spec do
+  puts 'Running ChefSpec Test'
+  RSpec::Core::RakeTask.new(:spec)
+end
