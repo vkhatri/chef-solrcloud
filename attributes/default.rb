@@ -28,6 +28,8 @@ default['solrcloud']['enable_ssl']    = true
 default['solrcloud']['enable_request_log']    = true
 default['solrcloud']['enable_jmx']    = true
 
+default['solrcloud']['context_name']  = 'solr' # used to configure the context path for jetty, core admin and solr cloud
+
 # manage zookeeper configSet, it is recommended to enable this attribute only on one node
 # Otherwise, each new node or configSet update will reupload config to zookeeper
 default['solrcloud']['manage_zkconfigsets']   = false
@@ -79,7 +81,7 @@ default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'f
 default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30_000
 
 # Jetty webapp
-default['solrcloud']['jetty_config']['context']['path'] = '/solr'
+default['solrcloud']['jetty_config']['context']['path'] = "/#{default['solrcloud']['context_name']}"
 default['solrcloud']['jetty_config']['context']['temp_directory'] = '/solr-webapp'
 default['solrcloud']['jetty_config']['context']['war'] = '/webapps/solr.war'
 
@@ -141,12 +143,12 @@ default['solrcloud']['log4j']['conversion_pattern'] = '%d{ISO8601} [%t] %-5p %c{
 
 # solr.xml config
 default['solrcloud']['solr_config']['admin_handler']        = 'org.apache.solr.handler.admin.CoreAdminHandler'
-default['solrcloud']['solr_config']['admin_path']           = '/solr/admin'
+default['solrcloud']['solr_config']['admin_path']           = "#{default['solrcloud']['jetty_config']['context']['path']}/admin"
 default['solrcloud']['solr_config']['core_load_threads']    = 3
 default['solrcloud']['solr_config']['management_path']      = nil
 default['solrcloud']['solr_config']['share_schema']         = 'false'
 default['solrcloud']['solr_config']['transient_cache_size'] = 1_000_000
-default['solrcloud']['solr_config']['solrcloud']['host_context']       = 'solr'
+default['solrcloud']['solr_config']['solrcloud']['host_context']       = "#{default['solrcloud']['context_name']}"
 default['solrcloud']['solr_config']['solrcloud']['distrib_update_conn_timeout']    = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['distrib_update_so_timeout']      = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['leader_vote_wait']   = 1_000_000
