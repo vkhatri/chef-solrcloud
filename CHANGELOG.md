@@ -3,6 +3,17 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.5.0
+-----
+
+- Timo Schmidt - Added collection lwrp action :reload to perform reload action on a collection
+
+- Timo Schmidt - Fixed typo in collection lwrp for :create action parameter router.field
+
+- Timo Schmidt -  Added context path attribute and updated reference to other configuration attributes
+
+- Virender Khatri - Init ruby spec and lint, prep for travis ci and kitchen test
+
 0.4.8
 -----
 
