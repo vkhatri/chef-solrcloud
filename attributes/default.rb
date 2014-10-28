@@ -81,7 +81,7 @@ default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'f
 default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30_000
 
 # Jetty webapp
-default['solrcloud']['jetty_config']['context']['path'] = "/#{default['solrcloud']['context_name']}"
+default['solrcloud']['jetty_config']['context']['path'] = '/' + node['solrcloud']['context_name']
 default['solrcloud']['jetty_config']['context']['temp_directory'] = '/solr-webapp'
 default['solrcloud']['jetty_config']['context']['war'] = '/webapps/solr.war'
 
@@ -143,12 +143,12 @@ default['solrcloud']['log4j']['conversion_pattern'] = '%d{ISO8601} [%t] %-5p %c{
 
 # solr.xml config
 default['solrcloud']['solr_config']['admin_handler']        = 'org.apache.solr.handler.admin.CoreAdminHandler'
-default['solrcloud']['solr_config']['admin_path']           = "#{default['solrcloud']['jetty_config']['context']['path']}/admin"
+default['solrcloud']['solr_config']['admin_path']           = node['solrcloud']['jetty_config']['context']['path'] + '/admin'
 default['solrcloud']['solr_config']['core_load_threads']    = 3
 default['solrcloud']['solr_config']['management_path']      = nil
 default['solrcloud']['solr_config']['share_schema']         = 'false'
 default['solrcloud']['solr_config']['transient_cache_size'] = 1_000_000
-default['solrcloud']['solr_config']['solrcloud']['host_context']       = "#{default['solrcloud']['context_name']}"
+default['solrcloud']['solr_config']['solrcloud']['host_context']       = node['solrcloud']['context_name']
 default['solrcloud']['solr_config']['solrcloud']['distrib_update_conn_timeout']    = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['distrib_update_so_timeout']      = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['leader_vote_wait']   = 1_000_000
@@ -185,7 +185,7 @@ default['solrcloud']['solr_config']['core_root_directory']      = node['solrclou
 default['solrcloud']['solr_config']['shared_lib']               = node['solrcloud']['shared_lib']
 default['solrcloud']['solr_config']['solrcloud']['host_port']   = node['solrcloud']['port']
 
-default['solrcloud']['source_dir']      = "/usr/local/solr-#{node['solrcloud']['version']}"
+default['solrcloud']['source_dir']      = '/usr/local/solr-' + node['solrcloud']['version']
 default['solrcloud']['tarball']['url']  = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
 default['solrcloud']['tarball']['md5']  = '316f11ed8e81cf07ebfa6ad9443add09'
 
