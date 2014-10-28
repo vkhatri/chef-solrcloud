@@ -1,3 +1,8 @@
+AllCops:
+  Exclude:
+    - Rakefile
+    - Vagrantfile
+    - Thorfile
 AlignParameters:
   Enabled: true
 Encoding:
