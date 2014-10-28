@@ -73,3 +73,21 @@ action :delete do
     end
   end
 end
+
+action :reload do
+  converge_by("reload collection #{new_resource.name} if exists \n") do
+    solr_options = {
+      :host => new_resource.host,
+      :port => new_resource.port,
+      :use_ssl => new_resource.use_ssl,
+      :ssl_port => new_resource.ssl_port
+    }
+
+    ruby_block "reload collection #{new_resource.name}" do
+      block do
+        SolrCloud::Collection.new(solr_options).reload(new_resource.name, new_resource.context_path)
+      end
+      only_if { node['solrcloud']['manage_collections'] && SolrCloud::Zk.new(new_resource.zkhost).collection?(new_resource.name) }
+    end
+  end
+end

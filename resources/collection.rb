@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-actions :create, :delete
+actions :create, :delete, :reload
 
 default_action :create
 

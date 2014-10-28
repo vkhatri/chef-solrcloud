@@ -143,5 +143,20 @@ module SolrCloud
         fail "#{url}, collection #{name} failed to delete. => #{data}"
       end
     end
+
+    def reload(name, context_path)
+      Chef::Log.info("collection #{name} reloading ..")
+      # Not necessary, but keeping it clean
+      context_path = context_path == '/' ? '' : context_path
+      url = "#{context_path}/admin/collections?wt=json&action=RELOAD&name=#{name}"
+      reply = httpconn.request(Net::HTTP::Post.new(url, headers))
+      data = JSON.pretty_generate(JSON.parse(reply.body))
+      if reply.code.to_i == 200
+        Chef::Log.info("collection #{name} reloaded. => #{data}")
+        return true
+      else
+        fail "#{url}, collection #{name} failed to reload. => #{data}"
+      end
+    end
   end
 end
