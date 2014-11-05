@@ -179,7 +179,7 @@ default['solrcloud']['zk_run_data_dir']  = File.join(node['solrcloud']['install_
 default['solrcloud']['solr_config']['solrcloud']['zk_host'] = ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"] if node['solrcloud']['zk_run']
 
 # Solr Zookeeper configSets directory (collection.configName)
-default['solrcloud']['zkconfigsets_home'] = File.join(node['solrcloud']['install_dir'], 'zkconfigs')
+default['solrcloud']['zkconfigsets_home'] = '/usr/local/solr_zkconfigsets'
 
 default['solrcloud']['solr_config']['core_root_directory']      = node['solrcloud']['cores_home']
 default['solrcloud']['solr_config']['shared_lib']               = node['solrcloud']['shared_lib']
