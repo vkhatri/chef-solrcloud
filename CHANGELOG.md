@@ -3,6 +3,14 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.5.2
+-----
+
+- Virender Khatri - `node['solrcloud']['zkconfigsets_home']` default directory location updated to
+                    `/usr/local/solr_zkconfigsets`
+
+- Virender Khatri - Bump Apache Solr version to 4.10.2
+
 0.5.0
 -----
 

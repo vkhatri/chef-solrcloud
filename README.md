@@ -350,7 +350,7 @@ Parameters:
 
  * `default[:solrcloud][:setup_user]` (default: `true`): manage solr user for solr service using `solrcloud::user` cookbook
 
- * `default[:solrcloud][:version]` (default: `4.9.0`): solr package version
+ * `default[:solrcloud][:version]` (default: `4.10.2`): solr package version
 
  * `default[:solrcloud][:zk_run_data_dir]` (default: `node[:solrcloud][:install_dir]/zookeeperdata`): embedded zookeeper data directory
 
@@ -385,7 +385,7 @@ Parameters:
 
  * `default[:solrcloud][:zkconfigsets_cookbook]` (default: `solrcloud`): zookeeper configSet cookbook
 
- * `default[:solrcloud][:zkconfigsets_home]` (default: `node[:solrcloud][:install_dir]/zkconfigs`): configs location for zookeeper configSet upconfig
+ * `default[:solrcloud][:zkconfigsets_home]` (default: `/usr/local/solr_zkconfigsets`): configs location for zookeeper configSet upconfig
 
  * `default[:solrcloud][:zookeeper][:version]` (default: `3.4.6`): zookeeper package setup for zkCli.sh
 
