@@ -3,24 +3,29 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.5.3
+-----
+
+- Virender Khatri - added travis ci support
+
 0.5.2
 -----
 
 - Virender Khatri - `node['solrcloud']['zkconfigsets_home']` default directory location updated to
                     `/usr/local/solr_zkconfigsets`
 
-- Virender Khatri - Bump Apache Solr version to 4.10.2
+- Virender Khatri - bump Apache Solr version to 4.10.2
 
 0.5.0
 -----
 
-- Timo Schmidt - Added collection lwrp action :reload to perform reload action on a collection
+- Timo Schmidt - added collection lwrp action :reload to perform reload action on a collection
 
-- Timo Schmidt - Fixed typo in collection lwrp for :create action parameter router.field
+- Timo Schmidt - fixed typo in collection lwrp for :create action parameter router.field
 
-- Timo Schmidt -  Added context path attribute and updated reference to other configuration attributes
+- Timo Schmidt -  added context path attribute and updated reference to other configuration attributes
 
-- Virender Khatri - Init ruby spec and lint, prep for travis ci and kitchen test
+- Virender Khatri - init ruby spec and lint, prep for travis ci and kitchen test
 
 0.4.8
 -----
