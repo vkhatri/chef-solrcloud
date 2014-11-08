@@ -17,7 +17,9 @@ end
 desc 'Run Food Critic Lint Task'
 task :foodcritic do
   puts "Running Food Critic Lint.."
-  FoodCritic::Rake::LintTask.new
+  FoodCritic::Rake::LintTask.new do |fc|
+    fc.options = {:fail_tags => ['any']}
+  end
 end
 
 desc 'Run Knife Cookbook Test Task'
