@@ -15,7 +15,7 @@ by this cookbook.
 
 ## Repository
 
-https://github.com/vkhatri/chef-solrcloud
+http://vkhatri.github.io/chef-solrcloud
 
 
 ## Supported Apache Solr Version

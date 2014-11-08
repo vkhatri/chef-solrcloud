@@ -1,14 +1,12 @@
 source 'https://rubygems.org'
 
 gem 'rake'
-gem 'berkshelf',  '~> 3.1.4'
-gem 'chefspec',   '~> 3.0'
-gem 'foodcritic', '~> 3.0'
-gem 'rubocop',    '~> 0.24'
 gem 'berkshelf'
+gem 'chefspec'
+gem 'foodcritic', '~> 3.0'
+gem 'rubocop'
 
-# ohai attributes override
-gem 'fauxhai'
+# gem 'fauxhai'
 
 group :integration do
   gem 'test-kitchen'
