@@ -1,6 +1,8 @@
 solrcloud Cookbook
 ==================
 
+[![Build Status](https://travis-ci.org/vkhatri/chef-solrcloud.svg?branch=master)](https://travis-ci.org/vkhatri/chef-solrcloud)
+
 This is a [Chef] cookbook for [Apache Solr].
 
 It was primarily developed for Testing SolrCloud against Solr Master/Slave setup and its features.
@@ -732,9 +734,10 @@ Node attributes:
 2. Create a named feature branch (like `add_component_x`)
 3. Write your change
 4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Write description about changes
-7. Submit a Pull Request using Github
+5. Run the tests (`rake`), ensuring they all pass
+6. Write new resource/attribute description to `README.md`
+7. Write description about changes to PR
+8. Submit a Pull Request using Github
 
 
 ## Copyright & License
