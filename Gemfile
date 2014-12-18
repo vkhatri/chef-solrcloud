@@ -1,15 +1,18 @@
 source 'https://rubygems.org'
 
 gem 'rake'
-gem 'berkshelf'
+# gem 'berkshelf'
 gem 'chefspec'
-gem 'foodcritic', '~> 3.0'
+gem 'foodcritic'
 gem 'rubocop'
+# gem 'vagrant-berkshelf'
 
 # gem 'fauxhai'
 
 group :integration do
-  gem 'test-kitchen'
+  # gem 'test-kitchen'
+  gem 'berkshelf'
+  gem 'vagrant-berkshelf'
   gem 'kitchen-vagrant'
   gem 'kitchen-docker'
 end
