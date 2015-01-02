@@ -1,7 +1,7 @@
 solrcloud Cookbook
 ==================
 
-[![Cookbook](http://img.shields.io/badge/cookbook-v0.5.3-green.svg)](https://github.com/vkhatri/chef-solrcloud) [![Build Status](https://travis-ci.org/vkhatri/chef-solrcloud.svg?branch=master)](https://travis-ci.org/vkhatri/chef-solrcloud)
+[![Cookbook](http://img.shields.io/badge/cookbook-v0.5.8-green.svg)](https://github.com/vkhatri/chef-solrcloud) [![Build Status](https://travis-ci.org/vkhatri/chef-solrcloud.svg?branch=master)](https://travis-ci.org/vkhatri/chef-solrcloud)
 
 This is a [Chef] cookbook for [Apache Solr].
 
