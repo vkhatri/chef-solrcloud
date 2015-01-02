@@ -90,5 +90,4 @@ action :reload do
       only_if { node['solrcloud']['manage_collections'] && SolrCloud::Zk.new(new_resource.zkhost).collection?(new_resource.name) }
     end
   end
-
 end

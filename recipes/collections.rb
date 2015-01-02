@@ -18,7 +18,6 @@
 #
 
 node['solrcloud']['collections'].each do |collection_name, options|
-
   collection_name = options['name'] if options['name']
 
   solrcloud_collection collection_name do
@@ -41,5 +40,4 @@ node['solrcloud']['collections'].each do |collection_name, options|
     zkhost options['zkhost']
     action options['action']
   end
-
 end

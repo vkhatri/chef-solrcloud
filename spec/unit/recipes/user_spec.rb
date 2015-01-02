@@ -29,5 +29,4 @@ describe 'solrcloud::user' do
   it 'adds user solr' do
     expect(chef_run).to create_user('solr')
   end
-
 end

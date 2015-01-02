@@ -18,7 +18,6 @@
 #
 
 node['solrcloud']['zkconfigsets'].each do |configset_name, options|
-
   solrcloud_zkconfigset configset_name do
     user options['user']
     group options['group']
@@ -31,5 +30,4 @@ node['solrcloud']['zkconfigsets'].each do |configset_name, options|
     force_upload options['force_upload']
     action options['action']
   end
-
 end
