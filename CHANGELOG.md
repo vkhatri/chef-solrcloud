@@ -3,6 +3,20 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.5.8
+-----
+
+- Virender Khatri - removed empty lines
+
+- Virender Khatri - added LWRP resource attrs to recipe collections
+
+- Virender Khatri - added LWRP resource attrs to recipe zkconfigsets
+
+- Virender Khatri - fixed lint config
+
+- Virender Khatri - update solr version to 4.10.3
+
+
 0.5.3
 -----
 
