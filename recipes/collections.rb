@@ -23,18 +23,22 @@ node['solrcloud']['collections'].each do |collection_name, options|
 
   solrcloud_collection collection_name do
     num_shards options['num_shards']
+    context_path options['context_path']
     shards options['shards']
     router_field options['router_field']
     async options['async']
     router_name options['router_name']
-    router_field options['router_field']
     use_ssl options['use_ssl']
+    host options['host']
+    auto_add_replicas options['auto_add_replicas']
+    port options['port']
+    ssl_port options['ssl_port']
     create_node_set options['create_node_set']
     replication_factor options['replication_factor']
     max_shards_per_node options['max_shards_per_node']
     collection_config_name options['collection_config_name']
-    auto_add_replicas options['auto_add_replicas']
-    context_path options['context_path']
+    zkcli options['zkcli']
+    zkhost options['zkhost']
     action options['action']
   end
 
