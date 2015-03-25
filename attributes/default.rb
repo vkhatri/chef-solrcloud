@@ -1,4 +1,5 @@
 
+default['solrcloud']['install_zk_gem']  = true
 default['solrcloud']['install_java']  = true
 default['solrcloud']['user']          = 'solr'
 default['solrcloud']['group']         = 'solr'

@@ -25,11 +25,13 @@ include_recipe 'solrcloud::java'
 %w(patch gcc).each do |pkg|
   package pkg do
     action :nothing
+    only_if { node['solrcloud']['install_zk_gem'] }
   end.run_action(:install)
 end
 
 chef_gem 'zk' do
   action :nothing
+  only_if { node['solrcloud']['install_zk_gem'] }
 end.run_action(:install)
 
 require 'zk'
