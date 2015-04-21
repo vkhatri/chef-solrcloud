@@ -111,7 +111,6 @@ end
  node['solrcloud']['pid_dir'],
  node['solrcloud']['data_dir'],
  node['solrcloud']['solr_home'],
- node['solrcloud']['shared_lib'],
  node['solrcloud']['config_sets'],
  node['solrcloud']['cores_home'],
  node['solrcloud']['zkconfigsets_home'],
