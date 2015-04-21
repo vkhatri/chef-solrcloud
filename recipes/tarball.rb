@@ -61,7 +61,7 @@ end
 # Solr Version Package File
 remote_file tarball_file do
   source node['solrcloud']['tarball']['url']
-  not_if { File.exist?("#{node['solrcloud']['source_dir']}/dist/solr-#{node['solrcloud']['version']}.war") }
+  not_if { File.exist?("#{node['solrcloud']['source_dir']}/dist/solr-core-#{node['solrcloud']['version']}.jar") }
 end
 
 # Extract and Setup Solr Source directories
@@ -77,7 +77,7 @@ bash 'extract_solr_tarball' do
   EOS
 
   not_if  { File.exist?(node['solrcloud']['source_dir']) }
-  creates "#{node['solrcloud']['install_dir']}/dist/solr-#{node['solrcloud']['version']}.war"
+  creates "#{node['solrcloud']['install_dir']}/dist/solr-core-#{node['solrcloud']['version']}.jar"
   action :run
 end
 
@@ -92,7 +92,7 @@ end
 
 # Link Jetty lib dir
 link File.join(node['solrcloud']['install_dir'], 'lib') do
-  to File.join(node['solrcloud']['install_dir'], 'example', 'lib')
+  to File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'lib')
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   action :create
@@ -100,7 +100,7 @@ end
 
 # Link Solr start.jar
 link File.join(node['solrcloud']['install_dir'], 'start.jar') do
-  to File.join(node['solrcloud']['install_dir'], 'example', 'start.jar')
+  to File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'start.jar')
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   action :create

@@ -18,7 +18,7 @@
 #
 
 link File.join(node['solrcloud']['install_dir'], 'webapps', 'solr.war') do
-  to File.join(node['solrcloud']['install_dir'], 'dist', "solr-#{node['solrcloud']['version']}.war")
+  to File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'webapps', 'solr.war')
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   action :create
