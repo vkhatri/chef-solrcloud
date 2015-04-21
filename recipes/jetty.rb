@@ -21,6 +21,7 @@ link File.join(node['solrcloud']['install_dir'], 'webapps', 'solr.war') do
   to File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'webapps', 'solr.war')
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
+  notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
   action :create
 end
 
@@ -53,6 +54,7 @@ template File.join(node['solrcloud']['install_dir'], 'etc', 'jetty.xml') do
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0644
+  notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
 end
 
 template File.join(node['solrcloud']['install_dir'], 'etc', 'create-solr.keystore.sh') do
