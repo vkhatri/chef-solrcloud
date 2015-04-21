@@ -35,7 +35,7 @@
 
 <solr>
   <str name="adminHandler"><%=node.solrcloud.solr_config.admin_handler-%></str>
-  <% if node.solrcloud.version !~ /^4\.[1-9][0-9]\.\d/ -%>
+  <% if node.solrcloud.version !~ /^4\.[1-9][0-9]\.\d|^5/ -%>
   <str name="adminPath"><%=node.solrcloud.solr_config.admin_path-%></str>
   <% end -%>
   <int name="coreLoadThreads"><%=node.solrcloud.solr_config.core_load_threads-%></int>
