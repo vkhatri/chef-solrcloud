@@ -34,7 +34,7 @@ attribute :force_upload,     :kind_of => [FalseClass, TrueClass], :default => no
 
 def initialize(*args)
   super
-  if @configset_name == nil
+  if @configset_name.nil?
     @configset_name = @name
   end
 end
