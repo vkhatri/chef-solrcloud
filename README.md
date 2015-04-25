@@ -22,7 +22,7 @@ https://github.com/vkhatri/chef-solrcloud
 
 ## Supported Apache Solr Version
 
-This cookbook was tested for Apache Solr v4.9.0 and v4.10.x.
+This cookbook was tested for Apache Solr v4.9, v4.10 and v5.1.0.
 
 
 ## Supported Apache Solr Runtime
@@ -44,6 +44,15 @@ support Apache Solr Master/Slave Cluster deployment.
 ## Supported JDK Versions
 
 Check [Apache Solr] Documentation for JDK Version requirement for current Solr version, Oracle JDK 7 is recommended.
+
+
+## Major Changes
+
+
+### v0.6.9
+
+* LWRP `zkconfigset` provider now refers to resource attribute `configset_name` instead of `name` attribute.
+Existing users might want to test LWRP `zkconfigset` resources before using this version.
 
 
 ## Recipes
@@ -352,7 +361,11 @@ Parameters:
 
  * `default[:solrcloud][:setup_user]` (default: `true`): manage solr user for solr service using `solrcloud::user` cookbook
 
- * `default[:solrcloud][:version]` (default: `4.10.2`): solr package version
+ * `default[:solrcloud][:version]` (default: `5.1.0`): solr package version
+
+ * `default[:solrcloud][:major_version]` (default: `calculated`): solr package major version to configure solr 4 / 5, valid values - 4 5
+
+ * `default[:solrcloud][:server_base_dir_name]` (default: `calculated`): solr base directory to configure solr 4 / 5, valid values - example server
 
  * `default[:solrcloud][:zk_run_data_dir]` (default: `node[:solrcloud][:install_dir]/zookeeperdata`): embedded zookeeper data directory
 

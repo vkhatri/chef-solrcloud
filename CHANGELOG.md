@@ -3,6 +3,31 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.6.9
+-----
+
+- Virender Khatri - issue #29, added attribute node[solrcloud][install_zk_gem]
+
+- Grzegorz Dudek - Fixed issue #30: Attribute 'configset_name' is not used in 'zkconfigset' provider
+
+- Virender Khatri - ignore adminPath in solr.xml for v5, issue #36
+
+- Virender Khatri - fix rubocop lint for zkconfigset resource
+
+- Virender Khatri - fixed travis
+
+- Virender Khatri - bump solr version to v5.1.0
+
+- Virender Khatri - added attributes default['solrcloud']['major_version'] & default['solrcloud']['server_base_dir_name'] in avor of solr5, issue #34
+
+- Virender Khatri - notify solr service restart on jetty config update
+
+- Virender Khatri - remove directory resource for symlink location node[solrcloud][shared_lib]
+
+- Virender Khatri - cookbook now supports solr 5
+
+- Virender Khatri - fixed LWRP zkconfigset to use attribute `configset_name` instead of `name`
+
 0.5.8
 -----
 
@@ -15,7 +40,6 @@ This file is used to list changes made in each version of the solrcloud cookbook
 - Virender Khatri - fixed lint config
 
 - Virender Khatri - update solr version to 4.10.3
-
 
 0.5.3
 -----
@@ -57,7 +81,6 @@ This file is used to list changes made in each version of the solrcloud cookbook
 
 - Virender Khatri - bump apache solr version to 4.10.1 after a basic test run
 
-
 0.4.2
 -----
 
@@ -67,7 +90,6 @@ This file is used to list changes made in each version of the solrcloud cookbook
 - Timo Schmidt - create directory for JETTY_RUN if missing for debian platform family
 
 - Virender Khatri - added attribute for jetty context configuration
-
 
 0.3.9
 -----
@@ -139,7 +161,6 @@ This file is used to list changes made in each version of the solrcloud cookbook
 0.2.6
 -----
 - Virender Khatri - Fixed Typo Changes in README examples
-
 
 0.2.5
 -----
