@@ -58,9 +58,9 @@
     <str name="hostContext">${hostContext:<%=node.solrcloud.solr_config.solrcloud.host_context-%>}</str>
     <int name="zkClientTimeout">${zkClientTimeout:<%=node.solrcloud.solr_config.solrcloud.zk_client_timeout-%>}</int>
     <%if node.solrcloud.zk_run-%>
-    <!-- <str name="zkHost">${zkHost:<%=node.solrcloud.solr_config.solrcloud.zk_host.sort.uniq.join(',')-%>}</str> -->
+    <!-- <str name="zkHost">${zkHost:<%=node.solrcloud.solr_config.solrcloud.zk_host.sort.uniq.join(',')-%><%=node.solrcloud.solr_config.solrcloud.zk_chroot-%>}</str> -->
     <%else-%>
-    <str name="zkHost">${zkHost:<%=node.solrcloud.solr_config.solrcloud.zk_host.sort.uniq.join(',')-%>}</str>
+    <str name="zkHost">${zkHost:<%=node.solrcloud.solr_config.solrcloud.zk_host.sort.uniq.join(',')-%><%=node.solrcloud.solr_config.solrcloud.zk_chroot-%>}</str>
     <%end-%>
     <bool name="genericCoreNodeNames">${genericCoreNodeNames:<%=node.solrcloud.solr_config.solrcloud.generic_core_node_names-%>}</bool>
   </solrcloud>
