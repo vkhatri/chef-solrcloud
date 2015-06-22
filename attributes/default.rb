@@ -8,6 +8,7 @@ default['solrcloud']['setup_user']    = true # ideally it must be set to false f
 
 default['solrcloud']['version']       = '5.1.0'
 default['solrcloud']['major_version'] = node['solrcloud']['version'].split('.')[0].to_i
+default['solrcloud']['minor_version'] = node['solrcloud']['version'].split('.')[1].to_i
 default['solrcloud']['server_base_dir_name'] = node['solrcloud']['major_version'] == 5 ? 'server' : 'example'
 
 default['solrcloud']['install_dir']   = '/usr/local/solr'
