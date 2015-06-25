@@ -4,33 +4,45 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Chef SolrCloud by vkhatri</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="wrapper">
+
       <header>
         <h1>Chef SolrCloud</h1>
         <p>Chef cookbook to Manage Apache SolrCloud</p>
-        <p class="view"><a href="https://github.com/vkhatri/chef-solrcloud">View the Project on GitHub <small>vkhatri/chef-solrcloud</small></a></p>
-        <ul>
-          <li><a href="https://github.com/vkhatri/chef-solrcloud/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/vkhatri/chef-solrcloud/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/vkhatri/chef-solrcloud">View On <strong>GitHub</strong></a></li>
-        </ul>
       </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/vkhatri/chef-solrcloud" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/vkhatri/chef-solrcloud/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/vkhatri/chef-solrcloud/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
       <section>
         <h1>
 <a id="solrcloud-cookbook" class="anchor" href="#solrcloud-cookbook" aria-hidden="true"><span class="octicon octicon-link"></span></a>solrcloud Cookbook</h1>
 
-<p><a href="https://github.com/vkhatri/chef-solrcloud"><img src="http://img.shields.io/badge/cookbook-v0.5.8-green.svg" alt="Cookbook"></a> <a href="https://travis-ci.org/vkhatri/chef-solrcloud"><img src="https://travis-ci.org/vkhatri/chef-solrcloud.svg?branch=master" alt="Build Status"></a></p>
+<p><a href="https://travis-ci.org/vkhatri/chef-solrcloud"><img src="https://travis-ci.org/vkhatri/chef-solrcloud.svg?branch=master" alt="Build Status"></a></p>
 
 <p>This is a <a href="https://www.getchef.com/chef/">Chef</a> cookbook for <a href="http://lucene.apache.org/solr/">Apache Solr</a>.</p>
 
@@ -51,7 +63,7 @@ by this cookbook.</p>
 <h2>
 <a id="supported-apache-solr-version" class="anchor" href="#supported-apache-solr-version" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Apache Solr Version</h2>
 
-<p>This cookbook was tested for Apache Solr v4.9.0 and v4.10.x.</p>
+<p>This cookbook was tested for Apache Solr v4.9, v4.10 and v5.1.0.</p>
 
 <h2>
 <a id="supported-apache-solr-runtime" class="anchor" href="#supported-apache-solr-runtime" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Apache Solr Runtime</h2>
@@ -73,6 +85,17 @@ support Apache Solr Master/Slave Cluster deployment.</p>
 <a id="supported-jdk-versions" class="anchor" href="#supported-jdk-versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported JDK Versions</h2>
 
 <p>Check <a href="http://lucene.apache.org/solr/">Apache Solr</a> Documentation for JDK Version requirement for current Solr version, Oracle JDK 7 is recommended.</p>
+
+<h2>
+<a id="major-changes" class="anchor" href="#major-changes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Major Changes</h2>
+
+<h3>
+<a id="v069" class="anchor" href="#v069" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.6.9</h3>
+
+<ul>
+<li>LWRP <code>zkconfigset</code> provider now refers to resource attribute <code>configset_name</code> instead of <code>name</code> attribute.
+Existing users might want to test LWRP <code>zkconfigset</code> resources before using this version.</li>
+</ul>
 
 <h2>
 <a id="recipes" class="anchor" href="#recipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Recipes</h2>
@@ -440,7 +463,9 @@ If there are changes in cores configuration between older and newer versions, on
 <li><p><code>default[:solrcloud][:group]</code> (default: <code>solr</code>): solr service group</p></li>
 <li><p><code>default[:solrcloud][:user_home]</code> (default: <code>nil</code>): solr service user home</p></li>
 <li><p><code>default[:solrcloud][:setup_user]</code> (default: <code>true</code>): manage solr user for solr service using <code>solrcloud::user</code> cookbook</p></li>
-<li><p><code>default[:solrcloud][:version]</code> (default: <code>4.10.2</code>): solr package version</p></li>
+<li><p><code>default[:solrcloud][:version]</code> (default: <code>5.1.0</code>): solr package version</p></li>
+<li><p><code>default[:solrcloud][:major_version]</code> (default: <code>calculated</code>): solr package major version to configure solr 4 / 5, valid values - 4 5</p></li>
+<li><p><code>default[:solrcloud][:server_base_dir_name]</code> (default: <code>calculated</code>): solr base directory to configure solr 4 / 5, valid values - example server</p></li>
 <li><p><code>default[:solrcloud][:zk_run_data_dir]</code> (default: <code>node[:solrcloud][:install_dir]/zookeeperdata</code>): embedded zookeeper data directory</p></li>
 <li><p><code>default[:solrcloud][:zk_run_port]</code> (default: <code>2181</code>): embedded zookeeper port</p></li>
 <li><p><code>default[:solrcloud][:install_dir]</code> (default: <code>/usr/local/solr</code>): jetty home directory - jetty.home</p></li>
@@ -824,11 +849,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 </pre>
       </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/vkhatri">vkhatri</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/vkhatri">vkhatri</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
