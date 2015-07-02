@@ -14,6 +14,8 @@ what you find missing!
 SolrCloud is the default deployment and Solr Master/Slave setup is not supported
 by this cookbook.
 
+>> For Production environment, always refer to [Chef Supermarket].
+
 
 ## Repository
 
@@ -778,3 +780,4 @@ limitations under the License.
 [Chef]: https://www.getchef.com/chef/
 [Contributors]: https://github.com/vkhatri/chef-solrcloud/graphs/contributors
 [Shawn Heisey]: https://wiki.apache.org/solr/ShawnHeisey
+[Chef Supermarket]: https://supermarket.chef.io/cookbooks/solrcloud
