@@ -22,7 +22,7 @@
 # but, keeping it minimal for now.
 case node['platform_family']
 when 'debian'
-  execute "apt-get update" do
+  execute 'apt-get update' do
     action :nothing
   end.run_action(:run)
 end
