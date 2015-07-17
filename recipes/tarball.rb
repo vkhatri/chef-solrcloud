@@ -24,17 +24,17 @@ include_recipe 'solrcloud::java'
 # Require for zk gem
 %w(patch gcc).each do |pkg|
   package pkg do
-    action :nothing
+    action :install
     only_if { node['solrcloud']['install_zk_gem'] }
-  end.run_action(:install)
+  end
 end
 
 chef_gem 'zk' do
-  action :nothing
+  action :install
+  compile_time false
   only_if { node['solrcloud']['install_zk_gem'] }
-end.run_action(:install)
+end
 
-require 'zk'
 require 'net/http'
 require 'json'
 require 'tmpdir'

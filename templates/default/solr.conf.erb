@@ -11,8 +11,8 @@ JAVA_OPTIONS="-Dsolr.solr.home=<%= node.solrcloud.solr_home %> \
 -Dsolr.directoryFactory=<%= node.solrcloud.hdfs.directory_factory %> \
 -Dsolr.lock.type=<%= node.solrcloud.hdfs.lock_type %> \
 -Dsolr.hdfs.home=<%= node.solrcloud.hdfs.hdfs_home %> \
-<%end-%>
-<%if node.solrcloud.enable_jmx-%>
+<% end -%>
+<% if node.solrcloud.enable_jmx -%>
 -Dcom.sun.management.jmxremote \
 -Dcom.sun.management.jmxremote.local.only=false \
 -Dcom.sun.management.jmxremote.port=<%= node.solrcloud.jmx.port %> \
@@ -22,15 +22,14 @@ JAVA_OPTIONS="-Dsolr.solr.home=<%= node.solrcloud.solr_home %> \
 -Dcom.sun.management.jmxremote.access.file=<%= node.solrcloud.jmx.access_file %> \
 -Djava.rmi.server.hostname=<%= node.ipaddress %> \
 <% end -%>
-<%= node.solrcloud.java_options.join(' ') %> \
+<% if node.solrcloud.java_options.find { |jo| jo.match /Xmx\d+/ }.nil? -%>
+-Xmx<%= node.solrcloud.java_xmx %> \
+<% end -%>
+<% if node.solrcloud.java_options.find { |jo| jo.match /Xms\d+/ }.nil? -%>
+-Xms<%= node.solrcloud.java_xms %> \
+<% end -%>
+<%= node.solrcloud.java_options.join(' \/n') -%>
 $JAVA_OPTIONS \
-<% if node.solrcloud.major_version == 5 && node.solrcloud.minor_version > 1 -%>
-<% if node.solrcloud.enable_ssl -%>
---module=https \
-<% else %>
---module=http \
-<% end -%>
-<% end -%>
 "
 
 JETTY_HOME=<%=node.solrcloud.install_dir%>

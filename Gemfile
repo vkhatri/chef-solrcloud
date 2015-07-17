@@ -7,6 +7,8 @@ gem 'foodcritic'
 gem 'rubocop'
 # gem 'vagrant-berkshelf'
 
+gem 'busser-serverspec'
+gem 'serverspec'
 # gem 'fauxhai'
 
 group :integration do

@@ -93,17 +93,29 @@ if !File.exist?(node['solrcloud']['key_store']['key_store_file_path']) && node['
   end
 end
 
+solr_config_path =  case node['platform_family']
+                    when 'rhel'
+                      '/etc/sysconfig/solr'
+                    when 'debian'
+                      '/etc/default/solr'
+                    end
+
 template 'solr_config' do
   source 'solr.conf.erb'
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0744
-  case node['platform_family']
-  when 'rhel'
-    path '/etc/sysconfig/solr'
-  when 'debian'
-    path '/etc/default/solr'
-  end
+  path solr_config_path
+  only_if { node['solrcloud']['major_version'] <= 5 && node['solrcloud']['minor_version'] < 2 }
+end
+
+template 'solr_config' do
+  source 'v5.2.x/solr.conf.erb'
+  owner node['solrcloud']['user']
+  group node['solrcloud']['group']
+  mode 0744
+  path solr_config_path
+  only_if { node['solrcloud']['version'] > '5.2' }
 end
 
 template '/etc/init.d/solr' do
@@ -111,6 +123,16 @@ template '/etc/init.d/solr' do
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0744
+  only_if { node['solrcloud']['major_version'] <= 5 && node['solrcloud']['minor_version'] < 2 }
+end
+
+template '/etc/init.d/solr' do
+  source 'v5.2.x/solr.init.erb'
+  owner node['solrcloud']['user']
+  group node['solrcloud']['group']
+  mode 0744
+  variables solr_env: solr_config_path
+  only_if { node['solrcloud']['version'] > '5.2' }
 end
 
 template node['solrcloud']['jmx']['access_file'] do
