@@ -28,7 +28,7 @@ default['solrcloud']['log_dir']       = '/var/log/solr'
 default['solrcloud']['port']          = 8983
 default['solrcloud']['ssl_port']      = 8984
 
-default['solrcloud']['enable_ssl']    = true
+default['solrcloud']['enable_ssl']    = false
 default['solrcloud']['enable_request_log']    = true
 default['solrcloud']['enable_jmx']    = true
 
