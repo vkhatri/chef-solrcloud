@@ -51,6 +51,12 @@ Check [Apache Solr] Documentation for JDK Version requirement for current Solr v
 ## Major Changes
 
 
+### Under Development
+
+* `default['solrcloud']['enable_ssl']` is set to `false`, you need to enable it in wrapper recipe / role / node before using this cookbook version
+
+* watch out for init.d sysconfig/environment file changes, if you have enabled node['solrcloud']['notify_restart'] it will trigger `solr` service `restart`
+
 ### v0.6.9
 
 * LWRP `zkconfigset` provider now refers to resource attribute `configset_name` instead of `name` attribute.
