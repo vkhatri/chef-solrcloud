@@ -13,6 +13,10 @@ default['solrcloud']['server_base_dir_name'] = node['solrcloud']['major_version'
 
 default['solrcloud']['install_dir']   = '/usr/local/solr'
 default['solrcloud']['data_dir']      = '/opt/solr'
+default['solrcloud']['sysconfig_file'] = value_for_platform_family(
+  'debian' => '/etc/default/solr',
+  'rhel' => '/etc/sysconfig/solr'
+)
 
 default['solrcloud']['restore_cores'] = true
 

@@ -48,7 +48,7 @@ fi
 # variables used by the bin/solr script. It's highly recommended to define this script so
 # that you can keep the Solr binary files separated from live files (pid, logs, index data, etc)
 # see bin/solr.in.sh for an example
-SOLR_ENV=<%= @solr_env %>
+SOLR_ENV=<%= node['solrcloud']['sysconfig_file'] %>
 
 if [ ! -f "$SOLR_ENV" ]; then
   echo "$SOLR_ENV not found! Please check the SOLR_ENV setting in your $0 script."

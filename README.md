@@ -392,6 +392,8 @@ Parameters:
 
  * `default[:solrcloud][:solr_home]` (default: `node[:solrcloud][:install_dir]/solr`): solr home
 
+ * `default[:solrcloud][:sysconfig_file]` (default: ```{ debian: '/etc/default/solr', rhel: '/etc/sysconfig/solr' }```): Location of sysconfig file meant for assigning environment variables to solr on startup.
+
  * `default[:solrcloud][:cores_home]` (default: `node[:solrcloud][:solr_home]/cores`): solr collection/core home
 
  * `default[:solrcloud][:shared_lib]` (default: `node[:solrcloud][:install_dir]`/lib): solr default lib directory
