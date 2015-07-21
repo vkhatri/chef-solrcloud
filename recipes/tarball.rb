@@ -31,7 +31,6 @@ end
 
 chef_gem 'zk' do
   action :install
-  compile_time false
   only_if { node['solrcloud']['install_zk_gem'] }
 end
 
