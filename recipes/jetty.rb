@@ -94,37 +94,18 @@ if !File.exist?(node['solrcloud']['key_store']['key_store_file_path']) && node['
 end
 
 template 'solr_config' do
-  source 'solr.conf.erb'
+  source node['solrcloud']['version'] > '5.2' ? 'v5.2.x/solr.conf.erb' : 'solr.conf.erb'
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0744
   path node['solrcloud']['sysconfig_file']
-  only_if { node['solrcloud']['major_version'] <= 5 && node['solrcloud']['minor_version'] < 2 }
-end
-
-template 'solr_config' do
-  source 'v5.2.x/solr.conf.erb'
-  owner node['solrcloud']['user']
-  group node['solrcloud']['group']
-  mode 0744
-  path node['solrcloud']['sysconfig_file']
-  only_if { node['solrcloud']['version'] > '5.2' }
 end
 
 template '/etc/init.d/solr' do
-  source "#{node['platform_family']}.solr.init.erb"
+  source node['solrcloud']['version'] > '5.2' ? 'v5.2.x/solr.init.erb' : "#{node['platform_family']}.solr.init.erb"
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0744
-  only_if { node['solrcloud']['major_version'] <= 5 && node['solrcloud']['minor_version'] < 2 }
-end
-
-template '/etc/init.d/solr' do
-  source 'v5.2.x/solr.init.erb'
-  owner node['solrcloud']['user']
-  group node['solrcloud']['group']
-  mode 0744
-  only_if { node['solrcloud']['version'] > '5.2' }
 end
 
 template node['solrcloud']['jmx']['access_file'] do
