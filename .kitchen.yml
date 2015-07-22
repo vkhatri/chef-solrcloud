@@ -1,8 +1,6 @@
 ---
 driver:
   name: vagrant
-  network:
-    - ["forwarded_port", {guest: 8983, host: 8888}]
 
 provisioner:
   name: chef_solo
@@ -12,10 +10,19 @@ platforms:
   - name: chef/centos-6.5
 
 suites:
-  - name: default
+  - name: 5.1.0
     run_list:
       - recipe[solrcloud_test::prerun]
       - recipe[solrcloud::default]
     attributes:
       solrcloud:
+        version: 5.1.0
+        zk_run: true
+  - name: 5.2.0
+    run_list:
+      - recipe[solrcloud_test::prerun]
+      - recipe[solrcloud::default]
+    attributes:
+      solrcloud:
+        version: 5.2.0
         zk_run: true

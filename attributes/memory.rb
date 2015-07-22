@@ -22,5 +22,9 @@ if node['solrcloud']['auto_java_memory'] && node['memory'] && node['memory'].key
   java_memory = total_memory - system_memory
   # Making Java -Xmx even
   java_memory += 1 unless java_memory.even?
-  node.default['solrcloud']['java_options'] << " -Xmx#{java_memory}m "
+  default['solrcloud']['java_xmx'] = "#{java_memory}m"
+  default['solrcloud']['java_xms'] = "#{java_memory}m"
+else
+  default['solrcloud']['java_xmx'] = '512m'
+  default['solrcloud']['java_xms'] = '512m'
 end

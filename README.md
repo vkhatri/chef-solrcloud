@@ -343,9 +343,13 @@ Parameters:
 
         With attribute `default[:solrcloud][:zk_run]`, this attribute will get local zookeeper server.
 
- * `default[:solrcloud][:java_options]` (default: `[]`): java options
+ * `default[:solrcloud][:java_options]` (default: `[]`): java options. Note that xmx and xms have special attributes and setting them through this list will not work past SOLR v.5.2.x.
 
- * `default[:solrcloud][:auto_java_memory]` (default: `true`): enable auto java memory allocation, sets java attribute `-Xmx` for `node[:solrcloud][:java_options]`
+ * `default[:solrcloud][:java_xmx]` (default: `512m`): Default starting memory for the JVM unless auto_java_memory is turned on in which case the default is dynamically defined.
+
+ * `default[:solrcloud][:java_xms]` (default: `512m`): Default starting memory for the JVM unless auto_java_memory is turned on in which case the default is dynamically defined.
+
+ * `default[:solrcloud][:auto_java_memory]` (default: `true`): enable auto java memory allocation, sets dynamic defaults for node attributes `node[:solrcloud][:java_xms]` and `node[:solrcloud][:java_xms]`.
 
 		This option calculates maximum allowed memory (multiple of 1024) for java process with minimum system memory 		reservation defined by attribute `node[:solrcloud][:auto_system_memory]`
 
@@ -387,6 +391,8 @@ Parameters:
           <dataDir>${solr.data.dir:}/collection name</dataDir>
 
  * `default[:solrcloud][:solr_home]` (default: `node[:solrcloud][:install_dir]/solr`): solr home
+
+ * `default[:solrcloud][:sysconfig_file]` (default: ```{ debian: '/etc/default/solr', rhel: '/etc/sysconfig/solr' }```): Location of sysconfig file meant for assigning environment variables to solr on startup.
 
  * `default[:solrcloud][:cores_home]` (default: `node[:solrcloud][:solr_home]/cores`): solr collection/core home
 

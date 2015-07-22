@@ -94,20 +94,15 @@ if !File.exist?(node['solrcloud']['key_store']['key_store_file_path']) && node['
 end
 
 template 'solr_config' do
-  source 'solr.conf.erb'
+  source node['solrcloud']['version'] > '5.2' ? 'v5.2.x/solr.conf.erb' : 'solr.conf.erb'
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0744
-  case node['platform_family']
-  when 'rhel'
-    path '/etc/sysconfig/solr'
-  when 'debian'
-    path '/etc/default/solr'
-  end
+  path node['solrcloud']['sysconfig_file']
 end
 
 template '/etc/init.d/solr' do
-  source "#{node['platform_family']}.solr.init.erb"
+  source node['solrcloud']['version'] > '5.2' ? 'v5.2.x/solr.init.erb' : "#{node['platform_family']}.solr.init.erb"
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0744
