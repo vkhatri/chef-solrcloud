@@ -34,6 +34,7 @@ chef_gem 'zk' do
   only_if { node['solrcloud']['install_zk_gem'] }
 end.run_action(:install)
 
+require 'zk'
 require 'net/http'
 require 'json'
 require 'tmpdir'
