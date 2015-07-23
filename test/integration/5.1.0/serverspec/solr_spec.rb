@@ -3,7 +3,7 @@ require 'serverspec'
 set :backend, :exec
 
 describe 'Working SOLR node' do
-  it 'is listening on port 8928' do
+  it 'is listening on port 8983' do
     expect(port(8983)).to be_listening
   end
 
