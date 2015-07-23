@@ -99,6 +99,7 @@ template 'solr_config' do
   group node['solrcloud']['group']
   mode 0744
   path node['solrcloud']['sysconfig_file']
+  notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
 end
 
 template '/etc/init.d/solr' do
@@ -106,6 +107,7 @@ template '/etc/init.d/solr' do
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0744
+  notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
 end
 
 template node['solrcloud']['jmx']['access_file'] do
