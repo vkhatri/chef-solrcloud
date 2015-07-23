@@ -37,7 +37,7 @@
 #   update-rc.d solr enable
 
 # Where you extracted the Solr distribution bundle
-SOLR_INSTALL_DIR=<%= node.solrcloud.install_dir %>
+SOLR_INSTALL_DIR=<%= node['solrcloud']['install_dir'] %>
 
 if [ ! -d "$SOLR_INSTALL_DIR" ]; then
   echo "$SOLR_INSTALL_DIR not found! Please check the SOLR_INSTALL_DIR setting in your $0 script."
@@ -57,7 +57,7 @@ fi
 
 # Specify the user to run Solr as; if not set, then Solr will run as root.
 # Running Solr as root is not recommended for production environments
-RUNAS=<%= node.solrcloud.user %>
+RUNAS=<%= node['solrcloud']['user'] %>
 
 # verify the specified run as user exists
 runas_uid=`id -u $RUNAS`
