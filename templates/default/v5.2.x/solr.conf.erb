@@ -86,6 +86,12 @@ SOLR_OPTS="$SOLR_OPTS \
 -Djava.rmi.server.hostname=<%= node['solrcloud']['solr_config']['solr_host'] %>"
 <% end -%>
 
+<%= unless node['solrcloud']['java_options'].empty? -%>
+SOLR_OPTS="$SOLR_OPTS \
+<%= node['solrcloud']['java_options'].join(' \/n') -%>
+"
+<% end -%>
+
 # Location where the bin/solr script will save PID files for running instances
 # If not set, the script will create PID files in $SOLR_TIP/bin
 SOLR_PID_DIR=<%= node['solrcloud']['pid_dir'] %>
