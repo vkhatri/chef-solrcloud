@@ -17,6 +17,9 @@
 # limitations under the License.
 #
 
+# to run apt-get update for first time
+include_recipe 'apt' if node['platform'] == 'debian'
+
 # Setup Solr Service User
 include_recipe 'solrcloud::user'
 include_recipe 'solrcloud::java'

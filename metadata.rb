@@ -8,6 +8,7 @@ version '0.6.9'
 
 depends 'java'
 depends 'ulimit'
+depends 'apt'
 
 %w(ubuntu centos redhat fedora amazon).each do |os|
   supports os
