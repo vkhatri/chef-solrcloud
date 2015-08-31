@@ -20,7 +20,7 @@
 require 'spec_helper'
 
 describe 'solrcloud::user' do
-  let(:chef_run) { ChefSpec::Runner.new(:platform => 'ubuntu', :version  => '12.04').converge(described_recipe) }
+  let(:chef_run) { ChefSpec::ServerRunner.new(:platform => 'ubuntu', :version => '12.04').converge(described_recipe) }
 
   it 'adds group solr' do
     expect(chef_run).to create_group('solr')

@@ -26,11 +26,11 @@ default_solr_zkcli = node['solrcloud']['zookeeper']['solr_zkcli'] % {
   install_dir: node['solrcloud']['install_dir'],
   server_base_dir_name: node['solrcloud']['server_base_dir_name'] || major_version == 5 ? 'server' : 'example'
 }
-zk_hosts =  if node['solrcloud']['zk_run']
-              ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
-            else
-              node['solrcloud']['solr_config']['solrcloud']['zk_host']
-            end
+zk_hosts = if node['solrcloud']['zk_run']
+             ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
+           else
+             node['solrcloud']['solr_config']['solrcloud']['zk_host']
+           end
 
 attribute :configset_name,  :kind_of => String
 attribute :user,            :kind_of => String, :default => node['solrcloud']['user']

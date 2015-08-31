@@ -80,12 +80,12 @@ default['solrcloud']['jetty_config']['server']['detailed_dump']   = 'false'
 # Jetty Connector Config
 # Default Parameters for org.eclipse.jetty.server.bio.SocketConnector
 default['solrcloud']['jetty_config']['connector']['stats_on']       = 'true'
-default['solrcloud']['jetty_config']['connector']['max_idle_time']  =  50_000
-default['solrcloud']['jetty_config']['connector']['low_resource_max_idle_time']   = 1500
+default['solrcloud']['jetty_config']['connector']['max_idle_time']  = 50_000
+default['solrcloud']['jetty_config']['connector']['low_resource_max_idle_time'] = 1500
 
 # Jetty SSL Connector Config
 default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'false'
-default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30_000
+default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      = 30_000
 
 # Jetty webapp
 default['solrcloud']['jetty_config']['context']['path'] = '/%{context_name}'
@@ -174,14 +174,14 @@ default['solrcloud']['solr_config']['logging']['watcher']['logging_size']  = 100
 default['solrcloud']['solr_config']['logging']['watcher']['threshold']     = 'INFO'
 
 # Solr Directories
-default['solrcloud']['solr_home']   = ::File.join("%{install_dir}", "solr")
-default['solrcloud']['cores_home']  = ::File.join("%{solr_home}", 'cores/')
-default['solrcloud']['shared_lib']  = ::File.join("%{install_dir}", 'lib')
+default['solrcloud']['solr_home']   = ::File.join('%{install_dir}', 'solr')
+default['solrcloud']['cores_home']  = ::File.join('%{solr_home}', 'cores/')
+default['solrcloud']['shared_lib']  = ::File.join('%{install_dir}', 'lib')
 
 # Solr default configSets directory
-default['solrcloud']['config_sets'] = ::File.join("%{solr_home}", 'configsets')
+default['solrcloud']['config_sets'] = ::File.join('%{solr_home}', 'configsets')
 
-default['solrcloud']['zk_run_data_dir'] = ::File.join("%{install_dir}", 'zookeeperdata')
+default['solrcloud']['zk_run_data_dir'] = ::File.join('%{install_dir}', 'zookeeperdata')
 
 # Solr Zookeeper configSets directory (collection.configName)
 default['solrcloud']['zkconfigsets_home'] = '/usr/local/solr_zkconfigsets'

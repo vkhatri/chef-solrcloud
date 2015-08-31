@@ -21,11 +21,11 @@ actions :create, :delete, :reload
 
 default_action :create
 
-zk_hosts =  if node['solrcloud']['zk_run']
-              ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
-            else
-              node['solrcloud']['solr_config']['solrcloud']['zk_host']
-            end
+zk_hosts = if node['solrcloud']['zk_run']
+             ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
+           else
+             node['solrcloud']['solr_config']['solrcloud']['zk_host']
+           end
 
 attribute :num_shards,             :kind_of => [String, Integer], :default => 1
 attribute :context_path,           :kind_of => String, :default => (node['solrcloud']['jetty_config']['context']['path'] % { context_name: node['solrcloud']['context_name'] })

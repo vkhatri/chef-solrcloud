@@ -18,10 +18,10 @@
 #
 
 zk_hosts = if node['solrcloud']['zk_run']
-  ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
-else
-  node['solrcloud']['solr_config']['solrcloud']['zk_host']
-end
+             ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
+           else
+             node['solrcloud']['solr_config']['solrcloud']['zk_host']
+           end
 
 fail "node attribute node['solrcloud']['solr_config']['solrcloud']['zk_host'] must have at least one zookeeper server" if zk_hosts.empty?
 

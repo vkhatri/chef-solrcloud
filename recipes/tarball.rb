@@ -112,9 +112,9 @@ link File.join(node['solrcloud']['install_dir'], 'start.jar') do
   action :create
 end
 
-solr_home   = node['solrcloud']['solr_home']   % { install_dir: node['solrcloud']['install_dir'] }
+solr_home   = node['solrcloud']['solr_home'] % { install_dir: node['solrcloud']['install_dir'] }
 config_sets = node['solrcloud']['config_sets'] % { solr_home: solr_home }
-cores_home  = node['solrcloud']['cores_home']  % { solr_home: solr_home }
+cores_home  = node['solrcloud']['cores_home'] % { solr_home: solr_home }
 
 # Setup Directories for Solr
 [node['solrcloud']['log_dir'],
@@ -195,7 +195,7 @@ end
 
 # Waiting for Service
 ruby_block 'wait_start_up' do
-  block  do
+  block do
     sleep node['solrcloud']['service_start_wait']
   end
   action :nothing
