@@ -43,6 +43,7 @@ require 'json'
 require 'tmpdir'
 
 temp_d        = Dir.tmpdir
+source_dir    = node['solrcloud']['source_dir'] % { version: node['solrcloud']['version'] }
 tarball_file  = ::File.join(temp_d, "solr-#{node['solrcloud']['version']}.tgz")
 tarball_dir   = ::File.join(temp_d, "solr-#{node['solrcloud']['version']}")
 
@@ -58,13 +59,13 @@ end
 service 'solr' do
   service_name node['solrcloud']['service_name']
   action :stop
-  only_if { File.exist?("/etc/init.d/#{node['solrcloud']['service_name']}") && !File.exist?(node['solrcloud']['source_dir']) }
+  only_if { File.exist?("/etc/init.d/#{node['solrcloud']['service_name']}") && !File.exist?(source_dir) }
 end
 
 # Solr Version Package File
 remote_file tarball_file do
-  source node['solrcloud']['tarball']['url']
-  not_if { File.exist?("#{node['solrcloud']['source_dir']}/dist/solr-core-#{node['solrcloud']['version']}.jar") }
+  source node['solrcloud']['tarball']['url'] % { version: node['solrcloud']['version'] }
+  not_if { File.exist?("#{source_dir}/dist/solr-core-#{node['solrcloud']['version']}.jar") }
 end
 
 # Extract and Setup Solr Source directories
@@ -74,28 +75,30 @@ bash 'extract_solr_tarball' do
 
   code <<-EOS
     tar xzf #{tarball_file}
-    mv --force #{tarball_dir} #{node['solrcloud']['source_dir']}
-    chown -R #{node['solrcloud']['user']}:#{node['solrcloud']['group']} #{node['solrcloud']['source_dir']}
-    chmod #{node['solrcloud']['dir_mode']} #{node['solrcloud']['source_dir']}
+    mv --force #{tarball_dir} #{source_dir}
+    chown -R #{node['solrcloud']['user']}:#{node['solrcloud']['group']} #{source_dir}
+    chmod #{node['solrcloud']['dir_mode']} #{source_dir}
   EOS
 
-  not_if  { File.exist?(node['solrcloud']['source_dir']) }
+  not_if  { File.exist?(source_dir) }
   creates "#{node['solrcloud']['install_dir']}/dist/solr-core-#{node['solrcloud']['version']}.jar"
   action :run
 end
 
 # Link Solr install_dir to Current source_dir
 link node['solrcloud']['install_dir'] do
-  to node['solrcloud']['source_dir']
+  to source_dir
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart_upgrade']
   action :create
 end
 
+major_version = node['solrcloud']['major_version'] || node['solrcloud']['version'].split('.')[0].to_i
+server_base_dir_name = node['solrcloud']['server_base_dir_name'] || major_version == 5 ? 'server' : 'example'
 # Link Jetty lib dir
 link File.join(node['solrcloud']['install_dir'], 'lib') do
-  to File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'lib')
+  to File.join(node['solrcloud']['install_dir'], server_base_dir_name, 'lib')
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   action :create
@@ -103,19 +106,23 @@ end
 
 # Link Solr start.jar
 link File.join(node['solrcloud']['install_dir'], 'start.jar') do
-  to File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'start.jar')
+  to File.join(node['solrcloud']['install_dir'], server_base_dir_name, 'start.jar')
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   action :create
 end
 
+solr_home   = node['solrcloud']['solr_home']   % { install_dir: node['solrcloud']['install_dir'] }
+config_sets = node['solrcloud']['config_sets'] % { solr_home: solr_home }
+cores_home  = node['solrcloud']['cores_home']  % { solr_home: solr_home }
+
 # Setup Directories for Solr
 [node['solrcloud']['log_dir'],
  node['solrcloud']['pid_dir'],
  node['solrcloud']['data_dir'],
- node['solrcloud']['solr_home'],
- node['solrcloud']['config_sets'],
- node['solrcloud']['cores_home'],
+ solr_home,
+ config_sets,
+ cores_home,
  node['solrcloud']['zkconfigsets_home'],
  File.join(node['solrcloud']['install_dir'], 'etc'),
  File.join(node['solrcloud']['install_dir'], 'resources'),
@@ -135,17 +142,18 @@ end
 ruby_block 'backup_solr_cores' do
   block do
     require 'fileutils'
-    Chef::Log.info("Removing Existing Cores under location - #{node['solrcloud']['cores_home']}")
+    Chef::Log.info("Removing Existing Cores under location - #{cores_home}")
     # Remove existing cors if any
-    FileUtils.remove_dir(::File.join(node['solrcloud']['cores_home'], '.'), :verbose => true)
-    Chef::Log.info("Restoring Cores #{old_source} -> #{node['solrcloud']['cores_home']}")
+    FileUtils.remove_dir(::File.join(cores_home, '.'), :verbose => true)
+    Chef::Log.info("Restoring Cores #{old_source} -> #{cores_home}")
     # Copy old source cores to new source cores
-    FileUtils.cp_r(::File.join(old_source_cores, '.'), node['solrcloud']['cores_home'], :verbose => true)
+    FileUtils.cp_r(::File.join(old_source_cores, '.'), cores_home, :verbose => true)
   end
-  only_if { node['solrcloud']['restore_cores'] && old_source && old_source != node['solrcloud']['source_dir'] }
+  only_if { node['solrcloud']['restore_cores'] && old_source && old_source != source_dir }
 end
 
-directory node['solrcloud']['zk_run_data_dir'] do
+zk_run_data_dir = node['solrcloud']['zk_run_data_dir'] % { install_dir: node['solrcloud']['install_dir'] }
+directory zk_run_data_dir do
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0755

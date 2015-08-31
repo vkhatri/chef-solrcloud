@@ -25,8 +25,9 @@
 # otherwise we use /etc/zookeeper
 # or the conf directory that is
 # a sibling of this script's directory
-ZOOCFGDIR=<%=File.join(node.solrcloud.zookeeper.install_dir, 'conf')%>
-ZOOBINDIR=<%=File.join(node.solrcloud.zookeeper.install_dir, 'bin')%>
+<% install_dir = node.solrcloud.zookeeper.install_dir % { install_dir: node.solrcloud.install_dir } -%>
+ZOOCFGDIR=<%=File.join(install_dir, 'conf')%>
+ZOOBINDIR=<%=File.join(install_dir, 'bin')%>
 ZOOBINDIR="${ZOOBINDIR:-/usr/bin}"
 ZOOKEEPER_PREFIX="${ZOOBINDIR}/.."
 

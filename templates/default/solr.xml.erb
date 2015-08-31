@@ -36,16 +36,19 @@
 <solr>
   <str name="adminHandler"><%=node.solrcloud.solr_config.admin_handler-%></str>
   <% if node.solrcloud.version !~ /^4\.[1-9][0-9]\.\d|^5/ -%>
-  <str name="adminPath"><%=node.solrcloud.solr_config.admin_path-%></str>
+  <str name="adminPath"><%= node.solrcloud.solr_config.admin_path || ::File.join(node.solrcloud.jetty_config.context.path, 'admin') -%></str>
   <% end -%>
-  <int name="coreLoadThreads"><%=node.solrcloud.solr_config.core_load_threads-%></int>
-  <%if node.solrcloud.cores_home and node.solrcloud.cores_home != node.solrcloud.solr_home-%>
-  <str name="coreRootDirectory"><%=node.solrcloud.solr_config.core_root_directory-%></str> <!-- usually solrHome  -->
+  <int name="coreLoadThreads"><%= node.solrcloud.solr_config.core_load_threads -%></int>
+  <% solr_home = node.solrcloud.solr_home % { install_dir: node.solrcloud.install_dir } -%>
+  <% cores_home = node.solrcloud.cores_home % { solr_home: solr_home } -%>
+  <% if cores_home and cores_home != solr_home -%>
+  <str name="coreRootDirectory"><%= node.solrcloud.solr_config.core_root_directory || cores_home -%></str> <!-- usually solrHome  -->
   <%else-%>
-  <!-- <str name="coreRootDirectory"><%=node.solrcloud.solr_config.core_root_directory-%></str> --> <!-- usually solrHome  -->
-  <%end-%>
+  <!-- <str name="coreRootDirectory"><%= node.solrcloud.solr_config.core_root_directory || cores_home -%></str> --> <!-- usually solrHome  -->
+  <% end-%>
   <!-- <str name="managementPath">${managementPath:<%=node.solrcloud.solr_config.management_path-%>}</str> -->
-  <str name="sharedLib"><%=node.solrcloud.solr_config.shared_lib-%></str>
+  <% shared_lib = node.solrcloud.shared_lib % { install_dir: node.solrcloud.install_dir } -%>
+  <str name="sharedLib"><%= node.solrcloud.solr_config.shared_lib || shared_lib -%></str>
   <str name="shareSchema"><%=node.solrcloud.solr_config.share_schema-%></str>
   <int name="transientCacheSize">${transientCacheSize:<%=node.solrcloud.solr_config.transient_cache_size-%>}</int> <!-- ignored unless cores are defined with transient=true -->
 
@@ -54,13 +57,18 @@
     <int name="distribUpdateSoTimeout">${distribUpdateTimeout:<%=node.solrcloud.solr_config.solrcloud.distrib_update_so_timeout-%>}</int>
     <int name="leaderVoteWait">${leaderVoteWait:<%=node.solrcloud.solr_config.solrcloud.leader_vote_wait-%>}</int>
     <str name="host">${host:<%=node.ipaddress-%>}</str>
-    <int name="hostPort">${jetty.port:<%=node.solrcloud.solr_config.solrcloud.host_port-%>}</int>
-    <str name="hostContext">${hostContext:<%=node.solrcloud.solr_config.solrcloud.host_context-%>}</str>
+    <int name="hostPort">${jetty.port:<%= node.solrcloud.solr_config.solrcloud.host_port || node.solrcloud.port -%>}</int>
+    <str name="hostContext">${hostContext:<%=node.solrcloud.solr_config.solrcloud.host_context || node.solrcloud.context_name -%>}</str>
     <int name="zkClientTimeout">${zkClientTimeout:<%=node.solrcloud.solr_config.solrcloud.zk_client_timeout-%>}</int>
+    <% zk_hosts = if node['solrcloud']['zk_run']
+                    ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
+                  else
+                    node['solrcloud']['solr_config']['solrcloud']['zk_host']
+                  end -%>
     <%if node.solrcloud.zk_run-%>
-    <!-- <str name="zkHost">${zkHost:<%=node.solrcloud.solr_config.solrcloud.zk_host.sort.uniq.join(',')-%><%=node.solrcloud.solr_config.solrcloud.zk_chroot-%>}</str> -->
+    <!-- <str name="zkHost">${zkHost:<%= zk_hosts.sort.uniq.join(',') -%><%=node.solrcloud.solr_config.solrcloud.zk_chroot-%>}</str> -->
     <%else-%>
-    <str name="zkHost">${zkHost:<%=node.solrcloud.solr_config.solrcloud.zk_host.sort.uniq.join(',')-%><%=node.solrcloud.solr_config.solrcloud.zk_chroot-%>}</str>
+    <str name="zkHost">${zkHost:<%= zk_hosts.sort.uniq.join(',')-%><%=node.solrcloud.solr_config.solrcloud.zk_chroot-%>}</str>
     <%end-%>
     <bool name="genericCoreNodeNames">${genericCoreNodeNames:<%=node.solrcloud.solr_config.solrcloud.generic_core_node_names-%>}</bool>
   </solrcloud>

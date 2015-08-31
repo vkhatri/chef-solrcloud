@@ -17,8 +17,10 @@
 # limitations under the License.
 #
 
+major_version = node['solrcloud']['major_version'] || node['solrcloud']['version'].split('.')[0].to_i
+server_base_dir_name = node['solrcloud']['server_base_dir_name'] || major_version == 5 ? 'server' : 'example'
 link File.join(node['solrcloud']['install_dir'], 'webapps', 'solr.war') do
-  to File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'webapps', 'solr.war')
+  to File.join(node['solrcloud']['install_dir'], server_base_dir_name, 'webapps', 'solr.war')
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
@@ -70,27 +72,56 @@ execute 'generate_key_store_file' do
   command File.join(node['solrcloud']['install_dir'], 'etc', 'create-solr.keystore.sh')
   action :nothing
   notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
-  only_if   { node['solrcloud']['key_store']['manage'] }
+  only_if { node['solrcloud']['key_store']['manage'] }
 end
 
-cookbook_file node['solrcloud']['key_store']['key_store_file_path'] do
+key_store_file_path = node['solrcloud']['key_store']['key_store_file_path'] % {
+  install_dir: node['solrcloud']['install_dir'],
+  key_store_file: node['solrcloud']['key_store']['key_store_file']
+}
+
+cookbook_file key_store_file_path do
   cookbook node['solrcloud']['key_store']['cookbook']
   source node['solrcloud']['key_store']['key_store_file']
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0400
   action :create
-  not_if    { node['solrcloud']['key_store']['manage'] }
+  not_if { node['solrcloud']['key_store']['manage'] }
 end
 
 # May be there is a better way of doing this
-if !File.exist?(node['solrcloud']['key_store']['key_store_file_path']) && node['solrcloud']['key_store']['manage']
+if !File.exist?(key_store_file_path) && node['solrcloud']['key_store']['manage']
   execute 'generate_key_store_file' do
     cwd File.join(node['solrcloud']['install_dir'], 'etc')
     command File.join(node['solrcloud']['install_dir'], 'etc', 'create-solr.keystore.sh')
     notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
-    only_if   { node['solrcloud']['key_store']['manage'] }
+    only_if { node['solrcloud']['key_store']['manage'] }
   end
+end
+
+java_xmx = node['solrcloud']['java_xmx']
+java_xms = node['solrcloud']['java_xms']
+
+# Calculate -Xmx (Multiple of 1024)
+if node['solrcloud']['auto_java_memory'] && node['memory'] && node['memory'].key?('total')
+  total_memory = (node['memory']['total'].gsub('kB', '').to_i / 1024).to_i
+  total_memory_percentage = (total_memory % 1024)
+  system_memory = if total_memory < 2048
+                    total_memory / 2
+                  else
+                    if total_memory_percentage >= node['solrcloud']['auto_system_memory'].to_i
+                      total_memory_percentage
+                    else
+                      total_memory_percentage + 1024
+                    end
+                  end
+
+  java_memory = total_memory - system_memory
+  # Making Java -Xmx even
+  java_memory += 1 unless java_memory.even?
+  java_xmx = "#{java_memory}m"
+  java_xms = "#{java_memory}m"
 end
 
 template 'solr_config' do
@@ -99,6 +130,10 @@ template 'solr_config' do
   group node['solrcloud']['group']
   mode 0744
   path node['solrcloud']['sysconfig_file']
+  variables(
+    java_xmx: java_xmx,
+    java_xms: java_xms
+  )
   notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
 end
 
@@ -110,7 +145,8 @@ template '/etc/init.d/solr' do
   notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
 end
 
-template node['solrcloud']['jmx']['access_file'] do
+access_file = node['solrcloud']['jmx']['access_file'] % { install_dir: node['solrcloud']['install_dir'] }
+template access_file do
   source 'jmxremote.access.erb'
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
@@ -118,7 +154,8 @@ template node['solrcloud']['jmx']['access_file'] do
   notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
 end
 
-template node['solrcloud']['jmx']['password_file'] do
+password_file = node['solrcloud']['jmx']['password_file'] % { install_dir: node['solrcloud']['install_dir'] }
+template password_file do
   source 'jmxremote.password.erb'
   owner node['solrcloud']['user']
   group node['solrcloud']['group']

@@ -13,7 +13,7 @@ syncLimit=5
 # the directory where the snapshot is stored.
 # do not use /tmp for storage, /tmp here is just
 # example sakes.
-dataDir=<%=node.solrcloud.zk_run_data_dir%>
+dataDir=<%= node.solrcloud.zk_run_data_dir % { install_dir: node['solrcloud']['install_dir'] } %>
 # the port at which the clients will connect
 clientPort=<%=node.solrcloud.zk_run_port%>
 # the maximum number of client connections.

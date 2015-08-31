@@ -7,9 +7,8 @@ default['solrcloud']['user_home']     = nil
 default['solrcloud']['setup_user']    = true # ideally it must be set to false for Production environment and advised to manage solr user via different cookbook
 
 default['solrcloud']['version']       = '5.1.0'
-default['solrcloud']['major_version'] = node['solrcloud']['version'].split('.')[0].to_i
-default['solrcloud']['minor_version'] = node['solrcloud']['version'].split('.')[1].to_i
-default['solrcloud']['server_base_dir_name'] = node['solrcloud']['major_version'] == 5 ? 'server' : 'example'
+default['solrcloud']['major_version'] = nil
+default['solrcloud']['server_base_dir_name'] = nil
 
 default['solrcloud']['install_dir']   = '/usr/local/solr'
 default['solrcloud']['data_dir']      = '/opt/solr'
@@ -20,8 +19,8 @@ default['solrcloud']['sysconfig_file'] = value_for_platform_family(
 
 default['solrcloud']['restore_cores'] = true
 
-default['solrcloud']['notify_restart']      = false # notify service restart on config change
-default['solrcloud']['notify_restart_upgrade']    = false # notify service restart on config change
+default['solrcloud']['notify_restart'] = false # notify service restart on config change
+default['solrcloud']['notify_restart_upgrade'] = false # notify service restart on config change
 default['solrcloud']['service_name']        = 'solr'
 default['solrcloud']['service_start_wait']  = 15
 
@@ -33,14 +32,14 @@ default['solrcloud']['port']          = 8983
 default['solrcloud']['ssl_port']      = 8984
 
 default['solrcloud']['enable_ssl']    = false
-default['solrcloud']['enable_request_log']    = true
+default['solrcloud']['enable_request_log'] = true
 default['solrcloud']['enable_jmx']    = true
 
 default['solrcloud']['context_name']  = 'solr' # used to configure the context path for jetty, core admin and solr cloud
 
 # manage zookeeper configSet, it is recommended to enable this attribute only on one node
 # Otherwise, each new node or configSet update will reupload config to zookeeper
-default['solrcloud']['manage_zkconfigsets']   = false
+default['solrcloud']['manage_zkconfigsets'] = false
 
 # manage solr configSet source
 default['solrcloud']['manage_zkconfigsets_source']   = true
@@ -56,10 +55,10 @@ default['solrcloud']['force_zkconfigsets_upload']    = false
 # Setting this attribute to all the nodes could lead to cluster wide issue. Issues encountered
 # after creating a collection could lead to multiple replica set for a collection on one node.
 # Use it with caution.
-default['solrcloud']['manage_collections']  = false
+default['solrcloud']['manage_collections'] = false
 
 # Java Options
-default['solrcloud']['java_options']  = []
+default['solrcloud']['java_options'] = []
 
 # JMX Options
 default['solrcloud']['jmx']['port']   = 1099
@@ -89,7 +88,7 @@ default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'f
 default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30_000
 
 # Jetty webapp
-default['solrcloud']['jetty_config']['context']['path'] = '/' + node['solrcloud']['context_name']
+default['solrcloud']['jetty_config']['context']['path'] = '/%{context_name}'
 default['solrcloud']['jetty_config']['context']['temp_directory'] = '/solr-webapp'
 default['solrcloud']['jetty_config']['context']['war'] = '/webapps/solr.war'
 
@@ -151,19 +150,19 @@ default['solrcloud']['log4j']['conversion_pattern'] = '%d{ISO8601} [%t] %-5p %c{
 
 # solr.xml config
 default['solrcloud']['solr_config']['admin_handler']        = 'org.apache.solr.handler.admin.CoreAdminHandler'
-default['solrcloud']['solr_config']['admin_path']           = node['solrcloud']['jetty_config']['context']['path'] + '/admin'
+default['solrcloud']['solr_config']['admin_path']           = nil
 default['solrcloud']['solr_config']['core_load_threads']    = 3
 default['solrcloud']['solr_config']['management_path']      = nil
 default['solrcloud']['solr_config']['share_schema']         = 'false'
 default['solrcloud']['solr_config']['transient_cache_size'] = 1_000_000
-default['solrcloud']['solr_config']['solrcloud']['host_context']       = node['solrcloud']['context_name']
+default['solrcloud']['solr_config']['solrcloud']['host_context'] = nil
 default['solrcloud']['solr_config']['solrcloud']['distrib_update_conn_timeout']    = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['distrib_update_so_timeout']      = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['leader_vote_wait']   = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['zk_client_timeout']  = 15_000
 default['solrcloud']['solr_config']['solrcloud']['zk_host']     = []  # syntax: ["zkHost:zkPort"]
 default['solrcloud']['solr_config']['solrcloud']['zk_chroot']   = nil # syntax: '/solr'
-default['solrcloud']['solr_config']['solrcloud']['generic_core_node_names']        = 'true'
+default['solrcloud']['solr_config']['solrcloud']['generic_core_node_names'] = 'true'
 
 default['solrcloud']['solr_config']['shard_handler_factory']['socket_timeout']       = 0
 default['solrcloud']['solr_config']['shard_handler_factory']['conn_timeout']         = 0
@@ -175,30 +174,27 @@ default['solrcloud']['solr_config']['logging']['watcher']['logging_size']  = 100
 default['solrcloud']['solr_config']['logging']['watcher']['threshold']     = 'INFO'
 
 # Solr Directories
-default['solrcloud']['solr_home']   = ::File.join(node['solrcloud']['install_dir'], 'solr')
-default['solrcloud']['cores_home']  = ::File.join(node['solrcloud']['solr_home'], 'cores/')
-default['solrcloud']['shared_lib']  = ::File.join(node['solrcloud']['install_dir'], 'lib')
+default['solrcloud']['solr_home']   = ::File.join("%{install_dir}", "solr")
+default['solrcloud']['cores_home']  = ::File.join("%{solr_home}", 'cores/')
+default['solrcloud']['shared_lib']  = ::File.join("%{install_dir}", 'lib')
 
 # Solr default configSets directory
-default['solrcloud']['config_sets'] = ::File.join(node['solrcloud']['solr_home'], 'configsets')
+default['solrcloud']['config_sets'] = ::File.join("%{solr_home}", 'configsets')
 
-default['solrcloud']['zk_run_data_dir']  = ::File.join(node['solrcloud']['install_dir'], 'zookeeperdata')
-
-# Set zkHost for zookeeper configSet management
-default['solrcloud']['solr_config']['solrcloud']['zk_host'] = ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"] if node['solrcloud']['zk_run']
+default['solrcloud']['zk_run_data_dir'] = ::File.join("%{install_dir}", 'zookeeperdata')
 
 # Solr Zookeeper configSets directory (collection.configName)
 default['solrcloud']['zkconfigsets_home'] = '/usr/local/solr_zkconfigsets'
 
-default['solrcloud']['solr_config']['core_root_directory']      = node['solrcloud']['cores_home']
-default['solrcloud']['solr_config']['shared_lib']               = node['solrcloud']['shared_lib']
-default['solrcloud']['solr_config']['solrcloud']['host_port']   = node['solrcloud']['port']
+default['solrcloud']['solr_config']['core_root_directory']      = nil # node['solrcloud']['cores_home']
+default['solrcloud']['solr_config']['shared_lib']               = nil # node['solrcloud']['shared_lib']
+default['solrcloud']['solr_config']['solrcloud']['host_port']   = nil # node['solrcloud']['port']
 
-default['solrcloud']['source_dir']      = '/usr/local/solr-' + node['solrcloud']['version']
-default['solrcloud']['tarball']['url']  = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
+default['solrcloud']['source_dir']      = '/usr/local/solr-%{version}'
+default['solrcloud']['tarball']['url']  = 'https://archive.apache.org/dist/lucene/solr/%{version}/solr-%{version}.tgz'
 default['solrcloud']['tarball']['md5']  = '316f11ed8e81cf07ebfa6ad9443add09'
 
-default['solrcloud']['key_store']['key_store_file_path']  = ::File.join(node['solrcloud']['install_dir'], 'etc', node['solrcloud']['key_store']['key_store_file'])
+default['solrcloud']['key_store']['key_store_file_path'] = ::File.join('%{install_dir}', 'etc', '%{key_store_file}')
 
-default['solrcloud']['jmx']['password_file']  = ::File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.password')
-default['solrcloud']['jmx']['access_file']    = ::File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.access')
+default['solrcloud']['jmx']['password_file']  = ::File.join('%{install_dir}', 'resources', 'jmxremote.password')
+default['solrcloud']['jmx']['access_file']    = ::File.join('%{install_dir}', 'resources', 'jmxremote.access')
