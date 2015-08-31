@@ -375,11 +375,11 @@ Parameters:
 
  * `default[:solrcloud][:version]` (default: `5.1.0`): solr package version
 
- * `default[:solrcloud][:major_version]` (default: `calculated`): solr package major version to configure solr 4 / 5, valid values - 4 5
+ * `default[:solrcloud][:major_version]` (default: `calculated`): solr package major version to configure solr 4 / 5, valid values - 4 5. Depricated.
 
  * `default[:solrcloud][:server_base_dir_name]` (default: `calculated`): solr base directory to configure solr 4 / 5, valid values - example server
 
- * `default[:solrcloud][:zk_run_data_dir]` (default: `node[:solrcloud][:install_dir]/zookeeperdata`): embedded zookeeper data directory
+ * `default[:solrcloud][:zk_run_data_dir]` (default: `%{install_dir}/zookeeperdata`): embedded zookeeper data directory
 
  * `default[:solrcloud][:zk_run_port]` (default: `2181`): embedded zookeeper port
 
@@ -390,15 +390,15 @@ Parameters:
         solrconfig.xml for each configSet needs to set dataDir for this location usage, like:
           <dataDir>${solr.data.dir:}/collection name</dataDir>
 
- * `default[:solrcloud][:solr_home]` (default: `node[:solrcloud][:install_dir]/solr`): solr home
+ * `default[:solrcloud][:solr_home]` (default: `%{install_dir}/solr`): solr home
 
  * `default[:solrcloud][:sysconfig_file]` (default: ```{ debian: '/etc/default/solr', rhel: '/etc/sysconfig/solr' }```): Location of sysconfig file meant for assigning environment variables to solr on startup.
 
- * `default[:solrcloud][:cores_home]` (default: `node[:solrcloud][:solr_home]/cores`): solr collection/core home
+ * `default[:solrcloud][:cores_home]` (default: `%{solr_home}/cores`): solr collection/core home
 
- * `default[:solrcloud][:shared_lib]` (default: `node[:solrcloud][:install_dir]`/lib): solr default lib directory
+ * `default[:solrcloud][:shared_lib]` (default: `%{install_dir}`/lib): solr default lib directory
 
- * `default[:solrcloud][:config_sets]` (default: `node[:solrcloud][:solr_home]/configsets`): solr cores configSets directory
+ * `default[:solrcloud][:config_sets]` (default: `%{solr_home}/configsets`): solr cores configSets directory
 
  * `default[:solrcloud][:service_name]` (default: `solr`): solr service name
 
@@ -766,6 +766,9 @@ Node attributes:
 7. Write description about changes to PR
 8. Submit a Pull Request using Github
 
+### Derived Attributes
+
+Attributes are not allowed to contrusted from other attributes in the attributes files to support wrapping cookbooks. If your change is to alias another attribute for more configurabilty then set it to `nil` and `||` the attributes together in the recipe. If an attribute is used in the construction of the new attribute, make the location of the substitution using string formating and then do the construction in the recipe such as is node the `node.solrcloud.solr_home` attribute. [Here](https://christinemdraper.wordpress.com/2014/10/06/avoiding-the-possible-pitfalls-of-derived-attributes/) is the rational behind these patterns.
 
 ## Copyright & License
 

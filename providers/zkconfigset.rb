@@ -33,7 +33,7 @@ action :delete do
     directory ::File.join(new_resource.zkconfigsets_home, new_resource.configset_name) do
       recursive true
       action :delete
-      only_if     { node['solrcloud']['manage_zkconfigsets_source'] }
+      only_if { node['solrcloud']['manage_zkconfigsets_source'] }
     end
   end
 end
@@ -50,14 +50,14 @@ action :create do
       files_owner new_resource.user
       files_group new_resource.group
       notifies :run, "execute[zk_config_set_upconfig_#{new_resource.configset_name}_update_upload]", :immediately if node['solrcloud']['notify_zkconfigsets_upload']
-      only_if     { node['solrcloud']['manage_zkconfigsets_source'] }
+      only_if { node['solrcloud']['manage_zkconfigsets_source'] }
     end
 
     # Upload on any config update
     execute "zk_config_set_upconfig_#{new_resource.configset_name}_update_upload" do
       command "#{new_resource.solr_zkcli} -zkhost #{new_resource.zkhost} -cmd upconfig -confdir #{::File.join(new_resource.zkconfigsets_home, new_resource.configset_name, 'conf')} -confname #{new_resource.configset_name} 2>&1"
       action :nothing
-      only_if     { node['solrcloud']['manage_zkconfigsets'] }
+      only_if { node['solrcloud']['manage_zkconfigsets'] }
     end
 
     # Update if config is not present in zk, like attribute node['solrcloud']['manage_zkconfigsets'] was not during the first chef run

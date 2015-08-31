@@ -22,6 +22,6 @@ default['solrcloud']['solr_config']['gc_tune'] = %w(-XX:NewRatio=3
 # whether to use node fqdn or ip addressfor solr host
 default['solrcloud']['solr_config']['solr_host_type'] = 'fqdn' # options: fqdn, ip
 # fallback to node ip address if node fqdn is not set
-default['solrcloud']['solr_config']['solr_host'] = node[node['solrcloud']['solr_config']['solr_host_type']] || node['ip']
+default['solrcloud']['solr_config']['solr_host'] = nil # node[node['solrcloud']['solr_config']['solr_host_type']] || node['ip']
 
 default['solrcloud']['solr_config']['solr_timezone'] = 'UTC'

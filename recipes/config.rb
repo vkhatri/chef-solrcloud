@@ -17,9 +17,17 @@
 # limitations under the License.
 #
 
-fail "node attribute node['solrcloud']['solr_config']['solrcloud']['zk_host'] must have atleast one zookeeper server" if node['solrcloud']['solr_config']['solrcloud']['zk_host'].empty? && !node['solrcloud']['zk_run']
+zk_hosts = if node['solrcloud']['zk_run']
+             ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
+           else
+             node['solrcloud']['solr_config']['solrcloud']['zk_host']
+           end
 
-template File.join(node['solrcloud']['solr_home'], 'solr.xml') do
+fail "node attribute node['solrcloud']['solr_config']['solrcloud']['zk_host'] must have at least one zookeeper server" if zk_hosts.empty?
+
+solr_home = node['solrcloud']['solr_home'] % { install_dir: node['solrcloud']['install_dir'] }
+
+template File.join(solr_home, 'solr.xml') do
   source 'solr.xml.erb'
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
@@ -27,7 +35,7 @@ template File.join(node['solrcloud']['solr_home'], 'solr.xml') do
   notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart']
 end
 
-template File.join(node['solrcloud']['solr_home'], 'zoo.cfg') do
+template File.join(solr_home, 'zoo.cfg') do
   source 'zoo.cfg.erb'
   owner node['solrcloud']['user']
   group node['solrcloud']['group']

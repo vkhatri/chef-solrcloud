@@ -34,8 +34,10 @@ SOLR_OPTS="$SOLR_OPTS
 -Dcom.sun.management.jmxremote.local.only=false
 -Dcom.sun.management.jmxremote.ssl=false
 -Dcom.sun.management.jmxremote.authenticate=<%= node['solrcloud']['jmx']['authenticate'] %>
--Dcom.sun.management.jmxremote.password.file=<%= node['solrcloud']['jmx']['password_file'] %>
--Dcom.sun.management.jmxremote.access.file=<%= node['solrcloud']['jmx']['access_file'] %>
+<% password_file = node['solrcloud']['jmx']['password_file'] % { install_dir: node['solrcloud']['install_dir'] } -%>
+-Dcom.sun.management.jmxremote.password.file=<%= password_file %>
+<% access_file = node['solrcloud']['jmx']['access_file'] % { install_dir: node['solrcloud']['install_dir'] } -%>
+-Dcom.sun.management.jmxremote.access.file=<%= access_file %>
 -Djava.rmi.server.hostname=<%= node['solrcloud']['solr_config']['solr_host'] %>
 <% end -%>
 <%= node['solrcloud']['java_options'].join(" \n") %>
@@ -51,13 +53,18 @@ SOLR_OPTS="$SOLR_OPTS
 
 # Expert: If you want finer control over memory options, specify them directly
 # Comment out SOLR_HEAP if you are using this though, that takes precedence
-SOLR_JAVA_MEM="-Xms<%= node.solrcloud.java_xms %> -Xmx<%= node.solrcloud.java_xmx %>"
+SOLR_JAVA_MEM="-Xms<%= @java_xms %> -Xmx<%= @java_xmx %>"
 
 # Set the ZooKeeper connection string if using an external ZooKeeper ensemble
 # e.g. host1:2181,host2:2181/chroot
 # Leave empty if not using SolrCloud
+<% zk_hosts = if node['solrcloud']['zk_run']
+                ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
+              else
+                node['solrcloud']['solr_config']['solrcloud']['zk_host']
+              end -%>
 <% unless node['solrcloud']['zk_run'] -%>
-ZK_HOST="<%=node['solrcloud']['solr_config']['solrcloud']['zk_host'].sort.uniq.join(',') %><%= node['solrcloud']['solr_config']['solrcloud']['zk_chroot'] %>"
+ZK_HOST="<%= zk_hosts.sort.uniq.join(',') %><%= node['solrcloud']['solr_config']['solrcloud']['zk_chroot'] %>"
 <% end -%>
 
 # Set the ZooKeeper client timeout (for SolrCloud mode)
@@ -79,7 +86,10 @@ RMI_PORT=<%= node['solrcloud']['jmx']['port'] %>
 
 # By default the start script uses "localhost"; override the hostname here
 # for production SolrCloud environments to control the hostname exposed to cluster state
-SOLR_HOST="<%= node['solrcloud']['solr_config']['solr_host'] %>"
+<% solr_host = node['solrcloud']['solr_config']['solr_host'] -%>
+<% solr_host = node[node['solrcloud']['solr_config']['solr_host_type']] if solr_host.nil? || solr_host.empty? -%>
+<% solr_host = node['ip'] if solr_host.nil? || solr_host.empty? -%>
+SOLR_HOST="<%= solr_host || "localhost" %>"
 
 # By default the start script uses UTC; override the timezone if needed
 SOLR_TIMEZONE="<%= node['solrcloud']['solr_config']['solr_timezone'] %>"
@@ -90,7 +100,8 @@ SOLR_PID_DIR=<%= node['solrcloud']['pid_dir'] %>
 
 # Path to a directory where Solr creates index files, the specified directory
 # must contain a solr.xml; by default, Solr will use server/solr
-SOLR_HOME=<%= node['solrcloud']['solr_home'] %>
+<% solr_home = node.solrcloud.solr_home % { install_dir: node.solrcloud.install_dir } -%>
+SOLR_HOME=<%= solr_home %>
 
 # Solr provides a default Log4J configuration properties file in server/resources
 # however, you may want to customize the log settings and file appender location

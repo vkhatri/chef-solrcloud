@@ -21,20 +21,26 @@ actions :create, :delete, :reload
 
 default_action :create
 
-attribute :num_shards,    :kind_of => [String, Integer], :default => 1
-attribute :context_path,  :kind_of => String, :default => node['solrcloud']['jetty_config']['context']['path']
-attribute :shards,        :kind_of => String, :default => nil
-attribute :router_field,  :kind_of => String, :default => nil
-attribute :async,         :kind_of => String, :default => nil
-attribute :router_name,   :kind_of => String, :default => nil
-attribute :use_ssl,       :kind_of => [TrueClass, FalseClass], :default => false
-attribute :host,          :kind_of => String, :default => node['ipaddress']
-attribute :auto_add_replicas,       :kind_of => [TrueClass, FalseClass], :default => false
-attribute :port,          :kind_of => [String, Integer], :default => node['solrcloud']['port']
-attribute :ssl_port,      :kind_of => [String, Integer], :default => node['solrcloud']['ssl_port']
-attribute :create_node_set,         :kind_of => String, :default => nil
-attribute :replication_factor,      :kind_of => [String, Integer], :default => 1
-attribute :max_shards_per_node,     :kind_of => [String, Integer], :default => nil
-attribute :collection_config_name,  :kind_of => String, :default => nil
-attribute :zkcli,           :kind_of => String, :default => node['solrcloud']['zookeeper']['zkcli']
-attribute :zkhost,          :kind_of => String, :default => node['solrcloud']['solr_config']['solrcloud']['zk_host'].first # Need only one node
+zk_hosts = if node['solrcloud']['zk_run']
+             ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"]
+           else
+             node['solrcloud']['solr_config']['solrcloud']['zk_host']
+           end
+
+attribute :num_shards,             :kind_of => [String, Integer], :default => 1
+attribute :context_path,           :kind_of => String, :default => (node['solrcloud']['jetty_config']['context']['path'] % { context_name: node['solrcloud']['context_name'] })
+attribute :shards,                 :kind_of => String, :default => nil
+attribute :router_field,           :kind_of => String, :default => nil
+attribute :async,                  :kind_of => String, :default => nil
+attribute :router_name,            :kind_of => String, :default => nil
+attribute :use_ssl,                :kind_of => [TrueClass, FalseClass], :default => false
+attribute :host,                   :kind_of => String, :default => node['ipaddress']
+attribute :auto_add_replicas,      :kind_of => [TrueClass, FalseClass], :default => false
+attribute :port,                   :kind_of => [String, Integer], :default => node['solrcloud']['port']
+attribute :ssl_port,               :kind_of => [String, Integer], :default => node['solrcloud']['ssl_port']
+attribute :create_node_set,        :kind_of => String, :default => nil
+attribute :replication_factor,     :kind_of => [String, Integer], :default => 1
+attribute :max_shards_per_node,    :kind_of => [String, Integer], :default => nil
+attribute :collection_config_name, :kind_of => String, :default => nil
+attribute :zkcli,                  :kind_of => String, :default => node['solrcloud']['zookeeper']['zkcli'] % { install_dir: node['solrcloud']['install_dir'] }
+attribute :zkhost,                 :kind_of => String, :default => zk_hosts.first # Need only one node
