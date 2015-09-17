@@ -17,16 +17,14 @@
 # limitations under the License.
 #
 
-puts "node['solrcloud']['version'] = #{node['solrcloud']['version']}"
-
-node.default['solrcloud']['major_version'] = node.attribute['solrcloud']['version'].split('.')[0].to_i
-node.default['solrcloud']['minor_version'] = node.attribute['solrcloud']['version'].split('.')[1].to_i
+node.default['solrcloud']['major_version'] = node['solrcloud']['version'].split('.')[0].to_i
+node.default['solrcloud']['minor_version'] = node['solrcloud']['version'].split('.')[1].to_i
 node.default['solrcloud']['server_base_dir_name'] = node['solrcloud']['major_version'] == 5 ? 'server' : 'example'
 
 node.default['solrcloud']['install_dir'] = '/usr/local/solr'
 node.default['solrcloud']['data_dir'] = '/opt/solr'
 
-node.default['solrcloud']['source_dir'] = '/usr/local/solr-' + node.attribute['solrcloud']['version']
+node.default['solrcloud']['source_dir'] = '/usr/local/solr-' + node['solrcloud']['version']
 
 node.default['solrcloud']['jetty_config']['context']['path'] = '/' + node['solrcloud']['context_name']
 
@@ -51,7 +49,7 @@ node.default['solrcloud']['key_store']['key_store_file_path'] = ::File.join(node
 node.default['solrcloud']['jmx']['password_file']  = ::File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.password')
 node.default['solrcloud']['jmx']['access_file']    = ::File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.access')
 
-node.default['solrcloud']['zookeeper']['source_dir'] = ::File.join(node.attribute['solrcloud']['source_dir'], "zookeeper-#{node['solrcloud']['zookeeper']['version']}")
+node.default['solrcloud']['zookeeper']['source_dir'] = ::File.join(node['solrcloud']['source_dir'], "zookeeper-#{node['solrcloud']['zookeeper']['version']}")
 node.default['solrcloud']['zookeeper']['install_dir']      = ::File.join(node['solrcloud']['install_dir'], 'zookeeper')
 node.default['solrcloud']['zookeeper']['zkcli']            = ::File.join(node['solrcloud']['zookeeper']['install_dir'], 'bin', 'zkCli.sh')
 node.default['solrcloud']['zookeeper']['solr_zkcli']       = ::File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'scripts/cloud-scripts/zkcli.sh')
