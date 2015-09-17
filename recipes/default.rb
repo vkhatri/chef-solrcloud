@@ -17,4 +17,5 @@
 # limitations under the License.
 #
 
+include_recipe 'solrcloud::attributes'
 include_recipe 'solrcloud::tarball'

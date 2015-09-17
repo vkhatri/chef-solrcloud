@@ -42,9 +42,12 @@ require 'net/http'
 require 'json'
 require 'tmpdir'
 
-temp_d        = Dir.tmpdir
-tarball_file  = ::File.join(temp_d, "solr-#{node['solrcloud']['version']}.tgz")
-tarball_dir   = ::File.join(temp_d, "solr-#{node['solrcloud']['version']}")
+tarball_url  = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
+tarball_checksum  = solr_tarball_sha256sum(node['solrcloud']['version'])
+
+temp_dir      = Dir.tmpdir
+tarball_file  = ::File.join(temp_dir, "solr-#{node['solrcloud']['version']}.tgz")
+tarball_dir   = ::File.join(temp_dir, "solr-#{node['solrcloud']['version']}")
 
 # Old Source Location for cores backup
 if ::File.exist?(node['solrcloud']['install_dir'])
@@ -58,13 +61,14 @@ end
 service 'solr' do
   service_name node['solrcloud']['service_name']
   action :stop
-  only_if { File.exist?("/etc/init.d/#{node['solrcloud']['service_name']}") && !File.exist?(node['solrcloud']['source_dir']) }
+  only_if { ::File.exist?("/etc/init.d/#{node['solrcloud']['service_name']}") && !::File.exist?(File.join(node['solrcloud']['source_dir'], 'dist', "solr-core-#{node['solrcloud']['version']}.jar")) }
 end
 
 # Solr Version Package File
 remote_file tarball_file do
-  source node['solrcloud']['tarball']['url']
-  not_if { File.exist?("#{node['solrcloud']['source_dir']}/dist/solr-core-#{node['solrcloud']['version']}.jar") }
+  source tarball_url
+  checksum tarball_checksum
+  not_if { ::File.exist?("#{node['solrcloud']['source_dir']}/dist/solr-core-#{node['solrcloud']['version']}.jar") }
 end
 
 # Extract and Setup Solr Source directories
@@ -78,35 +82,27 @@ bash 'extract_solr_tarball' do
     chown -R #{node['solrcloud']['user']}:#{node['solrcloud']['group']} #{node['solrcloud']['source_dir']}
     chmod #{node['solrcloud']['dir_mode']} #{node['solrcloud']['source_dir']}
   EOS
-
-  not_if  { File.exist?(node['solrcloud']['source_dir']) }
-  creates "#{node['solrcloud']['install_dir']}/dist/solr-core-#{node['solrcloud']['version']}.jar"
-  action :run
+  creates ::File.join(node['solrcloud']['source_dir'], 'dist', "solr-core-#{node['solrcloud']['version']}.jar")
 end
 
 # Link Solr install_dir to Current source_dir
 link node['solrcloud']['install_dir'] do
   to node['solrcloud']['source_dir']
-  owner node['solrcloud']['user']
-  group node['solrcloud']['group']
   notifies :restart, 'service[solr]', :delayed if node['solrcloud']['notify_restart_upgrade']
-  action :create
 end
 
 # Link Jetty lib dir
-link File.join(node['solrcloud']['install_dir'], 'lib') do
-  to File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'lib')
+link ::File.join(node['solrcloud']['install_dir'], 'lib') do
+  to ::File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'lib')
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
-  action :create
 end
 
 # Link Solr start.jar
-link File.join(node['solrcloud']['install_dir'], 'start.jar') do
-  to File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'start.jar')
+link ::File.join(node['solrcloud']['install_dir'], 'start.jar') do
+  to ::File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'start.jar')
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
-  action :create
 end
 
 # Setup Directories for Solr
@@ -117,17 +113,16 @@ end
  node['solrcloud']['config_sets'],
  node['solrcloud']['cores_home'],
  node['solrcloud']['zkconfigsets_home'],
- File.join(node['solrcloud']['install_dir'], 'etc'),
- File.join(node['solrcloud']['install_dir'], 'resources'),
- File.join(node['solrcloud']['install_dir'], 'webapps'),
- File.join(node['solrcloud']['install_dir'], 'contexts')
+ ::File.join(node['solrcloud']['install_dir'], 'etc'),
+ ::File.join(node['solrcloud']['install_dir'], 'resources'),
+ ::File.join(node['solrcloud']['install_dir'], 'webapps'),
+ ::File.join(node['solrcloud']['install_dir'], 'contexts')
 ].each do |dir|
   directory dir do
     owner node['solrcloud']['user']
     group node['solrcloud']['group']
     mode 0755
     recursive true
-    action :create
   end
 end
 
@@ -150,7 +145,6 @@ directory node['solrcloud']['zk_run_data_dir'] do
   group node['solrcloud']['group']
   mode 0755
   recursive true
-  action :create
   only_if { node['solrcloud']['zk_run'] }
 end
 

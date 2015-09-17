@@ -1,4 +1,7 @@
-
+# Note: attributes subject to evaluation or
+# depend on other attributes has been moved
+# to recipe `attributes`
+#
 default['solrcloud']['install_zk_gem']  = true
 default['solrcloud']['install_java']  = true
 default['solrcloud']['user']          = 'solr'
@@ -7,12 +10,7 @@ default['solrcloud']['user_home']     = nil
 default['solrcloud']['setup_user']    = true # ideally it must be set to false for Production environment and advised to manage solr user via different cookbook
 
 default['solrcloud']['version']       = '5.1.0'
-default['solrcloud']['major_version'] = node['solrcloud']['version'].split('.')[0].to_i
-default['solrcloud']['minor_version'] = node['solrcloud']['version'].split('.')[1].to_i
-default['solrcloud']['server_base_dir_name'] = node['solrcloud']['major_version'] == 5 ? 'server' : 'example'
 
-default['solrcloud']['install_dir']   = '/usr/local/solr'
-default['solrcloud']['data_dir']      = '/opt/solr'
 default['solrcloud']['sysconfig_file'] = value_for_platform_family(
   'debian' => '/etc/default/solr',
   'rhel' => '/etc/sysconfig/solr'
@@ -89,7 +87,6 @@ default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'f
 default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30_000
 
 # Jetty webapp
-default['solrcloud']['jetty_config']['context']['path'] = '/' + node['solrcloud']['context_name']
 default['solrcloud']['jetty_config']['context']['temp_directory'] = '/solr-webapp'
 default['solrcloud']['jetty_config']['context']['war'] = '/webapps/solr.war'
 
@@ -151,12 +148,10 @@ default['solrcloud']['log4j']['conversion_pattern'] = '%d{ISO8601} [%t] %-5p %c{
 
 # solr.xml config
 default['solrcloud']['solr_config']['admin_handler']        = 'org.apache.solr.handler.admin.CoreAdminHandler'
-default['solrcloud']['solr_config']['admin_path']           = node['solrcloud']['jetty_config']['context']['path'] + '/admin'
 default['solrcloud']['solr_config']['core_load_threads']    = 3
 default['solrcloud']['solr_config']['management_path']      = nil
 default['solrcloud']['solr_config']['share_schema']         = 'false'
 default['solrcloud']['solr_config']['transient_cache_size'] = 1_000_000
-default['solrcloud']['solr_config']['solrcloud']['host_context']       = node['solrcloud']['context_name']
 default['solrcloud']['solr_config']['solrcloud']['distrib_update_conn_timeout']    = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['distrib_update_so_timeout']      = 1_000_000
 default['solrcloud']['solr_config']['solrcloud']['leader_vote_wait']   = 1_000_000
@@ -174,19 +169,6 @@ default['solrcloud']['solr_config']['logging']['logging_class']  = nil
 default['solrcloud']['solr_config']['logging']['watcher']['logging_size']  = 1000
 default['solrcloud']['solr_config']['logging']['watcher']['threshold']     = 'INFO'
 
-# Solr Directories
-default['solrcloud']['solr_home']   = ::File.join(node['solrcloud']['install_dir'], 'solr')
-default['solrcloud']['cores_home']  = ::File.join(node['solrcloud']['solr_home'], 'cores/')
-default['solrcloud']['shared_lib']  = ::File.join(node['solrcloud']['install_dir'], 'lib')
-
-# Solr default configSets directory
-default['solrcloud']['config_sets'] = ::File.join(node['solrcloud']['solr_home'], 'configsets')
-
-default['solrcloud']['zk_run_data_dir']  = ::File.join(node['solrcloud']['install_dir'], 'zookeeperdata')
-
-# Set zkHost for zookeeper configSet management
-default['solrcloud']['solr_config']['solrcloud']['zk_host'] = ["#{node['ipaddress']}:#{node['solrcloud']['zk_run_port']}"] if node['solrcloud']['zk_run']
-
 # Solr Zookeeper configSets directory (collection.configName)
 default['solrcloud']['zkconfigsets_home'] = '/usr/local/solr_zkconfigsets'
 
@@ -194,11 +176,9 @@ default['solrcloud']['solr_config']['core_root_directory']      = node['solrclou
 default['solrcloud']['solr_config']['shared_lib']               = node['solrcloud']['shared_lib']
 default['solrcloud']['solr_config']['solrcloud']['host_port']   = node['solrcloud']['port']
 
-default['solrcloud']['source_dir']      = '/usr/local/solr-' + node['solrcloud']['version']
-default['solrcloud']['tarball']['url']  = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
-default['solrcloud']['tarball']['md5']  = '316f11ed8e81cf07ebfa6ad9443add09'
-
-default['solrcloud']['key_store']['key_store_file_path']  = ::File.join(node['solrcloud']['install_dir'], 'etc', node['solrcloud']['key_store']['key_store_file'])
-
-default['solrcloud']['jmx']['password_file']  = ::File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.password')
-default['solrcloud']['jmx']['access_file']    = ::File.join(node['solrcloud']['install_dir'], 'resources', 'jmxremote.access')
+# Zookeeper Client Setup
+# Note: This Cookbook does not manage Zookeeper Server/Cluster.
+# Use Zookeeper Cookbook instead for Zookeeper Cluster Management
+# Only Setup Zookeeper for Client zkCli.sh.
+#
+default['solrcloud']['zookeeper']['version']          = '3.4.6'

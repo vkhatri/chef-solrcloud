@@ -22,13 +22,17 @@
 
 require 'tmpdir'
 
+zookeeper_tarball_url = "https://archive.apache.org/dist/zookeeper/zookeeper-#{node['solrcloud']['zookeeper']['version']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.tar.gz"
+zookeeper_tarball_checksum   = zookeeper_tarball_sha256sum(node['solrcloud']['zookeeper']['version'])
+
 temp_d        = Dir.tmpdir
 tarball_file  = File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['version']}.tar.gz")
 tarball_dir   = File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['version']}")
 
 # Zookeeper Version Package File
 remote_file tarball_file do
-  source node['solrcloud']['zookeeper']['tarball']['url']
+  source zookeeper_tarball_url
+  checksum zookeeper_tarball_checksum
   not_if { File.exist?("#{node['solrcloud']['zookeeper']['source_dir']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.jar") }
 end
 
