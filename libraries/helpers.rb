@@ -16,7 +16,7 @@ end
 
 def zookeeper_tarball_sha256sum(version)
   sha256sums = {
-    '3.4.6' => '971c379ba65714fd25dc5fe8f14e9ad1'
+    '3.4.6' => '01b3938547cd620dc4c93efe07c0360411f4a66962a70500b163b59014046994'
   }
   sha256sum = sha256sums[version]
   fail "sha256sum is missing for zookeeper tarball version #{version}" unless sha256sum
