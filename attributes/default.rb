@@ -18,8 +18,8 @@ default['solrcloud']['sysconfig_file'] = value_for_platform_family(
 
 default['solrcloud']['restore_cores'] = true
 
-default['solrcloud']['notify_restart']      = false # notify service restart on config change
-default['solrcloud']['notify_restart_upgrade']    = false # notify service restart on config change
+default['solrcloud']['notify_restart'] = false # notify service restart on config change
+default['solrcloud']['notify_restart_upgrade'] = false # notify service restart on config change
 default['solrcloud']['service_name']        = 'solr'
 default['solrcloud']['service_start_wait']  = 15
 
@@ -31,14 +31,14 @@ default['solrcloud']['port']          = 8983
 default['solrcloud']['ssl_port']      = 8984
 
 default['solrcloud']['enable_ssl']    = false
-default['solrcloud']['enable_request_log']    = true
+default['solrcloud']['enable_request_log'] = true
 default['solrcloud']['enable_jmx']    = true
 
 default['solrcloud']['context_name']  = 'solr' # used to configure the context path for jetty, core admin and solr cloud
 
 # manage zookeeper configSet, it is recommended to enable this attribute only on one node
 # Otherwise, each new node or configSet update will reupload config to zookeeper
-default['solrcloud']['manage_zkconfigsets']   = false
+default['solrcloud']['manage_zkconfigsets'] = false
 
 # manage solr configSet source
 default['solrcloud']['manage_zkconfigsets_source']   = true
@@ -54,7 +54,7 @@ default['solrcloud']['force_zkconfigsets_upload']    = false
 # Setting this attribute to all the nodes could lead to cluster wide issue. Issues encountered
 # after creating a collection could lead to multiple replica set for a collection on one node.
 # Use it with caution.
-default['solrcloud']['manage_collections']  = false
+default['solrcloud']['manage_collections'] = false
 
 # Java Options
 default['solrcloud']['java_options']  = []
@@ -79,12 +79,12 @@ default['solrcloud']['jetty_config']['server']['detailed_dump']   = 'false'
 # Jetty Connector Config
 # Default Parameters for org.eclipse.jetty.server.bio.SocketConnector
 default['solrcloud']['jetty_config']['connector']['stats_on']       = 'true'
-default['solrcloud']['jetty_config']['connector']['max_idle_time']  =  50_000
-default['solrcloud']['jetty_config']['connector']['low_resource_max_idle_time']   = 1500
+default['solrcloud']['jetty_config']['connector']['max_idle_time']  = 50_000
+default['solrcloud']['jetty_config']['connector']['low_resource_max_idle_time'] = 1500
 
 # Jetty SSL Connector Config
 default['solrcloud']['jetty_config']['ssl_connector']['need_client_auth']   = 'false'
-default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      =  30_000
+default['solrcloud']['jetty_config']['ssl_connector']['max_idle_time']      = 30_000
 
 # Jetty webapp
 default['solrcloud']['jetty_config']['context']['temp_directory'] = '/solr-webapp'
@@ -158,7 +158,7 @@ default['solrcloud']['solr_config']['solrcloud']['leader_vote_wait']   = 1_000_0
 default['solrcloud']['solr_config']['solrcloud']['zk_client_timeout']  = 15_000
 default['solrcloud']['solr_config']['solrcloud']['zk_host']     = []  # syntax: ["zkHost:zkPort"]
 default['solrcloud']['solr_config']['solrcloud']['zk_chroot']   = nil # syntax: '/solr'
-default['solrcloud']['solr_config']['solrcloud']['generic_core_node_names']        = 'true'
+default['solrcloud']['solr_config']['solrcloud']['generic_core_node_names'] = 'true'
 
 default['solrcloud']['solr_config']['shard_handler_factory']['socket_timeout']       = 0
 default['solrcloud']['solr_config']['shard_handler_factory']['conn_timeout']         = 0
@@ -181,4 +181,4 @@ default['solrcloud']['solr_config']['solrcloud']['host_port']   = node['solrclou
 # Use Zookeeper Cookbook instead for Zookeeper Cluster Management
 # Only Setup Zookeeper for Client zkCli.sh.
 #
-default['solrcloud']['zookeeper']['version']          = '3.4.6'
+default['solrcloud']['zookeeper']['version'] = '3.4.6'

@@ -42,8 +42,8 @@ require 'net/http'
 require 'json'
 require 'tmpdir'
 
-tarball_url  = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
-tarball_checksum  = solr_tarball_sha256sum(node['solrcloud']['version'])
+tarball_url = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
+tarball_checksum = solr_tarball_sha256sum(node['solrcloud']['version'])
 
 temp_dir      = Dir.tmpdir
 tarball_file  = ::File.join(temp_dir, "solr-#{node['solrcloud']['version']}.tgz")
@@ -181,7 +181,7 @@ end
 
 # Waiting for Service
 ruby_block 'wait_start_up' do
-  block  do
+  block do
     sleep node['solrcloud']['service_start_wait']
   end
   action :nothing

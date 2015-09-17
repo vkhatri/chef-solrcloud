@@ -30,7 +30,7 @@ attribute :zkhost,          :kind_of => String, :default => node['solrcloud']['s
 attribute :zkconfigsets_home,       :kind_of => String, :default => node['solrcloud']['zkconfigsets_home']
 attribute :zkconfigsets_cookbook,   :kind_of => String, :default => node['solrcloud']['zkconfigsets_cookbook']
 attribute :manage_zkconfigsets,     :kind_of => [FalseClass, TrueClass], :default => node['solrcloud']['manage_zkconfigsets']
-attribute :force_upload,     :kind_of => [FalseClass, TrueClass], :default => node['solrcloud']['force_zkconfigsets_upload']
+attribute :force_upload, :kind_of => [FalseClass, TrueClass], :default => node['solrcloud']['force_zkconfigsets_upload']
 
 def initialize(*args)
   super

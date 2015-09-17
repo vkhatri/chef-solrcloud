@@ -23,7 +23,7 @@
 require 'tmpdir'
 
 zookeeper_tarball_url = "https://archive.apache.org/dist/zookeeper/zookeeper-#{node['solrcloud']['zookeeper']['version']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.tar.gz"
-zookeeper_tarball_checksum   = zookeeper_tarball_sha256sum(node['solrcloud']['zookeeper']['version'])
+zookeeper_tarball_checksum = zookeeper_tarball_sha256sum(node['solrcloud']['zookeeper']['version'])
 
 temp_d        = Dir.tmpdir
 tarball_file  = File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['version']}.tar.gz")
