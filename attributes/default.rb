@@ -11,6 +11,8 @@ default['solrcloud']['setup_user']    = true # ideally it must be set to false f
 
 default['solrcloud']['version']       = '5.1.0'
 
+default['solrcloud']['tarball_purge'] = false # purge old installed archive
+
 default['solrcloud']['sysconfig_file'] = value_for_platform_family(
   'debian' => '/etc/default/solr',
   'rhel' => '/etc/sysconfig/solr'

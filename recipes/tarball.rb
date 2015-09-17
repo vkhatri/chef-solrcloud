@@ -191,6 +191,22 @@ remote_file tarball_file do
   action :delete
 end
 
+# purge older versions
+ruby_block 'purge_old_versions' do
+  block do
+    require 'fileutils'
+    installed_versions = Dir.entries('/usr/local').reject { |a| a !~ /^solr-/ }.sort
+    old_versions = installed_versions - ["solr-#{node['solrcloud']['version']}"]
+
+    old_versions.each do |v|
+      v = "/usr/local/#{v}"
+      FileUtils.rm_rf Dir.glob(v)
+      Chef::Log.warn("deleted older solr tarball archive #{v}")
+    end
+  end
+  only_if { node['solrcloud']['tarball_purge'] }
+end
+
 # Setup configsets - node['solrcloud']['zkconfigsets']
 include_recipe 'solrcloud::zkconfigsets'
 

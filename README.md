@@ -357,6 +357,8 @@ Parameters:
 
  * `default[:solrcloud][:install_java]` (default: `true`): setup java, disable to manage java outside of this cookbook
 
+ * `default[:solrcloud][:tarball_purge]` (default: `false`): delete old versions archive if set to true
+
  * `default[:solrcloud][:context_name]` (default: `solr`): default solr jetty context path value
 
  * `default[:solrcloud][:force_zkconfigsets_upload]` (default: `false`): if set, zkconfigset lwrp will always execute configSet upload to zookeeper even configSet exists or there is no update. This option is useful when configSet source directory is managed separately.
