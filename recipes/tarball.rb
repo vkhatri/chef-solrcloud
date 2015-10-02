@@ -61,7 +61,7 @@ end
 service 'solr' do
   service_name node['solrcloud']['service_name']
   action :stop
-  only_if { ::File.exist?("/etc/init.d/#{node['solrcloud']['service_name']}") && !::File.exist?(File.join(node['solrcloud']['source_dir'], 'dist', "solr-core-#{node['solrcloud']['version']}.jar")) }
+  only_if { ::File.exist?("/etc/init.d/#{node['solrcloud']['service_name']}") && !::File.exist?(::File.join(node['solrcloud']['source_dir'], 'dist', "solr-core-#{node['solrcloud']['version']}.jar")) }
 end
 
 # Solr Version Package File
@@ -163,30 +163,6 @@ ruby_block 'require_pam_limits.so' do
   end
 end
 
-# Solr Config
-include_recipe 'solrcloud::config'
-
-# Jetty Config
-include_recipe 'solrcloud::jetty'
-
-# Zookeeper Client Setup
-include_recipe 'solrcloud::zkcli'
-
-service 'solr' do
-  supports :start => true, :stop => true, :restart => true, :status => true
-  service_name node['solrcloud']['service_name']
-  action [:enable, :start]
-  notifies :run, 'ruby_block[wait_start_up]', :immediately
-end
-
-# Waiting for Service
-ruby_block 'wait_start_up' do
-  block do
-    sleep node['solrcloud']['service_start_wait']
-  end
-  action :nothing
-end
-
 remote_file tarball_file do
   action :delete
 end
@@ -206,9 +182,3 @@ ruby_block 'purge_old_versions' do
   end
   only_if { node['solrcloud']['tarball_purge'] }
 end
-
-# Setup configsets - node['solrcloud']['zkconfigsets']
-include_recipe 'solrcloud::zkconfigsets'
-
-# Setup collections - node['solrcloud']['collections']
-include_recipe 'solrcloud::collections'
