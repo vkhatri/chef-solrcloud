@@ -21,9 +21,6 @@ node.default['solrcloud']['major_version'] = node['solrcloud']['version'].split(
 node.default['solrcloud']['minor_version'] = node['solrcloud']['version'].split('.')[1].to_i
 node.default['solrcloud']['server_base_dir_name'] = node['solrcloud']['major_version'] == 5 ? 'server' : 'example'
 
-node.default['solrcloud']['install_dir'] = '/usr/local/solr'
-node.default['solrcloud']['data_dir'] = '/opt/solr'
-
 node.default['solrcloud']['source_dir'] = '/usr/local/solr-' + node['solrcloud']['version']
 
 node.default['solrcloud']['jetty_config']['context']['path'] = '/' + node['solrcloud']['context_name']

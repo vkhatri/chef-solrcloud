@@ -20,6 +20,11 @@ default['solrcloud']['sysconfig_file'] = value_for_platform_family(
 
 default['solrcloud']['restore_cores'] = true
 
+# solr install dir
+node.default['solrcloud']['install_dir'] = '/usr/local/solr'
+# solr data dir
+node.default['solrcloud']['data_dir'] = '/opt/solr'
+
 default['solrcloud']['notify_restart'] = false # notify service restart on config change
 default['solrcloud']['notify_restart_upgrade'] = false # notify service restart on config change
 default['solrcloud']['service_name']        = 'solr'
