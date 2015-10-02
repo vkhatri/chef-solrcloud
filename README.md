@@ -26,6 +26,8 @@ https://github.com/vkhatri/chef-solrcloud
 
 This cookbook was tested for Apache Solr v4.9, v4.10 and v5.1.0.
 
+>> v5.2.x support is being added, but not yet fully tested.
+
 
 ## Supported Apache Solr Runtime
 
@@ -65,13 +67,21 @@ Existing users might want to test LWRP `zkconfigset` resources before using this
 
 ## Recipes
 
-- `solrcloud::tarball`     	- install solr package, directories and service
+- `solrcloud::default`  - default recipe, used for `run_list`
 
-- `solrcloud::config`  		- manages solr base configuration files
+- `solrcloud::attributes`  - derived attributes recipe
 
-- `solrcloud::jetty`   		- manages jetty base configuration files and directories
+- `solrcloud::tarball`     	- install solr
 
-- `solrcloud::zkcli`		- setup zookeeper package for zookeeper client binary (zkCli.sh)
+- `solrcloud::config`  		- manages solr configuration
+
+- `solrcloud::service`   	- manages solr service
+
+- `solrcloud::jetty`   		- manages jetty configuration
+
+- `solrcloud::java`   		- install java
+
+- `solrcloud::zkcli`		- setup zookeeper for zookeeper client binary (zkCli.sh)
 
 		zkcli recipe does not manage zookeeper server and its only purpose
 		is to have zookeeper client on all solr nodes
@@ -81,12 +91,11 @@ Existing users might want to test LWRP `zkconfigset` resources before using this
 		solr user is better to be managed by a User management cookbook
 		instead of solrcloud for Production environment.
 
+
 - `solrcloud::zkconfigsets`	- create/delete solrcloud configSet in zookeeper via LWRP
 
 - `solrcloud::collections` 	- create/delete solrcloud collection on solrcloud node via LWRP
 
-
-> `solrcloud::tarball` is the main recipe which includes all other recipe. For `run_list` use `solrcloud::tarball`.
 
 
 ## SolrCloud configSet (Zookeeper Configs) LWRP

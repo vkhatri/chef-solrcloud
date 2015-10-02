@@ -3,6 +3,41 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.8.5
+-----
+
+- Virender Khatri - issue #40, add zookeeper chroot support
+
+- Virender Khatri - #43, set default[solrcloud][enable_ssl] to false
+
+- Virender Khatri - #42, add test solrcloud_test cookbook
+
+- Virender Khatri - #44, reformat env sysconfig file parameters
+
+- Keith Stone - allow solr to start using new init.d for version 5.2.x
+
+- Keith Stone - default[:solrcloud][:sysconfig_file]
+
+- Keith Stone - modify init.d template to support v5.2.x
+
+- Virender Khatri - issue #51, add new default attribute file for v5.2.1
+
+- Virender Khatri - issue #49, restart solr service on sysconfig and init
+
+- Virender Khatri - updated env sysconfig solr file for v5.2.x
+
+- Keith Stone - include missing java_options in env sysconfig solr file for v5.2.x
+
+- Virender Khatri - issue #52 - fix solr v5.2.x service
+
+- Dawid Romaldowski - added missing dependency (make) to build zk-gem
+
+- Virender Khatri - #59, run apt-get update once for debian family setup
+
+- Virender Khatri - fix for #61, #58, Issues with setting default[solrcloud][version] and wrapper cookook
+
+- Virender Khatri - #62, optional purge old versions archive
+
 0.6.9
 -----
 
