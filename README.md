@@ -354,15 +354,11 @@ Parameters:
 
  * `default[:solrcloud][:java_options]` (default: `[]`): java options. Note that xmx and xms have special attributes and setting them through this list will not work past SOLR v.5.2.x.
 
- * `default[:solrcloud][:java_xmx]` (default: `512m`): Default starting memory for the JVM unless auto_java_memory is turned on in which case the default is dynamically defined.
+ * `default[:solrcloud][:java_xmx]` (default: `512m`): Default starting memory for the JVM unless auto_java_memory is turned on in which case the default is half of total memory.
 
- * `default[:solrcloud][:java_xms]` (default: `512m`): Default starting memory for the JVM unless auto_java_memory is turned on in which case the default is dynamically defined.
+ * `default[:solrcloud][:java_xms]` (default: `512m`): Default starting memory for the JVM unless auto_java_memory is turned on in which case the default is half of total memory.
 
- * `default[:solrcloud][:auto_java_memory]` (default: `true`): enable auto java memory allocation, sets dynamic defaults for node attributes `node[:solrcloud][:java_xms]` and `node[:solrcloud][:java_xms]`.
-
-		This option calculates maximum allowed memory (multiple of 1024) for java process with minimum system memory 		reservation defined by attribute `node[:solrcloud][:auto_system_memory]`
-
- * `default[:solrcloud][:auto_system_memory]` (default: `768`): memory to preserve for OS, required when attribute `default[:solrcloud][:auto_java_memory]` is set
+ * `default[:solrcloud][:auto_java_memory]` (default: `true`): if true, set `default[:solrcloud][:java_xmx]` and `default[:solrcloud][:java_xms]` to `(total_memory / 2)`.
 
  * `default[:solrcloud][:install_java]` (default: `true`): setup java, disable to manage java outside of this cookbook
 

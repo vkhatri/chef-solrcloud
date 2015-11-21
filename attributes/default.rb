@@ -13,6 +13,9 @@ default['solrcloud']['version']       = '5.1.0'
 
 default['solrcloud']['tarball_purge'] = false # purge old installed archive
 
+# set default heap size = (total_memory/2)
+default['solrcloud']['auto_java_memory'] = true
+
 default['solrcloud']['sysconfig_file'] = value_for_platform_family(
   'debian' => '/etc/default/solr',
   'rhel' => '/etc/sysconfig/solr'

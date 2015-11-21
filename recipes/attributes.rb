@@ -50,3 +50,15 @@ node.default['solrcloud']['zookeeper']['source_dir'] = ::File.join(node['solrclo
 node.default['solrcloud']['zookeeper']['install_dir']      = ::File.join(node['solrcloud']['install_dir'], 'zookeeper')
 node.default['solrcloud']['zookeeper']['zkcli']            = ::File.join(node['solrcloud']['zookeeper']['install_dir'], 'bin', 'zkCli.sh')
 node.default['solrcloud']['zookeeper']['solr_zkcli']       = ::File.join(node['solrcloud']['install_dir'], node['solrcloud']['server_base_dir_name'], 'scripts/cloud-scripts/zkcli.sh')
+
+if node['solrcloud']['auto_java_memory'] && node['memory'] && node['memory'].key?('total')
+  # set heap size to half of total memory if node['solrcloud']['auto_java_memory'] is set
+  heap_size = (node['memory']['total'].gsub('kB', '').to_i / 1024).to_i / 2
+  heap_size += 1 unless heap_size.even?
+  node.default['solrcloud']['java_xmx'] = "#{heap_size}m"
+  node.default['solrcloud']['java_xms'] = "#{heap_size}m"
+else
+  # default heap size
+  node.default['solrcloud']['java_xmx'] = '512m'
+  node.default['solrcloud']['java_xms'] = '512m'
+end
