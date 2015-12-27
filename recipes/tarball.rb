@@ -48,12 +48,19 @@ require 'net/http'
 require 'json'
 require 'tmpdir'
 
-tarball_url = "https://archive.apache.org/dist/lucene/solr/#{node['solrcloud']['version']}/solr-#{node['solrcloud']['version']}.tgz"
-tarball_checksum = solr_tarball_sha256sum(node['solrcloud']['version'])
+solr_version = node['solrcloud']['version']
+
+if node['solrcloud']['tarball_url'] == 'auto'
+  tarball_url = "https://archive.apache.org/dist/lucene/solr/#{solr_version}/solr-#{solr_version}.tgz"
+else
+  tarball_url = node['solrcloud']['tarball_url']
+end
+
+tarball_checksum = solr_tarball_sha256sum(solr_version)
 
 temp_dir      = Dir.tmpdir
-tarball_file  = ::File.join(temp_dir, "solr-#{node['solrcloud']['version']}.tgz")
-tarball_dir   = ::File.join(temp_dir, "solr-#{node['solrcloud']['version']}")
+tarball_file  = ::File.join(temp_dir, "solr-#{solr_version}.tgz")
+tarball_dir   = ::File.join(temp_dir, "solr-#{solr_version}")
 
 # Old Source Location for cores backup
 if ::File.exist?(node['solrcloud']['install_dir'])
@@ -67,7 +74,7 @@ end
 service 'stop_solr' do
   service_name node['solrcloud']['service_name']
   action :stop
-  only_if { ::File.exist?("/etc/init.d/#{node['solrcloud']['service_name']}") && !::File.exist?(::File.join(node['solrcloud']['source_dir'], 'dist', "solr-core-#{node['solrcloud']['version']}.jar")) }
+  only_if { ::File.exist?("/etc/init.d/#{node['solrcloud']['service_name']}") && !::File.exist?(::File.join(node['solrcloud']['source_dir'], 'dist', "solr-core-#{solr_version}.jar")) }
 end
 
 # Solr Version Package File
@@ -75,7 +82,7 @@ remote_file 'solr_tarball_file' do
   path tarball_file
   source tarball_url
   checksum tarball_checksum
-  not_if { ::File.exist?("#{node['solrcloud']['source_dir']}/dist/solr-core-#{node['solrcloud']['version']}.jar") }
+  not_if { ::File.exist?("#{node['solrcloud']['source_dir']}/dist/solr-core-#{solr_version}.jar") }
 end
 
 # Extract and Setup Solr Source directories
@@ -89,7 +96,7 @@ bash 'extract_solr_tarball' do
     chown -R #{node['solrcloud']['user']}:#{node['solrcloud']['group']} #{node['solrcloud']['source_dir']}
     chmod #{node['solrcloud']['dir_mode']} #{node['solrcloud']['source_dir']}
   EOS
-  creates ::File.join(node['solrcloud']['source_dir'], 'dist', "solr-core-#{node['solrcloud']['version']}.jar")
+  creates ::File.join(node['solrcloud']['source_dir'], 'dist', "solr-core-#{solr_version}.jar")
 end
 
 # Link Solr install_dir to Current source_dir
@@ -180,7 +187,7 @@ ruby_block 'purge_old_versions' do
   block do
     require 'fileutils'
     installed_versions = Dir.entries('/usr/local').reject { |a| a !~ /^solr-/ }.sort
-    old_versions = installed_versions - ["solr-#{node['solrcloud']['version']}"]
+    old_versions = installed_versions - ["solr-#{solr_version}"]
 
     old_versions.each do |v|
       v = "/usr/local/#{v}"

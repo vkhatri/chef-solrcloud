@@ -22,19 +22,26 @@
 
 require 'tmpdir'
 
-zookeeper_tarball_url = "https://archive.apache.org/dist/zookeeper/zookeeper-#{node['solrcloud']['zookeeper']['version']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.tar.gz"
-zookeeper_tarball_checksum = zookeeper_tarball_sha256sum(node['solrcloud']['zookeeper']['version'])
+zookeeper_version = node['solrcloud']['zookeeper']['version']
+
+if node['solrcloud']['zookeeper']['tarball_url'] == 'auto'
+  zookeeper_tarball_url = "https://archive.apache.org/dist/zookeeper/zookeeper-#{zookeeper_version}/zookeeper-#{zookeeper_version}.tar.gz"
+else
+  zookeeper_tarball_url = node['solrcloud']['zookeeper']['tarball_url']
+end
+
+zookeeper_tarball_checksum = zookeeper_tarball_sha256sum(zookeeper_version)
 
 temp_d        = Dir.tmpdir
-tarball_file  = ::File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['version']}.tar.gz")
-tarball_dir   = ::File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['version']}")
+tarball_file  = ::File.join(temp_d, "zookeeper-#{zookeeper_version}.tar.gz")
+tarball_dir   = ::File.join(temp_d, "zookeeper-#{zookeeper_version}")
 
 # Zookeeper Version Package File
 remote_file 'zookeeper_tarball_file' do
   path tarball_file
   source zookeeper_tarball_url
   checksum zookeeper_tarball_checksum
-  not_if { ::File.exist?("#{node['solrcloud']['zookeeper']['source_dir']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.jar") }
+  not_if { ::File.exist?("#{node['solrcloud']['zookeeper']['source_dir']}/zookeeper-#{zookeeper_version}.jar") }
 end
 
 # Extract and Setup Zookeeper Source directories
@@ -50,7 +57,7 @@ bash 'extract_zookeeper_tarball' do
   EOS
 
   not_if  { ::File.exist?(node['solrcloud']['zookeeper']['source_dir']) }
-  creates "#{node['solrcloud']['zookeeper']['install_dir']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.jar"
+  creates "#{node['solrcloud']['zookeeper']['install_dir']}/zookeeper-#{zookeeper_version}.jar"
   action :run
 end
 

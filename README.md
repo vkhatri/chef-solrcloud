@@ -382,6 +382,8 @@ Parameters:
 
  * `default[:solrcloud][:version]` (default: `5.1.0`): solr package version
 
+ * `default[:solrcloud][:tarball_url]` (default: `auto`): allows user to define custom solr tarball url, by default download from apache solr archive
+
  * `default[:solrcloud][:sha256sum]` (default: `nil`): allows user to provide sha256sum value for solr tarball if version is not yet supported by cookbook
 
  * `default[:solrcloud][:major_version]` (default: `calculated`): solr package major version to configure solr 4 / 5, valid values - 4 5
@@ -426,6 +428,8 @@ Parameters:
  * `default[:solrcloud][:zkconfigsets_home]` (default: `/usr/local/solr_zkconfigsets`): configs location for zookeeper configSet upconfig
 
  * `default[:solrcloud][:zookeeper][:version]` (default: `3.4.6`): zookeeper package setup for zkCli.sh
+
+ * `default[:solrcloud][:zookeeper][:tarball_url]` (default: `auto`): allows user to define custom zookeeper tarball url, by default download from zookeeper archive
 
  * `default[:solrcloud][:zookeeper][:sha256sum]` (default: `nil`): allows user to provide sha256sum value for zookeeper tarball if version is not yet supported by cookbook
 
