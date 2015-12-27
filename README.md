@@ -382,6 +382,8 @@ Parameters:
 
  * `default[:solrcloud][:version]` (default: `5.1.0`): solr package version
 
+ * `default[:solrcloud][:sha256sum]` (default: `nil`): allows user to provide sha256sum value for solr tarball if version is not yet supported by cookbook
+
  * `default[:solrcloud][:major_version]` (default: `calculated`): solr package major version to configure solr 4 / 5, valid values - 4 5
 
  * `default[:solrcloud][:server_base_dir_name]` (default: `calculated`): solr base directory to configure solr 4 / 5, valid values - example server
@@ -425,6 +427,7 @@ Parameters:
 
  * `default[:solrcloud][:zookeeper][:version]` (default: `3.4.6`): zookeeper package setup for zkCli.sh
 
+ * `default[:solrcloud][:zookeeper][:sha256sum]` (default: `nil`): allows user to provide sha256sum value for zookeeper tarball if version is not yet supported by cookbook
 
 ## Cookbook Ulimit Attributes
 

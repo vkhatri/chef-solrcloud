@@ -10,7 +10,7 @@ def solr_tarball_sha256sum(version)
     '5.2.0' => 'dff2c5df505b732e23178e8f12e817dba4a088a8afe6599dcacf9ea241f76a1e', '5.2.1' => '3f54cec862da1376857f96f4a6f2044a5addcebc4df159b8797fd71f7ba8df86', '5.3.0' => '26aec63d81239a65f182f17bbf009b1070f7db0bb83657ac2a67a08b57227f7c',
     '5.3.1' => '34ddcac071226acd6974a392af7671f687990aa1f9eb4b181d533ca6dca6f42d', '5.4.0' => '84c0f04a23047946f54618a092d4510d88d7205a756b948208de9e5afb42f7cd'
   }
-  sha256sum = sha256sums[version]
+  sha256sum = sha256sums[version] || node['solrcloud']['sha256sum']
   fail "sha256sum is missing for solr tarball version #{version}" unless sha256sum
   sha256sum
 end
@@ -19,7 +19,7 @@ def zookeeper_tarball_sha256sum(version)
   sha256sums = {
     '3.4.6' => '01b3938547cd620dc4c93efe07c0360411f4a66962a70500b163b59014046994'
   }
-  sha256sum = sha256sums[version]
+  sha256sum = sha256sums[version] || node['solrcloud']['zookeeper']['sha256sum']
   fail "sha256sum is missing for zookeeper tarball version #{version}" unless sha256sum
   sha256sum
 end

@@ -10,6 +10,7 @@ default['solrcloud']['user_home']     = nil
 default['solrcloud']['setup_user']    = true # ideally it must be set to false for Production environment and advised to manage solr user via different cookbook
 
 default['solrcloud']['version']       = '5.1.0'
+default['solrcloud']['sha256sum']       = nil
 
 default['solrcloud']['tarball_purge'] = false # purge old installed archive
 
@@ -192,3 +193,4 @@ default['solrcloud']['solr_config']['solrcloud']['host_port']   = node['solrclou
 # Only Setup Zookeeper for Client zkCli.sh.
 #
 default['solrcloud']['zookeeper']['version'] = '3.4.6'
+default['solrcloud']['zookeeper']['sha256sum'] = nil
