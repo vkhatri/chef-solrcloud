@@ -32,10 +32,16 @@ include_recipe 'solrcloud::java'
   end.run_action(:install)
 end
 
-chef_gem 'zk' do
-  action :nothing
-  only_if { node['solrcloud']['install_zk_gem'] }
-end.run_action(:install)
+if Chef::Resource::ChefGem.method_defined?(:compile_time)
+  chef_gem 'zk' do
+    compile_time true
+  end
+else
+  chef_gem 'zk' do
+    action :nothing
+    only_if { node['solrcloud']['install_zk_gem'] }
+  end.run_action(:install)
+end
 
 require 'zk'
 require 'net/http'
@@ -58,14 +64,15 @@ else
 end
 
 # Stop Solr Service if running for Version Upgrade
-service 'solr' do
+service 'stop_solr' do
   service_name node['solrcloud']['service_name']
   action :stop
   only_if { ::File.exist?("/etc/init.d/#{node['solrcloud']['service_name']}") && !::File.exist?(::File.join(node['solrcloud']['source_dir'], 'dist', "solr-core-#{node['solrcloud']['version']}.jar")) }
 end
 
 # Solr Version Package File
-remote_file tarball_file do
+remote_file 'solr_tarball_file' do
+  path tarball_file
   source tarball_url
   checksum tarball_checksum
   not_if { ::File.exist?("#{node['solrcloud']['source_dir']}/dist/solr-core-#{node['solrcloud']['version']}.jar") }
@@ -163,7 +170,8 @@ ruby_block 'require_pam_limits.so' do
   end
 end
 
-remote_file tarball_file do
+remote_file 'local_solr_tarball_file' do
+  path tarball_file
   action :delete
 end
 

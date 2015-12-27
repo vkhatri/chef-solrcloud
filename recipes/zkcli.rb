@@ -30,7 +30,8 @@ tarball_file  = ::File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper'][
 tarball_dir   = ::File.join(temp_d, "zookeeper-#{node['solrcloud']['zookeeper']['version']}")
 
 # Zookeeper Version Package File
-remote_file tarball_file do
+remote_file 'zookeeper_tarball_file' do
+  path tarball_file
   source zookeeper_tarball_url
   checksum zookeeper_tarball_checksum
   not_if { ::File.exist?("#{node['solrcloud']['zookeeper']['source_dir']}/zookeeper-#{node['solrcloud']['zookeeper']['version']}.jar") }

@@ -67,7 +67,7 @@ template ::File.join(solr_etc_dir, 'create-solr.keystore.sh') do
   notifies :run, 'execute[generate_key_store_file]', :immediately
 end
 
-execute 'generate_key_store_file' do
+execute 'generate_key_store_file_on_notify' do
   cwd solr_etc_dir
   command ::File.join(solr_etc_dir, 'create-solr.keystore.sh')
   action :nothing
@@ -75,13 +75,13 @@ execute 'generate_key_store_file' do
   only_if { node['solrcloud']['key_store']['manage'] }
 end
 
-cookbook_file node['solrcloud']['key_store']['key_store_file_path'] do
+cookbook_file 'solr.keystore' do
+  path node['solrcloud']['key_store']['key_store_file_path']
   cookbook node['solrcloud']['key_store']['cookbook']
   source node['solrcloud']['key_store']['key_store_file']
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0400
-  action :create
   not_if { node['solrcloud']['key_store']['manage'] }
 end
 
