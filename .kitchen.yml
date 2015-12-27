@@ -26,3 +26,11 @@ suites:
       solrcloud:
         version: 5.2.0
         zk_run: true
+  - name: 5.4.0
+    run_list:
+      - recipe[solrcloud_test::prerun]
+      - recipe[solrcloud::default]
+    attributes:
+      solrcloud:
+        version: 5.4.0
+        zk_run: true
