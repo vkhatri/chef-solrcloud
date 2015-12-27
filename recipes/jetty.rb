@@ -64,7 +64,7 @@ template ::File.join(solr_etc_dir, 'create-solr.keystore.sh') do
   owner node['solrcloud']['user']
   group node['solrcloud']['group']
   mode 0744
-  notifies :run, 'execute[generate_key_store_file]', :immediately
+  notifies :run, 'execute[generate_key_store_file_on_notify]', :immediately
 end
 
 execute 'generate_key_store_file_on_notify' do
