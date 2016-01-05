@@ -3,6 +3,21 @@ solrcloud CHANGELOG
 
 This file is used to list changes made in each version of the solrcloud cookbook.
 
+0.8.6
+-----
+
+- Virender Khatri - updated auto_java_memory to half of total memory
+
+- Virender Khatri - added solr v5.3.1 support
+
+- Jeff Wartes - added solr 5.4 support
+
+- Virender Khatri - added specs #71
+
+- Virender Khatri - allow user defined sha256sum value for solr and zookeeper #72
+
+- Virender Khatri - need tarball attribute for custom download url #65
+
 0.8.5
 -----
 
