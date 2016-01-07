@@ -83,6 +83,6 @@ template ::File.join(node['solrcloud']['zookeeper']['install_dir'], 'bin', 'zkEn
   mode 0644
 end
 
-remote_file tarball_file do
+file tarball_file do
   action :delete
 end

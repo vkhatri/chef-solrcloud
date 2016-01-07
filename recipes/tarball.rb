@@ -177,7 +177,7 @@ ruby_block 'require_pam_limits.so' do
   end
 end
 
-remote_file 'local_solr_tarball_file' do
+file 'local_solr_tarball_file' do
   path tarball_file
   action :delete
 end
